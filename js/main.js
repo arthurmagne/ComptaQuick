@@ -8,7 +8,8 @@ require.config({
     bootstrap: '../dist/js/bootstrap.min',
     underscore: 'libs/underscore/underscore',
     backbone: 'libs/backbone/backbone',
-    holder: 'holder'
+    holder: 'holder',
+    backbone_rails: 'libs/backbone_rails/backbone_rails_sync'
   },
 
     shim: {
