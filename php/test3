@@ -1,8 +1,0 @@
-class PDOStatement#8 (1) {
-  public $queryString =>
-  string(11) "SHOW TABLES"
-}
-Array
-(
-    [0] => TEST
-)
