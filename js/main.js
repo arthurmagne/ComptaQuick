@@ -9,7 +9,8 @@ require.config({
     underscore: 'libs/underscore/underscore',
     backbone: 'libs/backbone/backbone',
     holder: 'holder',
-    backbone_rails: 'libs/backbone_rails/backbone_rails_sync'
+    backbone_rails: 'libs/backbone_rails/backbone_rails_sync',
+    backbone_auth: 'libs/backbone_auth/backbone.basicauth'
   },
 
     shim: {
@@ -28,7 +29,12 @@ require.config({
         backbone: {
             deps: ['jquery','underscore'],
             exports: 'Backbone'
+        },
+        
+        backbone_auth: {
+            deps: ['underscore']
         }
+
     }
 
 });

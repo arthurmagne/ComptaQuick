@@ -4,10 +4,11 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'backbone_auth',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   'text!../../templates/signIn.html'
-  ], function(bootstrap, holder, $, _, Backbone, signInTemplate){
+  ], function(bootstrap, holder, $, _, Backbone, BackboneAuth, signInTemplate){
   var HomePage = Backbone.View.extend({
     events: {
       'click .close-sign-in': 'close',
@@ -32,7 +33,7 @@ define([
     attributes: function () {
       return {
         email: $(".sign-in-form input[name='email']").val(),
-        password: $(".sign-in-form input[name='password']").val(),
+        password: $(".sign-in-form input[name='password']").val()
        };
     },
 
@@ -40,13 +41,23 @@ define([
         event.preventDefault(); // Don't let this button submit the form
         var url = 'api/index.php/login';
         console.log('Loggin in... ');
-
+        var that = this;
 
         $.ajax({
             url:url,
             type:'POST',
             dataType:"json",
             data: this.attributes(),
+            statusCode: {
+              200: function (response) {
+                console.log("connection réussie");
+                Backbone.View.prototype.goTo('#/perso');
+                that.close();
+              },
+              401: function (response) {
+                 alert('Get out !!');
+              }
+            },
             success:function (data) {
                 console.log(["Login request details: ", data]);
                
@@ -54,7 +65,7 @@ define([
                     $('.alert-error').text(data.error.text).show();
                 }
                 else { // If not, send them back to the home page
-                    window.location.replace('#');
+                  Backbone.View.prototype.goTo('#/sign-in');
                 }
             }
         });
