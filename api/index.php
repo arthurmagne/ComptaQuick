@@ -52,6 +52,10 @@ function validateUserKey($uid, $key) {
   }
 }
 
+
+/**  Routes
+**************************/
+
 $app->get('/hello/:name', 'authenticate', function ($name) {
     echo "Hello, $name";
 });
