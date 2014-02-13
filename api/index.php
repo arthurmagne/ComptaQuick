@@ -1,7 +1,9 @@
 <?php
 
-#$app->add(new \HttpBasicAuth());
 require 'routesAPI.php';
+
+
+
 /*public function authenticate(\Slim\Route $route) {
         if(!ctype_alnum($username))
             return false;

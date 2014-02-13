@@ -1,13 +1,13 @@
 
 <?php
 require 'vendor/autoload.php';
-require 'vendor/slim/slim/Slim/Middleware/HttpBasicAuth.php';
+#require 'vendor/slim/slim/Slim/Middleware/HttpBasicAuth.php';
+require 'php/config.php';
 
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();
 
-$basicAuth = new \HttpBasicAuth();
 $app->get('/hello/:name', 'authenticate', function ($name) {
     echo "Hello, $name";
 });
@@ -37,6 +37,7 @@ $app->post('/login', function () {
 	#$basicAuth->authenticate($email, $password);
     
 });
+/*
 $app->post('/subscribe', function () {
 	global $app;
     echo "inscription";
@@ -68,9 +69,8 @@ $app->post('/subscribe', function () {
 		$app->halt(400);
 	}
 
-	#$basicAuth->authenticate($email, $password);
     
-});
+});*/
 
 
 $app->run();
