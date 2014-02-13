@@ -1,0 +1,335 @@
+class Doctrine_Connection_Mysql#5 (19) {
+  protected $driverName =>
+  string(5) "Mysql"
+  protected $dbh =>
+  NULL
+  protected $tables =>
+  array(0) {
+  }
+  protected $_name =>
+  int(0)
+  protected $isConnected =>
+  bool(false)
+  protected $supported =>
+  array(18) {
+    'sequences' =>
+    string(8) "emulated"
+    'indexes' =>
+    bool(true)
+    'affected_rows' =>
+    bool(true)
+    'transactions' =>
+    bool(true)
+    'savepoints' =>
+    bool(false)
+    'summary_functions' =>
+    bool(true)
+    'order_by_text' =>
+    bool(true)
+    'current_id' =>
+    string(8) "emulated"
+    'limit_queries' =>
+    bool(true)
+    'LOBs' =>
+    bool(true)
+    'replace' =>
+    bool(true)
+    'sub_selects' =>
+    bool(true)
+    'auto_increment' =>
+    bool(true)
+    'primary_key' =>
+    bool(true)
+    'result_introspection' =>
+    bool(true)
+    'prepared_statements' =>
+    string(8) "emulated"
+    'identifier_quoting' =>
+    bool(true)
+    'pattern_escaping' =>
+    bool(true)
+  }
+  protected $pendingAttributes =>
+  array(3) {
+    [16] =>
+    string(5) "mysql"
+    [8] =>
+    int(0)
+    [3] =>
+    int(2)
+  }
+  private $modules =>
+  array(9) {
+    'transaction' =>
+    bool(false)
+    'expression' =>
+    bool(false)
+    'dataDict' =>
+    bool(false)
+    'export' =>
+    bool(false)
+    'import' =>
+    bool(false)
+    'sequence' =>
+    bool(false)
+    'unitOfWork' =>
+    bool(false)
+    'formatter' =>
+    bool(false)
+    'util' =>
+    bool(false)
+  }
+  protected $properties =>
+  array(7) {
+    'sql_comments' =>
+    array(3) {
+      [0] =>
+      array(3) {
+        ...
+      }
+      [1] =>
+      array(3) {
+        ...
+      }
+      [2] =>
+      array(3) {
+        ...
+      }
+    }
+    'identifier_quoting' =>
+    array(3) {
+      'start' =>
+      string(1) "`"
+      'end' =>
+      string(1) "`"
+      'escape' =>
+      string(1) "`"
+    }
+    'string_quoting' =>
+    array(4) {
+      'start' =>
+      string(1) "'"
+      'end' =>
+      string(1) "'"
+      'escape' =>
+      string(1) "\"
+      'escape_pattern' =>
+      string(1) "\"
+    }
+    'wildcards' =>
+    array(2) {
+      [0] =>
+      string(1) "%"
+      [1] =>
+      string(1) "_"
+    }
+    'varchar_max_length' =>
+    int(255)
+    'sql_file_delimiter' =>
+    string(2) ";
+"
+    'max_identifier_length' =>
+    int(64)
+  }
+  protected $serverInfo =>
+  array(0) {
+  }
+  protected $options =>
+  array(4) {
+    'dsn' =>
+    string(34) "mysql:host=dbserver;dbname=ldjerbi"
+    'username' =>
+    string(7) "ldjerbi"
+    'password' =>
+    string(7) "pcctv49"
+    'other' =>
+    array(0) {
+    }
+  }
+  protected $_count =>
+  int(0)
+  protected $_usedNames =>
+  array(2) {
+    'foreign_keys' =>
+    array(0) {
+    }
+    'indexes' =>
+    array(0) {
+    }
+  }
+  protected $attributes =>
+  array(1) {
+    [112] =>
+    string(6) "INNODB"
+  }
+  protected $parent =>
+  class Doctrine_Manager#1 (17) {
+    protected $_connections =>
+    array(1) {
+      [0] =>
+              ...
+
+    }
+    protected $_bound =>
+    array(0) {
+    }
+    protected $_index =>
+    int(1)
+    protected $_currIndex =>
+    int(0)
+    protected $_queryRegistry =>
+    NULL
+    protected $_validators =>
+    array(0) {
+    }
+    protected $_hydrators =>
+    array(8) {
+      [3] =>
+      string(29) "Doctrine_Hydrator_ArrayDriver"
+      [2] =>
+      string(30) "Doctrine_Hydrator_RecordDriver"
+      [4] =>
+      string(28) "Doctrine_Hydrator_NoneDriver"
+      [5] =>
+      string(30) "Doctrine_Hydrator_ScalarDriver"
+      [6] =>
+      string(36) "Doctrine_Hydrator_SingleScalarDriver"
+      [7] =>
+      string(30) "Doctrine_Hydrator_RecordDriver"
+      [8] =>
+      string(38) "Doctrine_Hydrator_ArrayHierarchyDriver"
+      [9] =>
+      string(39) "Doctrine_Hydrator_RecordHierarchyDriver"
+    }
+    protected $_connectionDrivers =>
+    array(12) {
+      'db2' =>
+      string(23) "Doctrine_Connection_Db2"
+      'mysql' =>
+      string(25) "Doctrine_Connection_Mysql"
+      'mysqli' =>
+      string(25) "Doctrine_Connection_Mysql"
+      'sqlite' =>
+      string(26) "Doctrine_Connection_Sqlite"
+      'pgsql' =>
+      string(25) "Doctrine_Connection_Pgsql"
+      'oci' =>
+      string(26) "Doctrine_Connection_Oracle"
+      'oci8' =>
+      string(26) "Doctrine_Connection_Oracle"
+      'oracle' =>
+      string(26) "Doctrine_Connection_Oracle"
+      'mssql' =>
+      string(25) "Doctrine_Connection_Mssql"
+      'dblib' =>
+      string(25) "Doctrine_Connection_Mssql"
+      'odbc' =>
+      string(25) "Doctrine_Connection_Mssql"
+      'mock' =>
+      string(24) "Doctrine_Connection_Mock"
+    }
+    protected $_extensions =>
+    array(0) {
+    }
+    protected $_loadedValidatorsFromDisk =>
+    bool(false)
+    private $_initialized =>
+    bool(true)
+    protected $attributes =>
+    array(30) {
+      [150] =>
+      NULL
+      [157] =>
+      NULL
+      [153] =>
+      bool(true)
+      [100] =>
+      class Doctrine_EventListener#3 (0) {
+        ...
+      }
+      [154] =>
+      class Doctrine_Record_Listener#4 (1) {
+        ...
+      }
+      [155] =>
+      bool(true)
+      [107] =>
+      int(0)
+      [109] =>
+      int(2)
+      [103] =>
+      string(6) "%s_idx"
+      [104] =>
+      string(6) "%s_seq"
+      [120] =>
+      string(2) "%s"
+      [171] =>
+      string(2) "%s"
+      [101] =>
+      bool(false)
+      [105] =>
+      string(2) "id"
+      [106] =>
+      int(0)
+      [140] =>
+      int(7)
+      [141] =>
+      int(2)
+      [156] =>
+      string(8) "doctrine"
+      [160] =>
+      bool(false)
+      [164] =>
+      bool(false)
+      [165] =>
+      bool(false)
+      [166] =>
+      bool(false)
+      [169] =>
+      array(0) {
+        ...
+      }
+      [170] =>
+      array(0) {
+        ...
+      }
+      [172] =>
+      bool(true)
+      [173] =>
+      string(14) "Doctrine_Query"
+      [175] =>
+      string(19) "Doctrine_Collection"
+      [176] =>
+      string(14) "Doctrine_Table"
+      [174] =>
+      bool(true)
+      [179] =>
+      string(7) "%sTable"
+    }
+    protected $parent =>
+    NULL
+    protected $_impl =>
+    array(0) {
+    }
+    protected $_params =>
+    array(0) {
+    }
+    protected $_locator =>
+    NULL
+    protected $_resources =>
+    array(0) {
+    }
+  }
+  protected $_impl =>
+  array(0) {
+  }
+  protected $_params =>
+  array(0) {
+  }
+  protected $_locator =>
+  NULL
+  protected $_resources =>
+  array(0) {
+  }
+}
+
