@@ -1,8 +1,8 @@
 
 <?php
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 #require 'vendor/slim/slim/Slim/Middleware/HttpBasicAuth.php';
-require 'php/config.php';
+require_once 'php/config.php';
 
 \Slim\Slim::registerAutoloader();
 
@@ -37,7 +37,7 @@ $app->post('/login', function () {
 	#$basicAuth->authenticate($email, $password);
     
 });
-/*
+
 $app->post('/subscribe', function () {
 	global $app;
     echo "inscription";
@@ -48,9 +48,9 @@ $app->post('/subscribe', function () {
     $password 	= $app->request()->post('password');
 
 	$user = new User();
-	$user->email() 		= $email;
-	$user->firstname() 	= $firstname;
-	$user->lastname() 	= $lastname;
+	$user->email 		= $email;
+	$user->firstname 	= $firstname;
+	$user->lastname 	= $lastname;
 	$user->password 	= crypt($password, $email);
 
 	if($user->trySave()){
@@ -70,7 +70,7 @@ $app->post('/subscribe', function () {
 	}
 
     
-});*/
+});
 
 
 $app->run();
