@@ -18,6 +18,21 @@ $app->post('/login', function () {
     $email = $app->request()->post('email');
     $password = $app->request()->post('password');
 
+
+	$body = $app->request()->getBody();
+
+    $body = json_decode($body, true);
+
+    $email 		= $body['email'];
+    $password 	= crypt($body['password'], $email);
+
+
+    echo " les champs sonts : $email, $password";
+	/*$user = new User();
+	$user->email 		= $email;
+	$user->firstname 	= $firstname;
+	$user->lastname 	= $lastname;
+	$user->password 	= $password;*/
     // On vérifie ici si l'user existe
     if (true) {    	
 	    try {
@@ -25,7 +40,7 @@ $app->post('/login', function () {
 			$app->setEncryptedCookie('key', $password, '60 minutes');
 			$uid = $app->getEncryptedCookie('uid');
     		$key = $app->getEncryptedCookie('key');
-			echo "les cookies sont : $uid, $key";
+			echo "  les cookies sont : $uid, $key";
 		} catch (Exception $e) {
 			$app->response()->status(400);
 			$app->response()->header('X-Status-Reason', $e->getMessage());
@@ -41,17 +56,28 @@ $app->post('/login', function () {
 $app->post('/subscribe', function () {
 	global $app;
     echo "inscription";
+    $body = $app->request()->getBody();
 
-    $email 		= $app->request()->post('email');
+    /*$email 		= $app->request()->post('email');
     $firstname 	= $app->request()->post('firstName');
     $lastname 	= $app->request()->post('lastName');
-    $password 	= $app->request()->post('password');
+    $password 	= $app->request()->post('password');*/
+    #echo $body;
 
+    $body = json_decode($body, true);
+
+    $email 		= $body['email'];
+    $firstname 	= $body['firstname'];
+    $lastname 	= $body['lastname'];
+    $password 	= crypt($body['password'], $email);
+
+
+    echo " les champs sonts : $email";
 	$user = new User();
 	$user->email 		= $email;
 	$user->firstname 	= $firstname;
 	$user->lastname 	= $lastname;
-	$user->password 	= crypt($password, $email);
+	$user->password 	= $password;
 
 	if($user->trySave()){
 	    try {

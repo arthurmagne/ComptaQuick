@@ -1,6 +1,6 @@
 <?php
 
-require 'routesAPI.php';
+require_once 'routesAPI.php';
 
 
 
@@ -47,9 +47,10 @@ function validateUserKey($uid, $key) {
 }
 
 
-function subsribes(\Slim\Route $route) {
+function subscribes(\Slim\Route $route) {
 
 }
+
 
 
 

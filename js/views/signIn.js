@@ -42,12 +42,12 @@ define([
         var url = 'api/index.php/login';
         console.log('Loggin in... ');
         var that = this;
-
+        console.log(JSON.stringify(this.attributes()));
         $.ajax({
             url:url,
             type:'POST',
             dataType:"json",
-            data: this.attributes(),
+            data: JSON.stringify(this.attributes()),
             statusCode: {
               200: function (response) {
                 console.log("connection réussie");
