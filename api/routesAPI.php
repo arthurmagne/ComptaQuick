@@ -29,9 +29,10 @@ $app->post('/login', function () {
 
     echo " les champs sonts : $email, $password";
 	#$user = Doctrine_Core::getTable('User')->findOneByEmailAndPassword($email, $password);
-	$user = Doctrine_Core::getTable('User')->findOneByEmailAndPassword("toto", "tonpIEgbIHtuE");
+	$user = Doctrine_Core::getTable('User')->findOneByEmailAndPassword($email, $password);
 	
-	echo $user->firstname;
+	echo $user->firstname. "et lid ";
+	echo $user->user_id;
 	#echo $user->firstname  .  '<br />';
 	#echo $user->password  .  '<br />';
 	/*$user->email 		= $email;
