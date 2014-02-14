@@ -35,9 +35,9 @@ define([
       return {
         lastname: $(".sign-up-form input[name='lastname']").val(),
         firstname: $(".sign-up-form input[name='firstname']").val(),
-        email: $(".sign-in-form input[name='email']").val(),
-        password: $(".sign-in-form input[name='password']").val(),
-        passwordv: $(".sign-in-form input[name='passwordv']").val(),
+        email: $(".sign-up-form input[name='email']").val(),
+        password: $(".sign-up-form input[name='password']").val(),
+        passwordv: $(".sign-up-form input[name='passwordv']").val(),
         captcha: $(".sign-up-form input[name='captcha']").val()
        };
      },
@@ -48,12 +48,8 @@ define([
       console.log('Subscribing ... ');
       var that = this;
       console.log(JSON.stringify(this.attributes()));
-      console.log(this.attributes().lastname);
-      console.log(this.attributes().firstname);
-      console.log(this.attributes().email);
-      console.log(this.attributes().password);
-      console.log(this.attributes().passwordv);
-      console.log(this.attributes().captcha);
+      console.log('alors : '+ $(".sign-in-form input[name='email']").val() );
+     
       $.ajax({
         url:url,
         type:'POST',
