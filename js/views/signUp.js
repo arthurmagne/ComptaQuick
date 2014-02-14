@@ -47,9 +47,7 @@ define([
       var url = 'api/index.php/subscribe';
       console.log('Subscribing ... ');
       var that = this;
-      console.log(JSON.stringify(this.attributes()));
-      console.log('alors : '+ $(".sign-in-form input[name='email']").val() );
-     
+      console.log(JSON.stringify(this.attributes()));     
       $.ajax({
         url:url,
         type:'POST',
