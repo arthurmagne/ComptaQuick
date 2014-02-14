@@ -38,12 +38,13 @@ function authenticate(\Slim\Route $route) {
 }
 
 function validateUserKey($uid, $key) {
-  // insert your (hopefully more complex) validation routine here
-  if ($uid == 'demo' && $key == 'demo') {
-    return true;
-  } else {
-    return false;
-  }
+	$user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
+
+	if ($user) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 

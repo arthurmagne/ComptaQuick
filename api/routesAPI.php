@@ -27,26 +27,20 @@ $app->post('/login', function () {
     $password 	= crypt($body['password'], $email);
 
 
-    echo " les champs sonts : $email, $password";
-	#$user = Doctrine_Core::getTable('User')->findOneByEmailAndPassword($email, $password);
+    #echo " les champs sonts : $email, $password";
 	$user = Doctrine_Core::getTable('User')->findOneByEmailAndPassword($email, $password);
 	
-	echo $user->firstname. "et lid ";
-	echo $user->user_id;
-	#echo $user->firstname  .  '<br />';
-	#echo $user->password  .  '<br />';
-	/*$user->email 		= $email;
-	$user->firstname 	= $firstname;
-	$user->lastname 	= $lastname;
-	$user->password 	= $password;*/
     // On vérifie ici si l'user existe
-    if (true) {    	
+    if ($user) {    	
 	    try {
-			$app->setEncryptedCookie('uid', $email, '60 minutes');
+			$id = $user->user_id;
+			$app->setEncryptedCookie('uid', $id, '60 minutes');
 			$app->setEncryptedCookie('key', $password, '60 minutes');
+			$app->setEncryptedCookie('uma', $email, '60 minutes');
 			$uid = $app->getEncryptedCookie('uid');
     		$key = $app->getEncryptedCookie('key');
-			echo "  les cookies sont : $uid, $key";
+    		$uma = $app->getEncryptedCookie('uma');
+			echo "  Les cookies sont : $uid, $key, $uma";
 		} catch (Exception $e) {
 			$app->response()->status(400);
 			$app->response()->header('X-Status-Reason', $e->getMessage());
