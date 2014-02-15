@@ -24,6 +24,13 @@ define([
       setTimeout(function() {
         $("#sign-up-form").addClass("disp");
       }, 1000);   
+      this.firstname = $(".sign-up-form input[name='firstname']");
+      this.lastname = $(".sign-up-form input[name='lastname']");
+      this.email = $(".sign-up-form input[name='email']");
+      this.password = $(".sign-up-form input[name='password']");
+      this.passwordv = $(".sign-up-form input[name='passwordv']");
+      this.captcha = $(".sign-up-form input[name='captcha']");
+      this.error_msg = $(".error-msg");
     },
 
     close: function () {
@@ -33,22 +40,61 @@ define([
 
     attributes: function() {
       return {
-        lastname: $(".sign-up-form input[name='lastname']").val(),
-        firstname: $(".sign-up-form input[name='firstname']").val(),
-        email: $(".sign-up-form input[name='email']").val(),
-        password: $(".sign-up-form input[name='password']").val(),
-        passwordv: $(".sign-up-form input[name='passwordv']").val(),
-        captcha: $(".sign-up-form input[name='captcha']").val()
+        lastname: this.lastname.val(),
+        firstname: this.firstname.val(),
+        email: this.email.val(),
+        password: this.password.val(),
+        passwordv: this.passwordv.val(),
+        captcha: this.captcha.val()
        };
      },
 
     registration: function (event) {
       event.preventDefault(); // Don't let this button submit the form
+      this.email.removeClass("form-error");
+      this.password.removeClass("form-error");
+      this.passwordv.removeClass("form-error");
+      this.firstname.removeClass("form-error");
+      this.lastname.removeClass("form-error");
+      this.captcha.removeClass("form-error");
+      this.error_msg.html();
       var url = 'api/index.php/subscribe';
       console.log('Subscribing ... ');
       var that = this;
+
+      var _data = this.attributes();
+      var error_msg = '';
+      if (!_data.email){
+        error_msg += 'Veuillez indiquer un email.<br>';
+        this.email.addClass("form-error");
+      }
+      if (!_data.password){
+        error_msg += 'Veuillez indiquer un mot de passe.<br>';
+        this.password.addClass("form-error");
+      }
+      if (!_data.firstname){
+        error_msg += 'Veuillez indiquer un prénom.<br>';
+        this.firstname.addClass("form-error");
+      }
+      if (!_data.lastname){
+        error_msg += 'Veuillez indiquer un nom.<br>';
+        this.lastname.addClass("form-error");
+      }
+      if (!_data.passwordv || _data.passwordv != _data.password){
+        error_msg += 'Confirmation du mot de passe incorrect.<br>';
+        this.passwordv.addClass("form-error");
+      }
+      if (!_data.captcha || _data.captcha != 'captcha'){
+        error_msg += 'Captcha incorrect.';
+        this.captcha.addClass("form-error");
+      }
+      this.error_msg.html(error_msg);
+
+      if (error_msg != ''){
+        return ;
+      }
+
       console.log(JSON.stringify(this.attributes()));
-      console.log('alors : '+ $(".sign-in-form input[name='email']").val() );
      
       $.ajax({
         url:url,
@@ -58,22 +104,15 @@ define([
         statusCode: {
           200: function (response) {
             console.log("Enregistrement réussie. ;)");
-            Backbone.View.prototype.goTo('#/perso');
             that.close();
+            Backbone.View.prototype.goTo('#/perso');
           },
           401: function (response) {
-            alert('Get out !! >o< ');
-          }
+            that.error_msg.html("Erreur lors de l'enregistrement.<br>Email déjà utilisé.");
+         }
         },
         success:function (data) {
-          console.log(["Login request details: ", data]);
-         
-          if(data.error) {  // If there is an error, show the error messages
-            $('.alert-error').text(data.error.text).show();
-          }
-          else { // If not, send them back to the home page
-            Backbone.View.prototype.goTo('#/sign-up');
-          }
+          console.log(["Sign-up request details: ", data]);
         }
       });
     }

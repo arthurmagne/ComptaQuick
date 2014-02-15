@@ -31,14 +31,18 @@ function authenticate(\Slim\Route $route) {
     $uid = $app->getEncryptedCookie('uid');
     $key = $app->getEncryptedCookie('key');
     if (validateUserKey($uid, $key) === false) {
-      $app->halt(401);
+       $app->halt(401);
     }else{
     	echo "Vous passez !";
     }
 }
 
 function validateUserKey($uid, $key) {
-	$user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
+	if ($uid == '' || $key == ''){
+        return false;
+    }
+
+    $user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
 
 	if ($user) {
 		return true;

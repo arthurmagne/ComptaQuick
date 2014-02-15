@@ -22,53 +22,72 @@ define([
       this.$el.html(template);
       setTimeout(function() {
         $("#sign-in-form").addClass("disp");
-      }, 1000);   
-    },
-
-    close: function () {
-      $(this.el).unbind();
-      $(this.el).empty();
+      }, 1000); 
+      this.email = $(".sign-in-form input[name='email']");
+      this.password = $(".sign-in-form input[name='password']");
+      this.error_msg = $(".error-msg");
     },
 
     attributes: function () {
       return {
-        email: $(".sign-in-form input[name='email']").val(),
-        password: $(".sign-in-form input[name='password']").val()
+        email: this.email.val(),
+        password: this.password.val()
        };
     },
 
     login:function (event) {
         event.preventDefault(); // Don't let this button submit the form
+        this.email.removeClass("form-error");
+        this.password.removeClass("form-error");
+        this.error_msg.html();
         var url = 'api/index.php/login';
         console.log('Loggin in... ');
         var that = this;
-        console.log(JSON.stringify(this.attributes()));
+        var _data = this.attributes();
+        var error_msg = '';
+        if (!_data.email){
+          error_msg += 'Veuillez indiquer un email.<br>';
+          this.email.addClass("form-error");
+        }
+        if (!_data.password){
+          error_msg += 'Veuillez indiquer un mot de passe.';
+          this.password.addClass("form-error");
+        }
+        this.error_msg.html(error_msg);
+
+        if (error_msg != ''){
+          return ;
+        }
+
+        console.log("Données transmises: "+JSON.stringify(this.attributes()));
+        
+
         $.ajax({
             url:url,
             type:'POST',
             dataType:"json",
-            data: JSON.stringify(this.attributes()),
+            data: JSON.stringify(_data),
             statusCode: {
               200: function (response) {
                 console.log("connection réussie");
-                Backbone.View.prototype.goTo('#/perso');
                 that.close();
+                Backbone.View.prototype.goTo('#/perso');
               },
               401: function (response) {
-                 alert('Get out !!');
+                that.error_msg.html("Email ou mot de passe incorrect");
+                that.email.addClass("form-error");
+                that.password.addClass("form-error");
               }
             },
             success:function (data) {
                 console.log(["Login request details: ", data]);
-               
-                if(data.error) {  // If there is an error, show the error messages
-                    $('.alert-error').text(data.error.text).show();
-                }
-                else { // If not, send them back to the home page
-                  Backbone.View.prototype.goTo('#/sign-in');
-                }
             }
         });
+    },
+
+    close: function () {
+      $(this.el).unbind();
+      $(this.el).empty();
     }
   });
 
