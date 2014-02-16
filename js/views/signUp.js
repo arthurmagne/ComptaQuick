@@ -6,10 +6,12 @@ define([
   'backbone',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
-  'text!../../templates/signUp.html'
+  'text!../../templates/signUp.html',
+  'models/user',
+  'views/homePerso'
   ],
 
-  function(bootstrap, holder, $, _, Backbone, signUpTemplate){
+  function(bootstrap, holder, $, _, Backbone, signUpTemplate, User, HomePersoView){
     var HomePage = Backbone.View.extend({
     events: {
       'click .close-sign-up': 'close',
@@ -94,18 +96,25 @@ define([
         return ;
       }
 
-      console.log(JSON.stringify(this.attributes()));
+      _data = JSON.stringify(_data);
+      console.log(_data);
      
       $.ajax({
         url:url,
         type:'POST',
         dataType:"json",
-        data: JSON.stringify(this.attributes()),
+        data: _data,
         statusCode: {
           200: function (response) {
-            console.log("Enregistrement réussie. ;)");
+            console.log("Enregistrement réussie.");
             that.close();
-            Backbone.View.prototype.goTo('#/perso');
+            //on crée notre model user qu'on va passer à la vue suivante
+            var user = new User({model: response});
+            //on lance la vue suivante avec le modèle en paramètre
+            var homePersoView = new HomePersoView();
+            homePersoView.render({user: user.attributes.model});
+            //on change l'url sans appeler la fonction correspondante du router
+            window.history.pushState(null, null, window.location + "#/perso");
           },
           401: function (response) {
             that.error_msg.html("Erreur lors de l'enregistrement.<br>Email déjà utilisé.");

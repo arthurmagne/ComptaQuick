@@ -32,8 +32,6 @@ function authenticate(\Slim\Route $route) {
     $key = $app->getEncryptedCookie('key');
     if (validateUserKey($uid, $key) === false) {
        $app->halt(401);
-    }else{
-    	echo "Vous passez !";
     }
 }
 

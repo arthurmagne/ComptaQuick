@@ -14,9 +14,12 @@ define([
 
     el: '#page',
 
-    render: function () {
+    render: function (options) {
       var template = _.template(homePersoTemplate);
       this.$el.html(template);
+      console.log("home perso avec comme model : ");
+      console.log(options.user);
+
     }
 
   });

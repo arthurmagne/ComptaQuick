@@ -6,8 +6,10 @@ define([
   'backbone',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
-  'text!../../templates/home.html'
-  ], function(bootstrap, holder, $, _, Backbone, homeTemplate){
+  'text!../../templates/home.html',
+  'models/user',
+  'views/homePerso'
+  ], function(bootstrap, holder, $, _, Backbone, homeTemplate, User, HomePersoView){
   var HomePage = Backbone.View.extend({
     events: {
       'click .sign-up-btn': 'showConnexionForm',
@@ -38,7 +40,13 @@ define([
               200: function (response) {
                 console.log("connection automatique réussie");
                 that.close();
-                Backbone.View.prototype.goTo('#/perso');
+                 //on crée notre model user qu'on va passer à la vue suivante
+                var user = new User({model: response});
+                //on lance la vue suivante avec le modèle en paramètre
+                var homePersoView = new HomePersoView();
+                homePersoView.render({user: user.attributes.model});
+                //on change l'url sans appeler la fonction correspondante du router
+                window.history.pushState(null, null, window.location + "#/perso");
               },
               401: function (response) {
                 console.log("connection automatique échouée");

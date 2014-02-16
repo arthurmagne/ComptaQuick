@@ -14,6 +14,7 @@ $app->get('/hello/:name', 'authenticate', function ($name) {
 
 $app->get('/loginAuto', 'authenticate', function () {
 	#echo "Connexion automatique réussie";
+	global $app;
 	$uid = $app->getEncryptedCookie('uid');
     $key = $app->getEncryptedCookie('key');
     $user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
