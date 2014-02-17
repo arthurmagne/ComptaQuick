@@ -1,5 +1,7 @@
 @import "signIn.css";
 @import "signUp.css";
+@import "dashboard.css";
+@import "homePerso.css";
 
 
 #bg-video VIDEO {

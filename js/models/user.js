@@ -6,6 +6,8 @@ define([
   'backbone'    // lib/backbone/backbone
 ], function($, _, Backbone){
 	var User = Backbone.Model.extend({
+
+    
   
   url: 'api/index.php/login'
  	

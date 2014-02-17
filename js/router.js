@@ -5,14 +5,16 @@ define([
   'backbone',
   'views/home',
   'views/signIn',
-  'views/signUp'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView){
+  'views/signUp',
+  'views/homePerso'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
         '': 'home',
         'sign-in': 'signIn',
-        'sign-up': 'signUp'
+        'sign-up': 'signUp',
+        'perso': 'homePerso'
     }
   });
 
@@ -37,6 +39,12 @@ define([
       console.log("route: sign-up");
       signUpView = new SignUpView();
       signUpView.render();
+    });
+
+    app_router.on('route:homePerso', function() {
+      console.log("route: home perso");
+      homePersoView = new HomePersoView();
+      homePersoView.render();
     });
 
     Backbone.View.prototype.goTo = function (loc) {

@@ -19,12 +19,13 @@ class HttpBasicAuth extends \Slim\Middleware
  
     /**
      * Deny Access
-     *
+     * Possibilité de juste retourner 401 afin de capter le message avec backbone
      */   
     public function deny_access() {
-        $res = $this->app->response();
+        $res = $this->app->response();       
         $res->status(401);
-        $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->realm));        
+
+        #$res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->realm));        
     }
  
     /**
@@ -39,11 +40,15 @@ class HttpBasicAuth extends \Slim\Middleware
             return false;
          
         if(isset($username) && isset($password)) {
+            echo 'login in !';
             //$password = crypt($password);
             if ($username == 'root' && $password == 'root'){
             // Check database here with $username and $password
+                echo 'connexion réussie';
                 return true;
             }else{
+                echo 'connexion échouée';
+                $this->deny_access();
                 return false;
             }
         }
