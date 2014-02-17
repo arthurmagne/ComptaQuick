@@ -12,6 +12,13 @@ $app->get('/hello/:name', 'authenticate', function ($name) {
     echo "Hello, $name";
 });
 
+$app->get('/logout', function () {
+    global $app;
+	$app->deleteCookie('uid');
+    $app->deleteCookie('key');
+    $app->deleteCookie('uma');
+});
+
 $app->get('/loginAuto', 'authenticate', function () {
 	#echo "Connexion automatique réussie";
 	global $app;

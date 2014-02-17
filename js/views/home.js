@@ -46,7 +46,8 @@ define([
                 var homePersoView = new HomePersoView();
                 homePersoView.render({user: user.attributes.model});
                 //on change l'url sans appeler la fonction correspondante du router
-                window.history.pushState(null, null, window.location + "#/perso");
+                window.history.pushState(null, null,  "#/perso");
+
               },
               401: function (response) {
                 console.log("connection automatique échouée");
