@@ -10,7 +10,7 @@
   border: solid;
   border-radius: 20px;
   padding: 30px;
-  margin-top: -40px;
+  margin-top: 170px;
   padding-bottom: 10px;
 }
 
@@ -47,4 +47,13 @@
   display: block;
   margin-top: -17px;
   font-size: 1.3em;
+}
+
+.form-error{
+  background: rgba(245, 177, 188, 1);
+}
+
+.error-msg{
+  color: brown;
+  margin-top: -10px;
 }

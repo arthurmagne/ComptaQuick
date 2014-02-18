@@ -28,7 +28,7 @@ Account:
       foreign: user_id
       type: one
       foreignType: many
-  
+
 PaymentType:
   columns:
     type_id:

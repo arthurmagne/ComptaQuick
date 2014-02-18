@@ -9,9 +9,9 @@ Doctrine_Core::dropDatabases();
 Doctrine_Core::createDatabases();
 
 
-Doctrine_Core::generateModelsFromYaml('schem.yml', 'models', array('generateTableClasses' => true));
+Doctrine_Core::generateModelsFromYaml(dirname(__FILE__).'/schem.yml', 'models', array('generateTableClasses' => true));
 
-Doctrine_Core::createTablesFromModels('./models');
+Doctrine_Core::createTablesFromModels(dirname(__FILE__).'/models');
 
 
 $arrayPayment = array ("Cheque", "Carte bleue", "Liquide", "Virement", "Moneo");
