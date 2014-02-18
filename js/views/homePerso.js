@@ -10,7 +10,8 @@ define([
   ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate){
   var HomePage = Backbone.View.extend({
     events: {
-      'click #logout': 'logout'
+      'click #logout': 'logout',
+      'click .drop-down-toggle': 'dropDownMenu'
     },
 
     el: '#page',
@@ -45,6 +46,12 @@ define([
           console.log(["Sign-up request details: ", data]);
         }
       });
+    },
+
+    dropDownMenu: function (event) {
+      event.preventDefault();
+      $('.drop-down-menu').toggleClass('show');
+
     },
 
 
