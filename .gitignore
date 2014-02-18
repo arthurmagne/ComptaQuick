@@ -15,4 +15,5 @@
 /log/*.log
 /tmp
 
+api/php/config.php
 /api/php/config.php
