@@ -1,9 +1,9 @@
 <?php
 
+require_once(dirname(__FILE__).'/../libs/Doctrine-1.2.4/Doctrine.php');
 
 define('CFG_DB_DSN', 'mysql://root:badboy@localhost/test');
 
-require_once(dirname(__FILE__).'/../libs/Doctrine-1.2.4/Doctrine.php');
 
 spl_autoload_register(array('Doctrine_Core', 'autoload'));
 spl_autoload_register(array('Doctrine_Core', 'modelsAutoload'));
