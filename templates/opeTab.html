@@ -1,0 +1,23 @@
+<div class="operation-list">
+  <% if (operations.length == 0) { %>
+    <h2 class="text-center text-muted">Aucune opération trouvée</h2>
+  <% }else{ %>
+  <% _.each(operations, function(operationModel, cpt) { %>
+    <% var operation = operationModel.attributes.operation; %>
+      <% if ((cpt % 2) == 0 ) { %>
+        <div class="opeTabLine1">
+              <% if (artist.name) { %>
+                <% var firstname = artist.name.split(" ")[0]; %>
+                <% var lastname = artist.name.split(" ")[1]; %>
+              <% } %>
+        </div>
+   
+      <% } else { %> <!-- endif cpt % 2 == 0 -->
+        <div class="opeTabLine2">
+
+        </div>
+      <% } %>
+
+  <% }); %>
+  <% } %>
+  </div>

@@ -6,15 +6,17 @@ define([
   'views/home',
   'views/signIn',
   'views/signUp',
-  'views/homePerso'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView){
+  'views/homePerso',
+  'views/opeTab'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
         '': 'home',
         'sign-in': 'signIn',
         'sign-up': 'signUp',
-        'perso': 'homePerso'
+        'perso': 'homePerso',
+        'opeTab': 'opeTab'
     }
   });
 
@@ -30,7 +32,7 @@ define([
     });
 
     app_router.on('route:signIn', function() {
-      console.log("route: sign-in");
+      console.log("route: sign-infghfghg");
       signInView = new SignInView();
       signInView.render();
     });
@@ -45,6 +47,12 @@ define([
       console.log("route: home perso");
       homePersoView = new HomePersoView();
       homePersoView.render();
+    });
+
+    app_router.on('route:opeTab', function() {
+      console.log("route: opeTab");
+      opeTabView = new OpeTabView();
+      opeTabView.render();
     });
 
     Backbone.View.prototype.goTo = function (loc) {
