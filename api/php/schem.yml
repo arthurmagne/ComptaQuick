@@ -36,7 +36,8 @@ PaymentType:
       primary: true
       autoincrement: true
     type_name:
-      type: string(255)      
+      type: string(255)   
+      
 Operation:
   columns:
     account_id:
@@ -57,10 +58,11 @@ Operation:
       type: integer
   relations:
     Account:
-        local: account_id
-        foreign: account_id
-        type: one
-        foreignType: many
+      local: account_id
+      foreign: account_id
+      type: one
+      foreignType: many
+      onDelete: Cascade
     Payment_type:
       local: type_id
       foreign: type_id
