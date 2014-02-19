@@ -9,14 +9,23 @@ define([
     initialize: function(options) {
 
         if (options){
-            this.accountId = options.accountId;
+            this.accountId = options.id;
         }
+        // set the id of this model !!
+        this.set('id', this.get("account_id"));
+
+
+        
     },
     url: function() {
-        if (this.userId){
-            return '/account/' + this.accountId;
+        if (this.accountId){
+            return 'api/index.php/account/' + this.accountId;
         }
-        console.log("Aucun userId");
+        if (this.get("id")){
+            return 'api/index.php/account/' + this.get("id");
+        }
+
+        console.log("Aucun accountId");
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone

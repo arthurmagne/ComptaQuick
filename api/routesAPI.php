@@ -46,6 +46,14 @@ $app->get('/accounts', 'authenticate', function () {
 	$response->body($json);
 });
 
+
+$app->delete('/account/:id', 'authenticate', function ($id) {
+	global $app;
+    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+    $account->delete();
+	echo "compte supprimé";
+});
+
 $app->post('/login', function () {
 	global $app, $basicAuth;
     #echo "Tentative de connexion";

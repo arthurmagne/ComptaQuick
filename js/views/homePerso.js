@@ -38,7 +38,7 @@ define([
           200: function (response) {
             console.log("Déconnexion réussie.");
             that.close();
-            Backbone.View.prototype.goTo('/#');
+            Backbone.View.prototype.goTo('/');
 
           },
           401: function (response) {

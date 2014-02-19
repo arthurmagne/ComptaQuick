@@ -1,0 +1,18 @@
+.table.table-striped .clickableRow:hover td{
+	background-color: rgb(226, 239, 250);
+	cursor: pointer;
+
+}
+
+.table.table-striped .clickableRow{
+	z-index: 10;
+}
+
+.delete-account {
+	z-index: 100;
+
+}
+.delete-account:hover{
+	background-color: rgb(252, 201, 194) !important;
+
+}
