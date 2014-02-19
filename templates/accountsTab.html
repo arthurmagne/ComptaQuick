@@ -14,13 +14,15 @@
     </thead>
     <tbody>
   	<% _.each(accounts, function(account, cpt) { %>
+
       <tr class="clickableRow" href="#/account/<%= account.get("account_id") %>">
-        <td><%= cpt %></td>
+        <td><%= cpt+1 %></td>
         <td><%= account.get("account_id") %></td>
         <td><%= account.get("account_name") %></td>
         <td>3600</td>
         <td class="delete-account" data-value="<%= account.get("account_id") %>">delete</td>
       </tr>
+      </a>
     <% }); %>
     </tbody>
   </table>

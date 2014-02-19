@@ -1,23 +1,36 @@
-<div class="operation-list">
-  <% if (operations.length == 0) { %>
-    <h2 class="text-center text-muted">Aucune opération trouvée</h2>
-  <% }else{ %>
-  <% _.each(operations, function(operationModel, cpt) { %>
-    <% var operation = operationModel.attributes.operation; %>
-      <% if ((cpt % 2) == 0 ) { %>
-        <div class="opeTabLine1">
-              <% if (artist.name) { %>
-                <% var firstname = artist.name.split(" ")[0]; %>
-                <% var lastname = artist.name.split(" ")[1]; %>
-              <% } %>
-        </div>
-   
-      <% } else { %> <!-- endif cpt % 2 == 0 -->
-        <div class="opeTabLine2">
-
-        </div>
-      <% } %>
-
-  <% }); %>
-  <% } %>
-  </div>
+<% if (operations.length == 0) { %>
+    <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
+<% }else{ %>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>credit</th>
+        <th>debit</th>
+        <th>description</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% _.each(operations, function(operation, cpt) { %>
+      <tr>
+        <!-- account_id  type_id operation_date  operation_name  operation_desc  is_credit value -->
+        <td><%= cpt+1 %></td>
+        <td><%= operation.get("operation_date") %></td>
+        <td><%= operation.get("type_id") %></td>
+        <% if (operation.get("is_credit") == 1) {%>
+          <td><%= operation.get("value") %></td>
+          <td></td>
+        <%}else{%>
+          <td></td>
+          <td><%= operation.get("value") %></td>
+        <% } %>
+          <td><%= operation.get("operation_desc") %></td>
+      </tr>
+    <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } %>
