@@ -60,14 +60,8 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
      $operation->type_id;
   
   //if date isn't set, use today's date with format "yyyy/mm/dd"
-  $operation_date = ($date == 0) ? date('Y/m/d') : $date;
+  $date = ($date == 0) ? date('Y/m/d') : $date;
   
-  $operation->save();
-
-
-  $account = Doctrin_Core::getTable('account')->findOneByAccount_id($idAccount);
-  $account->balance += ($isCredit) ? $value : -($value);
-  $account->save();
 }
 
 
