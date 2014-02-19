@@ -14,13 +14,16 @@
     </thead>
     <tbody>
   	<% _.each(accounts, function(account, cpt) { %>
+      <a href="#/account/<%= account.get("account_id") %>">
       <tr>
-        <a href="#/account/<%= account.get("account_id") %>"><td><%= cpt %></td>
-        <td><%= account.get("account_id") %></td>
+        <!-- account_id  type_id operation_date  operation_name  operation_desc  is_credit value -->
+        <td><%= cpt+1 %></td>
+        <td><%= a.get("account_id") %></td>
         <td><%= account.get("account_name") %></td>
-        <td>3600</td></a>
+        <td>3600</td>
         <td>delete</td>
       </tr>
+      </a>
     <% }); %>
     </tbody>
   </table>
