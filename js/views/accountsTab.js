@@ -44,8 +44,10 @@ define([
     			console.log("Delete account with id : ", accountId);
     			console.log(this.accounts.get(accountId));
     			// remove model (from server and collection by bubbling)
-
     			this.accounts.get(accountId).destroy();
+
+    			// remove row from tab
+    			this.$el.find('.clickableRow[data-value='+accountId+']').remove(); 
 
   
 
