@@ -22,9 +22,6 @@ Account:
       type: integer
     account_name:
       type: string(255)
-    balance:
-      type: integer
-      default: 0
   relations:
     User:
       local: user_id

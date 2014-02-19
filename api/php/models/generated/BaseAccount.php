@@ -8,6 +8,7 @@
  * @property integer $account_id
  * @property integer $user_id
  * @property string $account_name
+ * @property integer $balance
  * @property User $User
  * @property Doctrine_Collection $Operation
  * 
@@ -32,6 +33,10 @@ abstract class BaseAccount extends Doctrine_Record
         $this->hasColumn('account_name', 'string', 255, array(
              'type' => 'string',
              'length' => '255',
+             ));
+        $this->hasColumn('balance', 'integer', null, array(
+             'type' => 'integer',
+             'default' => 0,
              ));
     }
 
