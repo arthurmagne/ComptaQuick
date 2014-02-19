@@ -1,0 +1,28 @@
+<% if (accounts.length == 0) { %>
+    <h2 class="text-center text-muted">Aucun compte n'a été trouvé</h2>
+<% }else{ %>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Compte</th>
+        <th>Nom</th>
+        <th>Solde</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+  	<% _.each(accounts, function(account, cpt) { %>
+      <tr>
+        <a href="#/account/<%= account.get("account_id") %>"><td><%= cpt %></td>
+        <td><%= account.get("account_id") %></td>
+        <td><%= account.get("account_name") %></td>
+        <td>3600</td></a>
+        <td>delete</td>
+      </tr>
+    <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } %>

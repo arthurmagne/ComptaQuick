@@ -23,9 +23,25 @@ body {
  */
 
 /* Hide for mobile, show later */
-.sidebar {
-  display: none;
+@media (max-width: 768px) {
+  .sidebar {
+    -webkit-transition: margin-left .5s;
+    transition: margin-left .5s;
+    margin-left: -140px !important;
+    position: fixed;
+    z-index: 1000;
+    background: white;
+    height: 100% !important;
+    padding-right: 21px !important;
+  }
+
+  /* Hide for mobile, show later */
+  .sidebar:hover {
+    margin-left: 20px !important;
+  }
 }
+
+
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
@@ -91,3 +107,15 @@ body {
 .placeholder img {
   border-radius: 50%;
 }
+
+
+
+
+
+
+
+
+
+
+
+

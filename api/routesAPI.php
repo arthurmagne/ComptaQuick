@@ -26,16 +26,24 @@ $app->get('/loginAuto', 'authenticate', function () {
     $key = $app->getEncryptedCookie('key');
     $user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
 	$response = $app->response();
-    $response['Content-Type'] = 'application/json';
-	$id = $user->user_id;
-	$firstname = $user->firstname;
-	$lastname = $user->lastname;
-	$email = $user->email;    
+    $response['Content-Type'] = 'application/json';  
 
-	$user_object = json_encode(array('user_id' => $id, 'firstname' => $firstname,
-	 'lastname' => $lastname, 'email' => $email), JSON_FORCE_OBJECT);
+	$user_object = json_encode($user->toArray());
 
 	$response->body($user_object);
+});
+
+$app->get('/accounts', 'authenticate', function () {
+	#echo "Connexion automatique réussie";
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+    $accounts = Doctrine_Core::getTable('Account')->findByUser_id($uid);
+
+	$response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode($accounts->toArray());
+
+	$response->body($json);
 });
 
 $app->post('/login', function () {
@@ -70,8 +78,7 @@ $app->post('/login', function () {
 			#echo "  Les cookies sont : $uid, $key, $uma";
 			$response['Content-Type'] = 'application/json';
 			// on crée notre objet
-			$user_object = json_encode(array('user_id' => $id, 'firstname' => $firstname, 
-				'lastname' => $lastname, 'email' => $email), JSON_FORCE_OBJECT);
+			$user_object = json_encode($user->toArray());
 
 			$response->body($user_object);
 
@@ -127,8 +134,7 @@ $app->post('/subscribe', function () {
 			#echo "les cookies sont : $uid, $key, $uma";
 			$response['Content-Type'] = 'application/json';
 			// on crée notre objet
-			$user_object = json_encode(array('user_id' => $id, 'firstname' => $firstname, 
-				'lastname' => $lastname, 'email' => $email), JSON_FORCE_OBJECT);
+			$user_object = json_encode($user->toArray());
 
 			$response->body($user_object);
 		} catch (Exception $e) {

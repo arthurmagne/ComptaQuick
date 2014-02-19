@@ -42,3 +42,7 @@
 	padding-left: 0;
 }
 
+.nav > li.active > a:hover{
+	color: #2a6496;
+}
+

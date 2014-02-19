@@ -6,8 +6,9 @@ define([
   'backbone',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
-  'text!../../templates/homePerso.html'
-  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate){
+  'text!../../templates/homePerso.html',
+  'views/accountsTab'
+  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView){
   var HomePage = Backbone.View.extend({
     events: {
       'click #logout': 'logout',
@@ -21,6 +22,8 @@ define([
       this.$el.html(template);
       console.log("home perso avec comme model : ");
       console.log(options.user);
+      var accountsTabView = new AccountsTabView();
+      accountsTabView.render();
 
     },
 
