@@ -46,6 +46,21 @@ $app->get('/accounts', 'authenticate', function () {
 	$response->body($json);
 });
 
+$app->get('/account/:id/all', 'authenticate', function () {
+	#echo "Connexion automatique réussie";
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+    $operations = Doctrine_Core::getTable('Operation')->findByAccount_id($id);
+
+	$response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode($operations->toArray());
+
+
+
+	$response->body($json);
+});
+
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;
