@@ -17,7 +17,10 @@ function getAccounts($idUser)
 
 function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
 {
-  $query = Doctrine_Query::create()->from('Operation o')->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
+  $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
+				  ->from('Operation o')
+				  ->leftJoin('o.PaymentType p')
+				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
   
   if($begin != 0)
     $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
@@ -94,10 +97,7 @@ function balanceFromAccount($idAccount)
   $credit = $q[1]->total;
 	      
 	      
-//   echo 'debit : '.$debit."\n";
-//   echo 'credit : '.$credit."\n";
-//  
-  
+
   return $credit - $debit;
 }
 
@@ -112,64 +112,11 @@ function balanceFromUser($idUser)
 }
 
 
-function find_account($idAccount)
-{
-
-/*
-  $query = Doctrine_Query::create()->select('Account.*, (total_credit - total_debit) as balance');
- 
-
-  $queryCredits =  $query->addComponent(select('a.account_id as account_id, sum(value) as total_credit')
-					  ->from('Account a')
-					  ->leftJoin('Operation o on a.account_id=o.account_id')
-					  ->where('account_id = :accountId', array(':accountId' => $idAccount))
-					  ->andwhere('is_credit')
-					  ->groupBy('o.account_id');
-					  
-					  /*
-  $queryDebits = Doctrine_Query::create()->select('a.account_id as account_id, sum(value) as total_dedit')
-					  ->from('Account a JOIN Operation o on a.account_id=o.account_id')
-					  ->where('account_id = :accountId', $account_id)
-					  ->andwhere('is_credit')
-					  ->groupBy('o.account_id'); 
-
-  $query = $query->from($queryCredits->getDql().' as credits')->leftJoin($queryDebits->getDql().' as debits ON credits.account_id = debits.account_id')
-						    ->leftJoin('account ON account.account_id = credits.account_id');
-  
- 
-  // $query->from('Account'); 
-  */ 
- // $query->from('Account')->leftJoin($queryCredits->execute().' as credits ON Account.account_id = credits.account_id');
- /* $query = Doctrine_Query::create('
-				select account.*, totalCredit - totalDebit as solde
-				FROM 
-				(select a.account_id as account_id, sum(value) as totalCredit from account a JOIN operation o on a.account_id=o.account_id where is_credit group by o.account_id) as credits
-				JOIN 
-				(select a.account_id as account_id, sum(value) as totalDebit from account a JOIN operation o on a.account_id=o.account_id where not is_credit group by o.account_id) as debits
-				ON credits.account_id = debits.account_id
-				JOIN
-				account on account.account_id = credits.account_id'
-				, array(accout
-  */
-  
-  $query = Doctrine_Manager::getInstance()->connection()->execute('select account.*, totalCredit - totalDebit as balance
-	  FROM 
-	  (select a.account_id as account_id, sum(value) as totalCredit from account a JOIN operation o on a.account_id=o.account_id where is_credit group by o.account_id) as credits
-	  JOIN 
-	  (select a.account_id as account_id, sum(value) as totalDebit from account a JOIN operation o on a.account_id=o.account_id where not is_credit group by o.account_id) as debits
-	  ON credits.account_id = debits.account_id
-	  JOIN
-	  account on account.account_id = credits.account_id where account.account_id = :accountId', array(':accountId'=> $idAccount));
-  
-  //echo $query->getSqlQuery()."\n";
-
-  
-}
 
 
 //example
 
-// $operations = getOperations(1, '2014/01/01', '2014/06/17', CREDIT);
+//  $operations = getOperations(1, '2014/01/01', '2014/06/17', CREDIT);
 // 
 // for($i = 0; $i < $operations->count(); ++$i)
 // {
@@ -177,8 +124,11 @@ function find_account($idAccount)
 //   echo "\t".$operations[$i]->operation_date."\n";
 //   echo "\tcredit : ".$operations[$i]->is_credit."\n";
 //   echo "\t".$operations[$i]->value."\n";
+//   echo "\t".$operations[$i]->type_name."\n";
 //   
 // }
+// 
 
-//find_account(1);
+
+
 ?>
