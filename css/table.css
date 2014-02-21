@@ -8,6 +8,14 @@
 	z-index: 10;
 }
 
+.account-tab {
+	text-align: center;
+}
+
+.account-tab thead tr th{
+	text-align: center;
+}
+
 .delete-account {
 	z-index: 100;
 
@@ -15,4 +23,23 @@
 .delete-account:hover{
 	background-color: rgb(252, 201, 194) !important;
 
+}
+
+.edit-account:hover{
+	background-color: rgb(194, 255, 196) !important;
+
+}
+
+.add-account-btn{
+	text-align: center;
+}
+
+.add-account-btn td{
+	background-color: #428bca !important;
+	color: white;
+	cursor: pointer;
+}
+
+.add-account-btn:hover td{
+	background-color: rgb(111, 172, 223) !important;
 }

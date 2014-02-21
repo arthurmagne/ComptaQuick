@@ -3,6 +3,7 @@
 @import "dashboard.css";
 @import "homePerso.css";
 @import "table.css";
+@import "bootstrap-dialog.min.css";
 
 
 #bg-video VIDEO {
