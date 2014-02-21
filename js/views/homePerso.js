@@ -18,10 +18,9 @@ define([
     el: '#page',
 
     render: function (options) {
-      var template = _.template(homePersoTemplate, {user: options.user});
+      var template = _.template(homePersoTemplate, {user: window.userSession.attributes.model});
       this.$el.html(template);
-      console.log("home perso avec comme model : ");
-      console.log(options.user);
+      console.log("home perso avec comme model : ", window.userSession.attributes.model);
       var accountsTabView = new AccountsTabView();
       accountsTabView.render();
 

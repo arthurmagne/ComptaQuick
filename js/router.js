@@ -7,8 +7,9 @@ define([
   'views/signIn',
   'views/signUp',
   'views/homePerso',
-  'views/opeTab'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView){
+  'views/opeTab',
+  'views/addAccount'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
@@ -16,7 +17,8 @@ define([
         'sign-in': 'signIn',
         'sign-up': 'signUp',
         'perso': 'homePerso',
-        'opeTab': 'opeTab'
+        'opeTab': 'opeTab',
+        'addAccount': 'addAccount'
     }
   });
 
@@ -53,6 +55,12 @@ define([
       console.log("route: opeTab");
       opeTabView = new OpeTabView();
       opeTabView.render();
+    });
+
+    app_router.on('route:addAccount', function() {
+      console.log("route: addAccount");
+      addAccountView = new AddAccountView();
+      addAccountView.render();
     });
 
     Backbone.View.prototype.goTo = function (loc) {

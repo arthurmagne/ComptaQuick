@@ -46,6 +46,49 @@ $app->get('/accounts', 'authenticate', function () {
 	$response->body($json);
 });
 
+$app->post('/addAccount', 'authenticate', function () {
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+
+	$body = $app->request()->getBody();
+
+    // on récupère les données du formulaire
+    $body = json_decode($body, true);
+
+    $id 		= $body['account_number'];
+    $name 	    = $body['account_name'];
+    $balance 	= $body['balance'];
+
+	$account = new Account();
+	if ($id != ""){
+		$account->account_id = $id;
+	}
+	$account->account_name = $name;
+	if ($balance != ""){
+		$account->balance = $balance;
+	}else{	
+		$account->balance = 0;
+	}
+	$account->user_id = $uid;
+
+	$response = $app->response();
+
+	if($account->trySave()){
+		try{
+			$response['Content-Type'] = 'application/json';
+			// on crée notre objet
+			$account_object = json_encode($account->toArray());
+			$response->body($account_object);
+ 		} catch (Exception $e) {
+			$app->response()->status(400);
+			$app->response()->header('X-Status-Reason', $e->getMessage());
+		}
+	}
+	else{
+		$app->halt(400);
+	}
+});
+
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;

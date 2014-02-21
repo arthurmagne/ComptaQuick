@@ -42,9 +42,11 @@ define([
                 that.close();
                  //on crée notre model user qu'on va passer à la vue suivante
                 var user = new User({model: response});
+                window.userSession = user;
+                
                 //on lance la vue suivante avec le modèle en paramètre
                 var homePersoView = new HomePersoView();
-                homePersoView.render({user: user.attributes.model});
+                homePersoView.render();
                 //on change l'url sans appeler la fonction correspondante du router
                 window.history.pushState(null, null,  "#/perso");
 

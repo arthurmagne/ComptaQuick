@@ -26,6 +26,7 @@ define([
         }
 
         console.log("Aucun accountId");
+        return 'api/index.php/addAccount';
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone

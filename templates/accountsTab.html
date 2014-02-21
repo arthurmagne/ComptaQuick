@@ -1,5 +1,10 @@
+<h1 class="page-header">Liste des comptes</h1>
+
 <% if (accounts.length == 0) { %>
     <h2 class="text-center text-muted">Aucun compte n'a été trouvé</h2>
+    <hr>
+    <p class="text-center"><a href="#/addAccount" class="btn btn-default" >Ajouter un compte</a></p>
+
 <% }else{ %>
 <div class="table-responsive ">
   <table class="table table-striped account-tab">
@@ -25,7 +30,7 @@
       </a>
     <% }); %>
     <tr class="add-account-btn">
-      <td colspan="6" >Ajouter un compte</td>
+      <td colspan="6" ><a href="#/addAccount" class="add-account-td-btn">Ajouter un compte</a></td>
     </tr>
     </tbody>
   </table>
