@@ -7,6 +7,7 @@
  * 
  * @property integer $type_id
  * @property string $type_name
+ * @property Doctrine_Collection $Operation
  * 
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
@@ -32,6 +33,8 @@ abstract class BasePaymentType extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
-        
+        $this->hasMany('Operation', array(
+             'local' => 'type_id',
+             'foreign' => 'type_id'));
     }
 }
