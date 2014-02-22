@@ -133,8 +133,6 @@ $app->get('/operation/all/:id', 'authenticate', function ($id) {
     $response['Content-Type'] = 'application/json';
     $json = json_encode($operations->toArray());
 
-
-
 	$response->body($json);
 });
 
@@ -143,7 +141,15 @@ $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;
     $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
     $account->delete();
-	echo "compte supprimé";
+});
+
+$app->get('/account/:id', 'authenticate', function ($id) {
+	global $app;
+    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+    $response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode($account->toArray());
+	$response->body($json);
 });
 
 $app->post('/login', function () {

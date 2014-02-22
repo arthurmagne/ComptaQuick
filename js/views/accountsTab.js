@@ -15,7 +15,8 @@ define([
 				'click .clickableRow': 'detailAccount',
 				'click .delete-account': 'deleteAccount',
 				'click .edit-account': 'editAccount',
-				'click .valid-edit': 'validEdit'
+				'click .valid-edit': 'validEdit',
+				'click .account-name-col input': 'preventLink'
 			},
 
 			el: '#center-page',
@@ -123,6 +124,11 @@ define([
 		    	editAccountBtn.html("Éditer");
 		    	editAccountBtn.removeClass("valid-edit");
 		    	editAccountBtn.addClass("edit-account");
+    		},
+    		preventLink: function (event) {
+    			// prevent navigation from click into an input
+    			event.stopImmediatePropagation();
+
     		}
 });
 

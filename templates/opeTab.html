@@ -1,3 +1,11 @@
+<h1 class="page-header">Détail compte</h1>
+<p class="error-msg"></p>
+<h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Clickez pour modifier</span></h2>
+
+
+<% var operations = object.models; %>
+<% console.log(object.account_name); %>
+
 <% if (operations.length == 0) { %>
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
 <% }else{ %>

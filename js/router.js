@@ -34,7 +34,7 @@ define([
     });
 
     app_router.on('route:signIn', function() {
-      console.log("route: sign-infghfghg");
+      console.log("route: sign-in");
       signInView = new SignInView();
       signInView.render();
     });
