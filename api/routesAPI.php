@@ -121,6 +121,20 @@ $app->put('/editAccount', 'authenticate', function () {
 	else{
 		$app->halt(400);
 	}
+	
+$app->get('/account/:id/all', 'authenticate', function () {
+	#echo "Connexion automatique réussie";
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+    $operations = Doctrine_Core::getTable('Operation')->findByAccount_id($id);
+
+	$response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode($operations->toArray());
+
+
+
+	$response->body($json);
 });
 
 

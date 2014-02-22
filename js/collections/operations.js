@@ -4,8 +4,11 @@ define([
   'jquery',     // lib/jquery/jquery
   'underscore', // lib/underscore/underscore
   'backbone'    // lib/backbone/backbone
-  ], function($, _, Backbone){
+  'models/operation'
+  ], function($, _, Backbone, Operation){
    var Operations = Backbone.Collection.extend({
+
+    model : Operation,
 
     initialize: function(options) {
 
@@ -26,7 +29,7 @@ define([
       }
       return '/account/all';
     }
-        
+
   });
   // Above we have passed in jQuery, Underscore and Backbone
   // They will not be accessible in the global scope
