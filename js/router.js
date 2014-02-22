@@ -68,6 +68,18 @@ define([
     };
     console.log("initialize");
 
+    app_router.bind('all', function(route, router) {
+      if (route != 'route'){
+        var routeName = route.split(':')[1];
+        $('.nav-sidebar li').removeClass('active');
+        if (routeName == "addAccount"){
+          $('.nav-sidebar li.' + routeName).addClass('active');
+        }else{
+          $('.nav-sidebar li.perso').addClass('active');
+        }
+      }
+    });
+
     /* AJAX CONFIGS */
 
     // Tell jQuery to watch for any 401 or 403 errors and handle them appropriately

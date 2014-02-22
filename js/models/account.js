@@ -8,25 +8,28 @@ define([
  
     initialize: function(options) {
 
-        if (options){
+        if (options.id){
             this.accountId = options.id;
+        }else{
+          // set the id of this model !!
+          console.log("set the id");
+          this.set('id', this.get("account_id"));
         }
-        // set the id of this model !!
-        this.set('id', this.get("account_id"));
+
 
 
         
     },
     url: function() {
-        if (this.accountId){
-            return 'api/index.php/account/' + this.accountId;
-        }
+        if (this.get("account_id")){
+            return 'api/index.php/account/' + this.get("account_id");
+        }// update
         if (this.get("id")){
-            return 'api/index.php/account/' + this.get("id");
+            return 'api/index.php/editAccount';
         }
 
         console.log("Aucun accountId");
-        return 'api/index.php/addAccount';
+        return 'api/index.php/editAccount';
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone

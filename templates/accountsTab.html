@@ -6,6 +6,9 @@
     <p class="text-center"><a href="#/addAccount" class="btn btn-default" >Ajouter un compte</a></p>
 
 <% }else{ %>
+
+<p class="error-msg"></p>
+
 <div class="table-responsive ">
   <table class="table table-striped account-tab">
     <thead>
@@ -24,8 +27,8 @@
         <td><%= account.get("account_id") %></td>
         <td class="account-name-col"><%= account.get("account_name") %></td>
         <td><%= account.get("balance") %></td>
-        <td class="delete-account" data-value="<%= id %>">delete</td>
-        <td class="edit-account" data-value="<%= id %>">edit</td>
+        <td class="delete-account" data-value="<%= id %>">Supprimer</td>
+        <td class="edit-account" data-value="<%= id %>">Éditer</td>
       </tr>
       </a>
     <% }); %>

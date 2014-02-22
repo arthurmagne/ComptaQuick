@@ -14,7 +14,8 @@ define([
 			events: {
 				'click .clickableRow': 'detailAccount',
 				'click .delete-account': 'deleteAccount',
-				'click .edit-account': 'editAccount'
+				'click .edit-account': 'editAccount',
+				'click .valid-edit': 'validEdit'
 			},
 
 			el: '#center-page',
@@ -31,6 +32,7 @@ define([
 		        		that.$el.html(template);
 		        	}
 		        });
+
 
     		},
 
@@ -63,11 +65,64 @@ define([
     		editAccount: function (event) {
     			event.stopImmediatePropagation();
     			// Ajouter un input à la place du nom avec un bouton valider
+    			console.log("editAccount");
 		        var accountId = $(event.currentTarget).data('value');
-		    	var accountName = this.$el.find('.clickableRow[data-value='+accountId+'] .account-name-col');
-		    	accountName.html("<input class='form-control' type='text' placeholder='toto'/>");
+		    	var accountNameTag = this.$el.find('.clickableRow[data-value='+accountId+'] .account-name-col');
+		    	var editAccountBtn = this.$el.find('.edit-account[data-value='+accountId+']');
+		    	var accountName = accountNameTag.html();
+
+		    	accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
+		    	editAccountBtn.html("Valider");
+		    	editAccountBtn.removeClass("edit-account");
+		    	editAccountBtn.addClass("valid-edit");
+
+    		},
+
+    		validEdit: function (event) {
+    			event.stopImmediatePropagation();
+    			console.log("validEdit");
+    			var that = this;
+    			var accountId = $(event.currentTarget).data('value');
+		    	var accountNameTag = this.$el.find('.clickableRow[data-value='+accountId+'] .account-name-col');
+		    	var accountNameInput = this.$el.find('.clickableRow[data-value='+accountId+'] .account-name-col input');
+		    	var editAccountBtn = this.$el.find('.valid-edit[data-value='+accountId+']');
+		    	// On récupère la valeur de l'input
+		    	var accountName = accountNameInput.val();
+      			$(".error-msg").html();
+
+		    	var error_msg = '';
+		    	if (accountName == ''){
+		    		error_msg += 'Le nom du compte ne peut être vide.<br>';
+     			    accountNameInput.addClass("form-error");
+      				
+		    	}
+
+      			$(".error-msg").html(error_msg);
 
 
+		    	if (error_msg != ''){
+		    		return ;
+		    	}
+		    	// on update l'account sur le serveur
+
+		    	var account = new Account({id: accountId, account_name: accountName});
+		    	account.save(null, {
+			        success: function (account){
+
+			          console.log("Account push au serveur avec succès");
+			          console.log(account);			          
+			          
+
+			        },
+			        error: function (){
+			          console.log("Ann error occured");
+			        }
+			      });
+
+		    	accountNameTag.html(accountName);
+		    	editAccountBtn.html("Éditer");
+		    	editAccountBtn.removeClass("valid-edit");
+		    	editAccountBtn.addClass("edit-account");
     		}
 });
 

@@ -46,7 +46,7 @@ $app->get('/accounts', 'authenticate', function () {
 	$response->body($json);
 });
 
-$app->post('/addAccount', 'authenticate', function () {
+$app->post('/editAccount', 'authenticate', function () {
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
 
@@ -70,6 +70,40 @@ $app->post('/addAccount', 'authenticate', function () {
 		$account->balance = 0;
 	}
 	$account->user_id = $uid;
+
+	$response = $app->response();
+
+	if($account->trySave()){
+		try{
+			$response['Content-Type'] = 'application/json';
+			// on crée notre objet
+			$account_object = json_encode($account->toArray());
+			$response->body($account_object);
+ 		} catch (Exception $e) {
+			$app->response()->status(400);
+			$app->response()->header('X-Status-Reason', $e->getMessage());
+		}
+	}
+	else{
+		$app->halt(400);
+	}
+});
+
+$app->put('/editAccount', 'authenticate', function () {
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+
+	$body = $app->request()->getBody();
+
+    // on récupère les données du formulaire
+    $body = json_decode($body, true);
+
+    $name 	    = $body['account_name'];
+    $id 	    = $body['id'];
+
+    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+
+    $account->account_name = $name;
 
 	$response = $app->response();
 
