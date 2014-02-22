@@ -17,7 +17,7 @@ define([
         'sign-in': 'signIn',
         'sign-up': 'signUp',
         'perso': 'homePerso',
-        'opeTab': 'opeTab',
+        'opeTab/:id': 'opeTab',
         'addAccount': 'addAccount'
     }
   });
@@ -51,10 +51,10 @@ define([
       homePersoView.render();
     });
 
-    app_router.on('route:opeTab', function() {
+    app_router.on('route:opeTab', function(id) {
       console.log("route: opeTab");
       opeTabView = new OpeTabView();
-      opeTabView.render();
+      opeTabView.render({account_id: id});
     });
 
     app_router.on('route:addAccount', function() {

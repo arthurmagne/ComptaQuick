@@ -37,7 +37,7 @@ define([
     		},
 
     		detailAccount: function (event) {
-    			console.log($(event.currentTarget).attr("href"));
+            	Backbone.View.prototype.goTo($(event.currentTarget).attr("href"));
 
     		},
 

@@ -25,12 +25,12 @@ define([
             return 'api/index.php/account/operation' + this.get("id");
         }
 
-        console.log("Aucun operation");
+        console.log("Aucun id");
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone
   // They will not be accessible in the global scope
-    return Account;
+    return Operation;
   // What we return here will be used by other modules
 });
 

@@ -3,7 +3,7 @@ define([
   // These are path alias that we configured in our bootstrap
   'jquery',     // lib/jquery/jquery
   'underscore', // lib/underscore/underscore
-  'backbone'    // lib/backbone/backbone
+  'backbone',    // lib/backbone/backbone
   'models/operation'
   ], function($, _, Backbone, Operation){
    var Operations = Backbone.Collection.extend({
@@ -17,17 +17,18 @@ define([
         this.dateFin = options.dateFin;
         this.maxOpe = options.maxOp;
         this.typeOpe = options.typeOpe;
+        this.accountId = options.accountId;
       }
     },
     url: function() {
       if (this.maxOpe){
-        return '/account/limited/' + this.maxOpe;
+        return 'api/index.php/operation/limited/' + this.maxOpe;
       }else if (this.typeOpe){
-        return '/account/byType/' + this.typeOpe;
+        return 'api/index.php/operation/byType/' + this.typeOpe;
       }else if (this.dateDebut && this.dateFin){
-        return '/account/byDate/' + this.dateDebut + '/' + this.dateFin;
+        return 'api/index.php/operation/byDate/' + this.dateDebut + '/' + this.dateFin;
       }
-      return '/account/all';
+      return 'api/index.php/operation/all/' + this.accountId;
     }
 
   });

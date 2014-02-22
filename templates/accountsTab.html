@@ -23,7 +23,7 @@
     <tbody>
   	<% _.each(accounts, function(account, cpt) { %>
       <% var id = account.get("account_id"); %>
-      <tr class="clickableRow" href="#/account/<%= id %>" data-value="<%= id %>">
+      <tr class="clickableRow" href="#/opeTab/<%= id %>" data-value="<%= id %>">
         <td><%= account.get("account_id") %></td>
         <td class="account-name-col"><%= account.get("account_name") %></td>
         <td><%= account.get("balance") %></td>

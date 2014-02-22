@@ -13,11 +13,12 @@ define([
 
 			},
 
-			el: '#pageOpeTab',
+			el: '#center-page',
 
-			render: function () {
+			render: function (options) {
+				console.log("operation view");
 
-				var operations = new Operations();
+				var operations = new Operations({accountId: options.account_id});
 				var that = this;
 		        operations.fetch({
 		        	success: function (operations) {

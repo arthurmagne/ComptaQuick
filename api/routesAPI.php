@@ -121,8 +121,9 @@ $app->put('/editAccount', 'authenticate', function () {
 	else{
 		$app->halt(400);
 	}
+});
 	
-$app->get('/account/:id/all', 'authenticate', function () {
+$app->get('/operation/all/:id', 'authenticate', function ($id) {
 	#echo "Connexion automatique réussie";
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
