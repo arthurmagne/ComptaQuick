@@ -1,0 +1,11 @@
+<form>
+	<select type="number" placeholder="Compte à débiter" name="list_account" required>
+		<% if (accounts.length == 0) { %>
+		<option value=""> Aucun compte disponible</option>
+		<% }else{ %>
+		<% _.each(accounts, function(account, cpt) { %>
+		<option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
+		<% }); %>
+		<% } %>
+	</select>
+</form>

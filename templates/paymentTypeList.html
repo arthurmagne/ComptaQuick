@@ -1,0 +1,11 @@
+<form >
+			<select type="text" placeholder="Type de payment" name="list_type" required>
+				<% if (paymentTypes.length == 0) { %>
+				<option value=""> Aucun type de paiement disponible</option>
+				<% }else{ %>
+				<% _.each(paymentTypes, function(paymentType, cpt) { %>
+				<option value="<%= paymentType.get("type_id") %>"><%= paymentType.get("type_name") %></option>
+				<% }); %>
+				<% } %>							
+			</select>
+</form>

@@ -15,9 +15,6 @@ define([
           console.log("set the id");
           this.set('id', this.get("account_id"));
         }
-
-
-
         
     },
     url: function() {
@@ -30,6 +27,7 @@ define([
 
         console.log("Aucun accountId");
         return 'api/index.php/editAccount';
+		
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone

@@ -24,7 +24,7 @@ define([
         if (this.get("id")){
             return 'api/index.php/account/operation' + this.get("id");
         }
-
+		return 'api/index.php/editOperation';
         console.log("Aucun id");
     } 	
     });

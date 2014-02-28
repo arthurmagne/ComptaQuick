@@ -6,7 +6,7 @@
 @import "bootstrap-dialog.min.css";
 @import "forms.css";
 @import "opeTab.css";
-
+@import "addOperation.css";
 
 #bg-video VIDEO {
 	  /* Set rules to fill background */

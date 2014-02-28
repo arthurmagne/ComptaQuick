@@ -13,8 +13,15 @@ define([
     },
 
     el: '#center-page',
-
+	el2: '#list_account',
+	el3: '#list_type',
+	el4: '#form_operation',
+	
     render: function (options) {
+	  $(this.el).empty();
+	  $(this.el2).empty();
+	  $(this.el3).empty();
+	  $(this.el4).empty();
       var template = _.template(addAccountTemplate);
       this.$el.html(template);
       this.number = $(".add-account-form input[name='number']");

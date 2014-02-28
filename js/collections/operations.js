@@ -21,15 +21,17 @@ define([
       }
     },
     url: function() {
-      if (this.maxOpe){
+      /*if (this.maxOpe){
         return 'api/index.php/operation/limited/' + this.maxOpe;
       }else if (this.typeOpe){
         return 'api/index.php/operation/byType/' + this.typeOpe;
       }else if (this.dateDebut && this.dateFin){
         return 'api/index.php/operation/byDate/' + this.dateDebut + '/' + this.dateFin;
-      }
-      return 'api/index.php/operation/all/' + this.accountId;
+      }*/
+      //return 'api/index.php/operation/all/' + this.accountId;
+	  return 'api/index.php/editOperation';
     }
+	
 
   });
   // Above we have passed in jQuery, Underscore and Backbone
