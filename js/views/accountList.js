@@ -23,8 +23,8 @@ define([
 				console.log("accounts fetch success");
 				var template = _.template(accountListTemplate, {accounts: accounts.models});
 				that.$el.html(template);
-				this.account = $('select[name=list_account]').val();	
-				console.log(this.account);				
+				that.account = $('select[name=list_account]').val();	
+				console.log(that.account);				
 			}
 		});
 

@@ -6,9 +6,10 @@ define([
 	'backbone',
 	'text!../../templates/opeTab.html',
 	'collections/operations',
-	'models/account'
+	'models/account',
+	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, Operations, Account){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, Operations, Account, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .account-name-ope-tab .name': 'renameAccount',
@@ -23,6 +24,8 @@ define([
 				this.accountId = options.account_id;
 				var operations = new Operations({accountId: this.accountId});
 				var account = new Account({account_id: this.accountId});
+				
+
 				account.fetch({
 					success: function (account) {
 						console.log("account recupéré : ",account);
@@ -34,6 +37,8 @@ define([
 								var extendObject = $.extend({},account.attributes,operations);
 				        		var template = _.template(opeTabTemplate, {object: extendObject});
 				        		that.$el.html(template);
+				        		that.initGraphOptions(operations);
+				        		
 				        	},
 							error: function() {
 								console.log("Error during fetch account operation");
@@ -44,9 +49,50 @@ define([
 						console.log("Error during fetch account operation");
 					}
 				});
+				
 
 		        
    			},
+
+   			initGraphOptions: function (object) {
+   				// options for graph
+				var graphOptions = {
+			        chart: {
+			            type: 'spline'
+			        },
+			        title: {
+			            text: 'Opération du mois'
+			        },
+			        xAxis: {
+			            type: 'datetime'
+			        },
+			        yAxis: {
+			            title: {
+			                text: 'Montant (euros)'
+			            }
+			        },
+			        series: [{
+           		 }]
+      		  	};
+
+
+   				var jsonArray = [];
+   				object.each(function(op) {
+			        console.log('log item.', op.get("operation_date"));
+			        console.log('log item ggghvjgcv.', op.get("value"));
+			        jsonArray.push({
+			        	x: Date.parse(op.get("operation_date")),
+			        	name: op.get("operation_name"),
+			        	color: '#FF00FF',
+				        y: parseInt(op.get("value"))
+				    });
+			    });
+
+	    		graphOptions.series[0].data = jsonArray;
+	    		//console.log(graphOptions);
+	    		this.drawGraphs(graphOptions);
+   			},
+
    			renameAccount: function (event) {
    				event.preventDefault();
 		    	var accountNameTag = $('.account-name-ope-tab');
@@ -54,6 +100,7 @@ define([
 
 		    	accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
    			},
+
 			logKey: function(event) {
 			    if (event.which == 13){
 			    	// enter pressed
@@ -97,7 +144,15 @@ define([
 			    	accountNameTag.html("<span class='name'>"+accountName+"</span><span class='info text-muted'>Clickez pour modifier</span>");
 
 			    }
+			},
+
+			drawGraphs: function (graphOptions) {
+				this.$el.find('#graphs').highcharts(graphOptions);
+				
 			}
+			
+    
+
 		});
 
   // Our module now returns our view

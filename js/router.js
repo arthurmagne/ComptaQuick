@@ -21,8 +21,8 @@ define([
         'perso': 'homePerso',
         'opeTab/:id': 'opeTab',
         'addAccount': 'addAccount',
-		'addDebit': 'addDebit',
-		'addCredit': 'addCredit'
+    		'addDebit': 'addDebit',
+    		'addCredit': 'addCredit'
     }
   });
 

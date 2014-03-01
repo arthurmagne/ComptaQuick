@@ -13,9 +13,9 @@ define([
     },
 
     el: '#center-page',
-	el2: '#list_account',
-	el3: '#list_type',
-	el4: '#form_operation',
+  	el2: '#list_account',
+  	el3: '#list_type',
+  	el4: '#form_operation',
 	
     render: function (options) {
 	  $(this.el).empty();

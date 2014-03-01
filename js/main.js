@@ -11,7 +11,8 @@ require.config({
     backbone: 'libs/backbone/backbone',
     holder: 'holder',
     backbone_rails: 'libs/backbone_rails/backbone_rails_sync',
-    backbone_auth: 'libs/backbone_auth/backbone.basicauth'
+    backbone_auth: 'libs/backbone_auth/backbone.basicauth',
+    highcharts: 'libs/highcharts/highcharts'
   },
 
     shim: {
@@ -34,6 +35,10 @@ require.config({
         
         backbone_auth: {
             deps: ['underscore']
+        },
+        
+        highcharts: {
+            deps: ['jquery']
         }
 
     }

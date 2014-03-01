@@ -12,9 +12,9 @@
   'models/operation'
   ], function(bootstrap, holder, $, _, Backbone, PaymentTypeListView, AccountListView, AddOperationFormView, Operations, Operation){
     var addDebitPage = Backbone.View.extend({
-	events: {
-      'click #submit_btn': 'validerOp'
-    },
+    	events: {
+        'submit .add-operation-form': 'validerOp'
+      },
 	
 	el: '#center-page', 
 	
@@ -34,21 +34,22 @@
 	
 	attributes: function () {
       return {
-	    account_id: this.accountListView.getAccount(),
-		type_id: this.paymentTypeListView.getType(),
-		operation_date: this.addOperationFormView.getOpDate(),
-		operation_name: this.addOperationFormView.getOpName(),
-		operation_desc: this.addOperationFormView.getOpDesc(),
-		is_credit: 1,
-		value: this.addOperationFormView.getOpMontant()
+    	  account_id: this.accountListView.getAccount(),
+    		type_id: this.paymentTypeListView.getType(),
+    		operation_date: this.addOperationFormView.getOpDate(),
+    		operation_name: this.addOperationFormView.getOpName(),
+    		operation_desc: this.addOperationFormView.getOpDesc(),
+    		is_credit: 1,
+    		value: this.addOperationFormView.getOpMontant()
       };
     },
 
    validerOp: function (event) {
       event.preventDefault(); 
+      event.stopPropagation();
       console.log("creating op ...");
       var that = this;
-	  var _data = this.attributes();
+	    var _data = this.attributes();
       console.log(_data);	  
       var operation = new Operation(_data);
       operation.save();

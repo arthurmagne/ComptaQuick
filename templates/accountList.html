@@ -1,5 +1,4 @@
-<form>
-	<select type="number" placeholder="Compte à débiter" name="list_account" required>
+	<select type="number" placeholder="Compte à débiter" name="list_account" class="form-control" required>
 		<% if (accounts.length == 0) { %>
 		<option value=""> Aucun compte disponible</option>
 		<% }else{ %>
@@ -8,4 +7,3 @@
 		<% }); %>
 		<% } %>
 	</select>
-</form>

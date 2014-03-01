@@ -24,8 +24,8 @@ define([
 				console.log("Payment Types fetch success");
 				var template = _.template(paymentTypeListTemplate, {paymentTypes: paymentTypes.models});
 				that.$el.html(template);
-				this.type = $('select[name=list_type]').val();
-				console.log(this.type);
+				that.type = $('select[name=list_type]').val();
+				console.log(that.type);
 				
 			}
 		});
