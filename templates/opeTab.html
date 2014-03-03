@@ -1,7 +1,7 @@
 <h1 class="page-header">Détail compte</h1>
 
 <p class="error-msg"></p>
-<h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Clickez pour modifier</span></h2>
+<h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Cliquez pour modifier</span></h2>
 
 <div id="graphs"></div>
 
@@ -13,7 +13,7 @@
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
 <% }else{ %>
 <div class="table-responsive">
-  <table class="table table-striped">
+  <table class="table table-striped ope-tab">
     <thead>
       <tr>
         <th>#</th>
@@ -30,13 +30,13 @@
         <!-- account_id  type_id operation_date  operation_name  operation_desc  is_credit value -->
         <td><%= cpt+1 %></td>
         <td><%= operation.get("operation_date") %></td>
-        <td><%= operation.get("type_id") %></td>
+        <td><%= operation.get("type_name") %></td>
         <% if (operation.get("is_credit") == 1) {%>
-          <td><%= operation.get("value") %></td>
+          <td class='credit'><%= operation.get("value") %></td>
           <td></td>
         <%}else{%>
           <td></td>
-          <td><%= operation.get("value") %></td>
+          <td class='debit'><%= operation.get("value") %></td>
         <% } %>
           <td><%= operation.get("operation_desc") %></td>
       </tr>

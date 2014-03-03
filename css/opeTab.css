@@ -17,6 +17,14 @@
 	padding: 5px;
 }
 
+.ope-tab .credit{
+	color:green;
+}
+
+.ope-tab .debit{
+	color:red;
+}
+
 #graphs{
 	width:100%;
 	height:400px;
