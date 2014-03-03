@@ -22,6 +22,20 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
 				  ->leftJoin('o.PaymentType p')
 				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
   
+  
+  
+  if($begin == 0 && $end == 0)
+  {
+    $month = date('m');
+    $query->addWhere('o.operation_date = MONTH(o.operation_date)');
+  }
+  
+  
+  
+  
+  
+  
+  
   if($begin != 0)
     $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
 								 
@@ -115,18 +129,18 @@ function balanceFromUser($idUser)
 
 
 //example
-
-//  $operations = getOperations(1, '2014/01/01', '2014/06/17', CREDIT);
-// 
-// for($i = 0; $i < $operations->count(); ++$i)
-// {
-//   echo "account: ".$operations[$i]->account_id."\n";
-//   echo "\t".$operations[$i]->operation_date."\n";
-//   echo "\tcredit : ".$operations[$i]->is_credit."\n";
-//   echo "\t".$operations[$i]->value."\n";
-//   echo "\t".$operations[$i]->type_name."\n";
-//   
-// }
+/*
+  $operations = getOperations(1,0,0, CREDIT);
+ 
+ for($i = 0; $i < $operations->count(); ++$i)
+{
+  echo "account: ".$operations[$i]->account_id."\n";
+  echo "\t".$operations[$i]->operation_date."\n";
+  echo "\tcredit : ".$operations[$i]->is_credit."\n";
+  echo "\t".$operations[$i]->value."\n";
+  echo "\t".$operations[$i]->type_name."\n";
+  
+}*/
 // 
 
 
