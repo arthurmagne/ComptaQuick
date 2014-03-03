@@ -13,7 +13,7 @@
   ], function(bootstrap, holder, $, _, Backbone, PaymentTypeListView, AccountListView, AddOperationFormView, Operations, Operation){
     var addDebitPage = Backbone.View.extend({
     	events: {
-        'submit .add-operation-form': 'validerOp'
+        'click #submit_btn_op': 'validerOp'
       },
 	
 	el: '#center-page', 
@@ -46,7 +46,6 @@
 
    validerOp: function (event) {
       event.preventDefault(); 
-      event.stopPropagation();
       console.log("creating op ...");
       var that = this;
 	    var _data = this.attributes();

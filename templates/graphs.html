@@ -1,0 +1,20 @@
+<h1 class="page-header">Suivi budget</h1>
+<form class="graph-form form-horizontal">
+  <p class="error-msg"></p>
+	<div class="form-group">
+		<select type="number" placeholder="Sélectionnez le compte" name="list_account" class="form-control" required>
+		<% if (accounts.length == 0) { %>
+			<option value=""> Aucun compte disponible</option>
+		<% }else{ %>
+			<% _.each(accounts, function(account, cpt) { %>
+				<option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
+			<% }); %>
+		<% } %>
+	</select>
+	</div>
+  <p class="text-center"><button type="submit" class="btn btn-primary btn-lg">Générer</button>
+<hr>
+
+<div id="graphs"></div>
+
+</form>

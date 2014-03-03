@@ -30,6 +30,7 @@ define([
 					success: function (account) {
 						console.log("account recupéré : ",account);
 						that.account = account;
+						that.accountBalance = account.get("balance");
 						operations.fetch({
 				        	success: function (operations) {
 								console.log("operations recupérées : ",operations);
@@ -75,11 +76,14 @@ define([
            		 }]
       		  	};
 
+      		  	var balance = this.accountBalance;
+      		  	var balanceTab = [];
+   				object.each(function(op) {
+   					console.log('value :',op.get("value"));
+   				});
 
    				var jsonArray = [];
    				object.each(function(op) {
-			        console.log('log item.', op.get("operation_date"));
-			        console.log('log item ggghvjgcv.', op.get("value"));
 			        jsonArray.push({
 			        	x: Date.parse(op.get("operation_date")),
 			        	name: op.get("operation_name"),
@@ -88,8 +92,9 @@ define([
 				    });
 			    });
 
-	    		graphOptions.series[0].data = jsonArray;
-	    		//console.log(graphOptions);
+   				// don't forget to reverse it
+	    		graphOptions.series[0].data = jsonArray.reverse();
+	    		console.log(graphOptions);
 	    		this.drawGraphs(graphOptions);
    			},
 

@@ -10,8 +10,9 @@ define([
   'views/opeTab',
   'views/addAccount',
   'views/addDebit',
-  'views/addCredit'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView){
+  'views/addCredit',
+  'views/graphs'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
@@ -22,7 +23,8 @@ define([
         'opeTab/:id': 'opeTab',
         'addAccount': 'addAccount',
     		'addDebit': 'addDebit',
-    		'addCredit': 'addCredit'
+        'addCredit': 'addCredit',
+    		'graphs': 'graphs'
     }
   });
 
@@ -72,11 +74,17 @@ define([
       addDebitView = new AddDebitView();
       addDebitView.render();
     });
-	
-	app_router.on('route:addCredit', function() {
-	  console.log("route: addCredit");
+  
+  app_router.on('route:addCredit', function() {
+    console.log("route: addCredit");
       addCreditView = new AddCreditView();
       addCreditView.render();
+    });
+  
+  app_router.on('route:graphs', function() {
+    console.log("route: graphs");
+      graphsView = new GraphsView();
+      graphsView.render();
     });
 
     Backbone.View.prototype.goTo = function (loc) {
