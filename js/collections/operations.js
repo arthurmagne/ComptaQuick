@@ -28,8 +28,7 @@ define([
       }else if (this.dateDebut && this.dateFin){
         return 'api/index.php/operation/byDate/' + this.dateDebut + '/' + this.dateFin;
       }*/
-      return 'api/index.php/operation/all/' + this.accountId;
-	  //return 'api/index.php/editOperation';
+      return 'api/index.php/operation/all/' + this.accountId
     }
 	
 

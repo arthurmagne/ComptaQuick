@@ -22,16 +22,16 @@ define([
 			success: function (accounts) {
 				console.log("accounts fetch success");
 				var template = _.template(accountListTemplate, {accounts: accounts.models});
-				that.$el.html(template);
-				that.account = $('select[name=list_account]').val();	
-				console.log(that.account);				
+				that.$el.html(template);			
 			}
 		});
 
     },
 	
 	getAccount: function () {
-	  this.account = $('select[name=list_account]').val();					
+	  console.log("account:"+ $('select[name=list_account]').val());
+	  this.account = $('select[name=list_account]').val();		
+		
       return this.account;
     },
 	

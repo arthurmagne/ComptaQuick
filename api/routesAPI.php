@@ -2,6 +2,7 @@
 <?php
 require_once 'vendor/autoload.php';
 #require 'vendor/slim/slim/Slim/Middleware/HttpBasicAuth.php';
+require_once 'php/functions.php';
 require_once 'php/config.php';
 
 \Slim\Slim::registerAutoloader();
@@ -181,7 +182,7 @@ $app->get('/operation/all/:id', 'authenticate', function ($id) {
 	#echo "Connexion automatique réussie";
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
-    $operations = Doctrine_Core::getTable('Operation')->findByAccount_id($id);
+    $operations = getOperations($id);
 
 	$response = $app->response();
     $response['Content-Type'] = 'application/json';
