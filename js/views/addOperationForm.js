@@ -9,6 +9,7 @@ define([
     var addOperationForm = Backbone.View.extend({
 	
 	el: '#form_operation',
+
 	
 	render: function () {
 		var template = _.template(addOperationFormTemplate);
