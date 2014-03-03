@@ -30,6 +30,7 @@ define([
 					success: function (account) {
 						console.log("account recupéré : ",account);
 						that.account = account;
+						that.accountBalance = account.get("balance");
 						operations.fetch({
 				        	success: function (operations) {
 								console.log("operations recupérées : ",operations);
@@ -54,7 +55,7 @@ define([
 		        
    			},
 
-   			initGraphOptions: function (object) {
+   			initGraphOptions: function (operations) {
    				// options for graph
 				var graphOptions = {
 			        chart: {
@@ -75,18 +76,38 @@ define([
            		 }]
       		  	};
 
+   				console.log('AYA !')
 
+   				var balance 	= this.accountBalance;
+   				var listOpe 	= operations.toJSON();
+   				var evolutionX 	= []; 
+   				var evolutionY 	= []; 
+
+   				listOpe = listOpe.reverse();
+   				evolutionY.push(balance);
+   				evolutionX.push(new Date());
+
+   				operations.each(function(currentOp) {
+   					if(currentOp.get("is_credit") == 0){
+   						balance = balance + currentOp.get("value");
+   					}else{
+   						balance = balance - currentOp.get("value");
+   					}
+   					evolutionY.push(parseInt(balance);
+   					evolutionX.push(Date.parse(op.get("operation_date"));
+   				});
+
+   				evolutionX.reverse();
+   				evolutionY.reverse();
    				var jsonArray = [];
-   				object.each(function(op) {
-			        console.log('log item.', op.get("operation_date"));
-			        console.log('log item ggghvjgcv.', op.get("value"));
+   				for(var i = 0; i < evolutionX.length; i++){
 			        jsonArray.push({
-			        	x: Date.parse(op.get("operation_date")),
-			        	name: op.get("operation_name"),
-			        	color: '#FF00FF',
-				        y: parseInt(op.get("value"))
+			        	x: Date.parse(evolutionX[i]),
+			        	name: test,
+			        	color: '#483D8B',
+				        y: parseInt(evolutionY[i])
 				    });
-			    });
+			    };
 
 	    		graphOptions.series[0].data = jsonArray;
 	    		//console.log(graphOptions);
