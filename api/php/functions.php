@@ -26,8 +26,8 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
   
   if($begin == 0 && $end == 0)
   {
-    $month = date('m');
-    $query->addWhere('o.operation_date = MONTH(o.operation_date)');
+   $month = date('m');
+   $query->addWhere('MONTH(o.operation_date) = :month', array(":month" => $month));
   }
   
   
@@ -67,22 +67,23 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   //check payment
   
   $operation = new Operation();
-  $operation->id_account = $idAccount;
-  $oparation->is_credit = $isCredit;
+  $operation->account_id = $idAccount;
+  $operation->is_credit = $isCredit;
   $operation->value = $value;
   $operation->operation_name = $operation_name;
   $operation->operation_desc = $operation_desc;
   
   if($payment_id != 0)
      $operation->type_id;
-  
+
   //if date isn't set, use today's date with format "yyyy/mm/dd"
-  $operation_date = ($date == 0) ? date('Y/m/d') : $date;
+  $operation->operation_date = ($date == 0) ? date('Y-m-d') : $date;
+
   
   $operation->save();
 
 
-  $account = Doctrin_Core::getTable('account')->findOneByAccount_id($idAccount);
+  $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($idAccount);
   $account->balance += ($isCredit) ? $value : -($value);
   $account->save();
 }
@@ -126,11 +127,9 @@ function balanceFromUser($idUser)
 }
 
 
-
-
 //example
 /*
-  $operations = getOperations(1,0,0, CREDIT);
+  $operations = getOperations(1, 0, 0, DEBIT);
  
  for($i = 0; $i < $operations->count(); ++$i)
 {
@@ -141,7 +140,7 @@ function balanceFromUser($idUser)
   echo "\t".$operations[$i]->type_name."\n";
   
 }*/
-// 
+//
 
 
 
