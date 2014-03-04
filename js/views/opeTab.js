@@ -72,20 +72,26 @@ define([
 			                text: 'Montant (euros)'
 			            }
 			        },
+			       plotOptions: {
+		                line: {
+		                    dataLabels: {
+		                        enabled: true
+		                    }
+		                }
+		            },
 			        series: [{
            		 }]
       		  	};
 
-   				console.log('AYA !')
 
    				var balance 	= this.accountBalance;
    				var listOpe 	= operations.toJSON();
    				var evolutionX 	= []; 
    				var evolutionY 	= []; 
+   				var evolutionOp = [];
 
    				listOpe = listOpe.reverse();
-   				evolutionY.push(balance);
-   				evolutionX.push(new Date());
+   				
 
    				operations.each(function(currentOp) {
    					if(currentOp.get("is_credit") == 0){
@@ -93,24 +99,27 @@ define([
    					}else{
    						balance = balance - currentOp.get("value");
    					}
-   					evolutionY.push(parseInt(balance);
-   					evolutionX.push(Date.parse(op.get("operation_date"));
+   					evolutionY.push(parseInt(balance));
+   					evolutionX.push(Date.parse(currentOp.get("operation_date")));
+   					evolutionOp.push(currentOp.get("operation_name"));
    				});
 
-   				evolutionX.reverse();
-   				evolutionY.reverse();
+   				evolutionY.push(balance);
+   				evolutionX.push(Date.parse(new Date()));
+   				evolutionOp.push("Solde actuel");
+
    				var jsonArray = [];
    				for(var i = 0; i < evolutionX.length; i++){
 			        jsonArray.push({
-			        	x: Date.parse(evolutionX[i]),
-			        	name: test,
+			        	x: evolutionX[i],
+			        	name: evolutionOp[i],
 			        	color: '#483D8B',
 				        y: parseInt(evolutionY[i])
 				    });
 			    };
 
 	    		graphOptions.series[0].data = jsonArray;
-	    		//console.log(graphOptions);
+	    		console.log(graphOptions);
 	    		this.drawGraphs(graphOptions);
    			},
 
