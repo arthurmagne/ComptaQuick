@@ -11,12 +11,14 @@ define([
   'views/addAccount',
   'views/addDebit',
   'views/addCredit',
-  'views/graphs'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView){
+  'views/graphs',
+  'views/accountsTab'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView, AccountsTabView){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
         '': 'home',
+        'accountList': 'accountList',
         'sign-in': 'signIn',
         'sign-up': 'signUp',
         'perso': 'homePerso',
@@ -70,21 +72,27 @@ define([
     });
 	
 	app_router.on('route:addDebit', function() {
-	  console.log("route: addDebit");
+	    console.log("route: addDebit");
       addDebitView = new AddDebitView();
       addDebitView.render();
     });
   
   app_router.on('route:addCredit', function() {
-    console.log("route: addCredit");
+      console.log("route: addCredit");
       addCreditView = new AddCreditView();
       addCreditView.render();
-    });
+    });      
   
   app_router.on('route:graphs', function() {
-    console.log("route: graphs");
+      console.log("route: graphs");
       graphsView = new GraphsView();
       graphsView.render();
+    });
+
+  app_router.on('route:accountList', function() {
+      console.log("route: accountList");
+      accountListView = new AccountsTabView();
+      accountListView.render();
     });
 
     Backbone.View.prototype.goTo = function (loc) {
@@ -98,6 +106,9 @@ define([
         $('.nav-sidebar li').removeClass('active');
         if ((routeName == "addAccount") || (routeName == 'graphs')){
           $('.nav-sidebar li.' + routeName).addClass('active');
+        }else if (routeName == 'perso'){
+          console.log("perso test");
+          $('.drop-down-menu').toggleClass('show');
         }else{
           $('.nav-sidebar li.perso').addClass('active');
         }

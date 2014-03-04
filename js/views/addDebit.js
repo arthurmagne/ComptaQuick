@@ -50,9 +50,10 @@
 
    validerOp: function (event) {
       event.preventDefault(); 
-      console.log("creating op ...");
-	  var _data = this.attributes();
+      console.log("creating debit op ... ");
+	    var _data = this.attributes();
       console.log(_data);
+      var that = this;
       var operation = new Operation(_data);
       operation.save(null, {
 		  success: function (operation){
@@ -61,13 +62,16 @@
 			  console.log(operation);
 			  $(that.el).empty();
 			  
-			  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de crédit ajouté avec succès</h2><hr>");
+			  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
 			  
 			  setTimeout(function(){
-				Backbone.View.prototype.goTo('#/perso');
+				Backbone.View.prototype.goTo('#/accountList');
 				that.close();
 			  },2000);
-			}
+			},
+        error: function (){
+          console.log("Ann error occured");
+        }
 	  });
       
     },

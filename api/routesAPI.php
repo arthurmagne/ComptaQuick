@@ -48,7 +48,6 @@ $app->get('/accounts', 'authenticate', function () {
 });
 
 $app->post('/editOperation', 'authenticate', function () {
-	echo "/editOperation";
 	global $app;
 	$body = $app->request()->getBody();
 

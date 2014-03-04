@@ -87,7 +87,7 @@ define([
           $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
           
           setTimeout(function(){
-            Backbone.View.prototype.goTo('#/perso');
+            Backbone.View.prototype.goTo('#/accountList');
             that.close();
           },2000);
         },
