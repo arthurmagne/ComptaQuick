@@ -17,9 +17,10 @@ define([
 		this.date = $("input[name='date']");
 		this.name = $("input[name='name']");
 		this.desc = $("input[name='description']");
-		this.montant = $("input[name='montant']");
+		this.value = $("input[name='value']");
     },
 	
+	//Recupérer les valeurs du formulaire
 	getOpDate: function() {
 		return this.date.val();
 	},
@@ -29,8 +30,31 @@ define([
 	getOpDesc: function() {
 		return this.desc.val();
 	},
-	getOpMontant: function() {
-      return this.montant.val();
+	getOpValue: function() {
+		return this.value.val();
+    },
+	
+	//Gestion des erreurs 
+	setErrorOpDate: function(set) { 
+	    if(!set){
+			this.date.removeClass("form-error");
+		}else{
+			this.date.addClass("form-error");
+		};
+	},
+	setErrorOpName: function(set) {
+	    if(!set){
+			this.name.removeClass("form-error");
+		}else{
+			this.name.addClass("form-error");
+		};
+	},
+	setErrorOpValue: function(set) {
+	    if(!set){
+			this.value.removeClass("form-error");
+		}else{
+			this.value.addClass("form-error");
+		};
     },
 	
     close: function () {
