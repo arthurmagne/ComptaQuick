@@ -86,28 +86,31 @@ define([
 
 
    				var balance 	= this.accountBalance;
-   				var listOpe 	= operations.toJSON();
+   				var listOpe 	= operations.toArray();
    				var evolutionX 	= []; 
    				var evolutionY 	= []; 
    				var evolutionOp = [];
 
    				listOpe = listOpe.reverse();
-   				
-
-   				operations.each(function(currentOp) {
-   					if(currentOp.get("is_credit") == 1){
-   						balance = parseInt(balance) + parseInt(currentOp.get("value"));
-   					}else{
-   						balance = parseInt(balance) - parseInt(currentOp.get("value"));
-   					}
-   					evolutionY.push(parseInt(balance));
-   					evolutionX.push(Date.parse(currentOp.get("operation_date")));
-   					evolutionOp.push(currentOp.get("operation_name"));
-   				});
 
    				evolutionY.push(this.accountBalance);
    				evolutionX.push(Date.parse(new Date()));
    				evolutionOp.push("Solde actuel");
+   				
+   				for(var i = 0; i < listOpe.length; i++){
+   					if(listOpe[i].get("is_credit") == 1){
+   						balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+   					}else{
+   						balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+   					}
+   					evolutionY.push(parseInt(balance));
+   					evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+   					evolutionOp.push(listOpe[i].get("operation_name"));
+   				}
+
+   				evolutionX.reverse();
+   				evolutionY.reverse();
+   				evolutionOp.reverse();
 
    				var jsonArray = [];
    				for(var i = 0; i < evolutionX.length; i++){
