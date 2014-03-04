@@ -55,7 +55,7 @@ define([
 		        
    			},
 
-   			initGraphOptions: function (object) {
+   			initGraphOptions: function (operations) {
    				// options for graph
 				var graphOptions = {
 			        chart: {
@@ -72,28 +72,57 @@ define([
 			                text: 'Montant (euros)'
 			            }
 			        },
+			       plotOptions: {
+		                line: {
+		                    dataLabels: {
+		                        enabled: true
+		                    }
+		                }
+		            },
 			        series: [{
+			        	name: 'solde'
            		 }]
       		  	};
 
-      		  	var balance = this.accountBalance;
-      		  	var balanceTab = [];
-   				object.each(function(op) {
-   					console.log('value :',op.get("value"));
-   				});
+
+   				var balance 	= this.accountBalance;
+   				var listOpe 	= operations.toArray();
+   				var evolutionX 	= []; 
+   				var evolutionY 	= []; 
+   				var evolutionOp = [];
+
+   				listOpe = listOpe.reverse();
+
+   				evolutionY.push(this.accountBalance);
+   				evolutionX.push(Date.parse(new Date()));
+   				evolutionOp.push("Solde actuel");
+   				
+   				for(var i = 0; i < listOpe.length; i++){
+   					if(listOpe[i].get("is_credit") == 1){
+   						balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+   					}else{
+   						balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+   					}
+   					evolutionY.push(parseInt(balance));
+   					evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+   					evolutionOp.push(listOpe[i].get("operation_name"));
+   				}
+
+   				evolutionX.reverse();
+   				evolutionY.reverse();
+   				evolutionOp.reverse();
 
    				var jsonArray = [];
-   				object.each(function(op) {
+   				for(var i = 0; i < evolutionX.length; i++){
 			        jsonArray.push({
-			        	x: Date.parse(op.get("operation_date")),
-			        	name: op.get("operation_name"),
-			        	color: '#FF00FF',
-				        y: parseInt(op.get("value"))
+			        	x: evolutionX[i],
+			        	name: evolutionOp[i],
+			        	color: '#483D8B',
+				        y: parseInt(evolutionY[i])
 				    });
-			    });
+			    };
 
-   				// don't forget to reverse it
-	    		graphOptions.series[0].data = jsonArray.reverse();
+	    		graphOptions.series[0].data = jsonArray;
 	    		console.log(graphOptions);
 	    		this.drawGraphs(graphOptions);
    			},
