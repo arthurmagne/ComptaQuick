@@ -96,7 +96,7 @@ define([
       if (route != 'route'){
         var routeName = route.split(':')[1];
         $('.nav-sidebar li').removeClass('active');
-        if (routeName == "addAccount"){
+        if ((routeName == "addAccount") || (routeName == 'graphs')){
           $('.nav-sidebar li.' + routeName).addClass('active');
         }else{
           $('.nav-sidebar li.perso').addClass('active');

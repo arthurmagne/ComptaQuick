@@ -52,7 +52,7 @@ define([
 
     dropDownMenu: function (event) {
       event.preventDefault();
-      $('.drop-down-menu').toggleClass('show');
+      this.$el.find('.drop-down-menu').toggleClass('show');
 
     },
 
