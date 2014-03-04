@@ -77,8 +77,8 @@ $app->post('/editOperation', 'authenticate', function () {
 		try{
 			$response['Content-Type'] = 'application/json';
 			// on crée notre objet
-			$$operation_object = json_encode($operation->toArray());
-			$response->body($$operation_object);
+			$operation_object = json_encode($operation->toArray());
+			$response->body($operation_object);
  		} catch (Exception $e) {
 			$app->response()->status(400);
 			$app->response()->header('X-Status-Reason', $e->getMessage());
