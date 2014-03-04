@@ -80,6 +80,7 @@ define([
 		                }
 		            },
 			        series: [{
+			        	name: 'solde'
            		 }]
       		  	};
 
@@ -94,17 +95,17 @@ define([
    				
 
    				operations.each(function(currentOp) {
-   					if(currentOp.get("is_credit") == 0){
-   						balance = balance + currentOp.get("value");
+   					if(currentOp.get("is_credit") == 1){
+   						balance = parseInt(balance) + parseInt(currentOp.get("value"));
    					}else{
-   						balance = balance - currentOp.get("value");
+   						balance = parseInt(balance) - parseInt(currentOp.get("value"));
    					}
    					evolutionY.push(parseInt(balance));
    					evolutionX.push(Date.parse(currentOp.get("operation_date")));
    					evolutionOp.push(currentOp.get("operation_name"));
    				});
 
-   				evolutionY.push(balance);
+   				evolutionY.push(this.accountBalance);
    				evolutionX.push(Date.parse(new Date()));
    				evolutionOp.push("Solde actuel");
 
