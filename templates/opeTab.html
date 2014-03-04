@@ -19,6 +19,7 @@
         <th>#</th>
         <th>Date</th>
         <th>Type</th>
+        <th>Nom</th>
         <th>credit</th>
         <th>debit</th>
         <th>description</th>
@@ -31,6 +32,7 @@
         <td><%= cpt+1 %></td>
         <td><%= operation.get("operation_date") %></td>
         <td><%= operation.get("type_name") %></td>
+          <td><%= operation.get("operation_name") %></td>
         <% if (operation.get("is_credit") == 1) {%>
           <td class='credit'><%= operation.get("value") %></td>
           <td></td>
