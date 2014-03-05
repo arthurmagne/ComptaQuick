@@ -39,6 +39,7 @@ define([
 
     		detailAccount: function (event) {
             	Backbone.View.prototype.goTo($(event.currentTarget).attr("href"));
+            	this.close();
 
     		},
 
@@ -129,7 +130,12 @@ define([
     			// prevent navigation from click into an input
     			event.stopImmediatePropagation();
 
-    		}
+    		},
+	
+		    close: function () {
+		      $(this.el).unbind();
+		      $(this.el).empty();
+		    }
 });
 
   // Our module now returns our view
