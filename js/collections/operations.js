@@ -1,16 +1,21 @@
 
 define([
   // These are path alias that we configured in our bootstrap
-  'jquery',     // lib/jquery/jquery
-  'underscore', // lib/underscore/underscore
-  'backbone',    // lib/backbone/backbone
+  'jquery',                 // lib/jquery/jquery
+  'underscore',             // lib/underscore/underscore
+  'backbone',               // lib/backbone/backbone
+  'backbone_offline',       // lib/backbone_offline/backbone.offline.js
   'models/operation'
-  ], function($, _, Backbone, Operation){
-   var Operations = Backbone.Collection.extend({
+  ], 
+
+  function($, _, Backbone, Offline, Operation){
+    var Operations = Backbone.Collection.extend({
 
     model : Operation,
 
     initialize: function(options) {
+      // first param is a name of storage, second is a link to collection
+      this.storage = new Offline.Storage('operations', this);
 
       if (options){
         this.dateDebut = options.dateDebut;
@@ -20,6 +25,7 @@ define([
         this.accountId = options.accountId;
       }
     },
+
     url: function() {
       /*if (this.maxOpe){
         return 'api/index.php/operation/limited/' + this.maxOpe;
