@@ -106,9 +106,6 @@ define([
         $('.nav-sidebar li').removeClass('active');
         if ((routeName == "addAccount") || (routeName == 'graphs')){
           $('.nav-sidebar li.' + routeName).addClass('active');
-        }else if (routeName == 'perso'){
-          console.log("perso test");
-          $('.drop-down-menu').toggleClass('show');
         }else{
           $('.nav-sidebar li.perso').addClass('active');
         }

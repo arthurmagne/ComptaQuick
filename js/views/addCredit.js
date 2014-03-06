@@ -120,8 +120,8 @@
 			  $(that.el).empty();
 			  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
 			  setTimeout(function(){
-				Backbone.View.prototype.goTo('#/accountList');
 				that.close();
+				Backbone.View.prototype.goTo('#/accountList');
 			  },2000);
 			},
         error: function (){
