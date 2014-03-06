@@ -2,7 +2,7 @@
 
 <p class="error-msg"></p>
 <h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Cliquez pour modifier</span></h2>
-
+<h3>Solde : <%= object.balance %> €</h3>
 <div id="graphs"></div>
 
 
@@ -39,7 +39,7 @@
           <td></td>
           <td class='debit'><%= operation.get("value") %></td>
         <% } %>
-          <td><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a href=\"#/search/$2\"> #$2</a>') 
+          <td><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"$2\"> #$2</a>') 
 
           %></td>
       </tr>

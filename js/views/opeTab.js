@@ -5,13 +5,15 @@ define([
 	'underscore',
 	'backbone',
 	'text!../../templates/opeTab.html',
+	'views/graphs',
 	'collections/operations',
 	'models/account',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, Operations, Account, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Account, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
+				'click .hashtag-opetab': 'graphHashtag',
 				'click .account-name-ope-tab .name': 'renameAccount',
 				'keypress :input': 'logKey'
 			},
@@ -24,7 +26,7 @@ define([
 				this.accountId = options.account_id;
 				var operations = new Operations({accountId: this.accountId});
 				var account = new Account({account_id: this.accountId});
-				
+				this.operations = operations;
 
 				account.fetch({
 					success: function (account) {
@@ -135,6 +137,15 @@ define([
 		    	accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
    			},
 
+   			graphHashtag: function(event){
+   				event.preventDefault();
+   				var hashtagName = $(event.currentTarget).attr("href");
+   				//console.log(hashtagName);
+
+				var graphview = new GraphView();
+				graphview.render({hashtagName : hashtagName, accountId : this.accountId, operations : this.operations});
+   			},
+
 			logKey: function(event) {
 			    if (event.which == 13){
 			    	// enter pressed
@@ -144,7 +155,7 @@ define([
 			    	var accountNameInput = accountNameTag.find('input');
 			    	// On récupère la valeur de l'input
 			    	var accountName = accountNameInput.val();
-	      			$(".error-msg").html();
+	      			$(".error-msgO").html();
 
 			    	var error_msg = '';
 			    	if (accountName == ''){

@@ -17,8 +17,9 @@
 	
   	el: '#center-page',
   	
-  	render: function () {
-  		console.log("graphs view");
+  	render: function (options) {
+      console.log("graphs view");
+      console.log(options);
       this.accounts = new Accounts();
       console.log("account list :");
       console.log(this.accounts);
@@ -93,12 +94,12 @@
             jsonArray.push({
               x: Date.parse(op.get("operation_date")),
               name: op.get("operation_name"),
-              color: '#FF00FF',
+              color: '#483D8B',
               y: parseInt(op.get("value"))
           });
         }); 
         // don't forget to reverse it
-        graphOptions.series[0].data = jsonArray.reverse();
+        graphOptions.series[0].data = jsonArray;
         this.$el.find('#graphs').highcharts(graphOptions);
     
       },
