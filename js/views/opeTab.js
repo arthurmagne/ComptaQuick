@@ -100,12 +100,13 @@ define([
    				// evolutionOp.push("Solde actuel");
    				
    				for(var i = 0; i < listOpe.length; i++){
+   					// we put the previous balance in the tab
+   					evolutionY.push(parseInt(balance));
    					if(listOpe[i].get("is_credit") == 1){
    						balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
    					}else{
    						balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
    					}
-   					evolutionY.push(parseInt(balance));
    					evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
    					evolutionOp.push(listOpe[i].get("operation_name"));
    				}

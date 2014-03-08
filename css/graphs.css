@@ -1,0 +1,10 @@
+.graph-form .calendars{
+	max-height: 0px;
+	transition: .5s all ease-in-out;
+	overflow: hidden;
+}
+
+.graph-form .calendars.show{
+	max-height: 80px;
+}
+

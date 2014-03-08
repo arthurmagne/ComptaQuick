@@ -60,8 +60,21 @@ $app->post('/editOperation', 'authenticate', function () {
 	$operation_name = $body['operation_name'];
 	$is_credit = $body['is_credit'];
 	$value = $body['value'];
+
+	// create new operation
+	$operation = operation($is_credit, $account_id, $value, $type_id, $operation_name, $operation_desc, $operation_date);
 	
-	$operation = new Operation();
+	$response = $app->response();
+	try{
+		$response['Content-Type'] = 'application/json';
+		$operation_object = json_encode($operation->toArray());
+		$response->body($operation_object);
+	} catch (Exception $e) {
+		$app->response()->status(400);
+		$app->response()->header('X-Status-Reason', $e->getMessage());
+	}
+	
+	/*$operation = new Operation();
 	$operation->account_id = $account_id;
 	$operation->type_id = $type_id;
 	$operation->operation_date = $operation_date;
@@ -85,7 +98,7 @@ $app->post('/editOperation', 'authenticate', function () {
 	}
 	else{
 		$app->halt(400);
-	}
+	}*/
 });
 
 $app->post('/editAccount', 'authenticate', function () {
@@ -177,11 +190,18 @@ $app->get('/paymentTypes', 'authenticate', function () {
 
 });
 	
-$app->get('/operation/all/:id', 'authenticate', function ($id) {
+$app->get('/operations/:select/:id/:limit/:type/:begin/:end', 'authenticate', function ($select, $id, $limit, $type, $begin, $end) {
 	#echo "Connexion automatique réussie";
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
-    $operations = getOperations($id);
+
+	if ($select == 'byAccount'){
+		$operations = getOperations($id, $begin, $end, $type, $limit);
+	}else{
+		// to change
+		$app->halt(401);
+	}
+	       		
 
 	$response = $app->response();
     $response['Content-Type'] = 'application/json';

@@ -23,25 +23,20 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
 				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
   
   
-  
-  if($begin == 0 && $end == 0)
-  {
-   $month = date('m');
-   $query->addWhere('MONTH(o.operation_date) = :month', array(":month" => $month));
+  if ($begin != 'all'){
+    if($begin == 0 && $end == 0)
+    {
+     $month = date('m');
+     $query->addWhere('MONTH(o.operation_date) = :month', array(":month" => $month));
+    }
+    
+    if($begin != 0)
+      $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
+  								 
+    if($end != 0)
+      $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
   }
-  
-  
-  
-  
-  
-  
-  
-  if($begin != 0)
-    $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
-								 
-  if($end != 0)
-    $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
-								
+  						
   switch($type)
   {
     case CREDIT:
@@ -86,6 +81,8 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($idAccount);
   $account->balance += ($isCredit) ? $value : -($value);
   $account->save();
+
+  return $operation;
 }
 
 

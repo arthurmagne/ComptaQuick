@@ -11,7 +11,30 @@
 			<% }); %>
 		<% } %>
 	</select>
+
+	<input type="number" name="limit" class="form-control" placeholder="Nombre maximum d'opérations">
 	</div>
+	<label class="checkbox-inline">
+		<input type="radio" name="duration" class="hide-cal" value="current" checked> 
+		Mois courant
+	</label>
+	<label class="checkbox-inline">
+		<input type="radio" name="duration" class="hide-cal" value="future">
+		 Opérations à venir
+	</label>
+	<label class="checkbox-inline">
+		<input type="radio" name="duration" class="hide-cal" value="all"> 
+		Toutes
+	</label>
+	<label class="checkbox-inline">
+		<input type="radio" name="duration" class="display-cal" value="manuel"> 
+		Sélection manuel
+    </label>
+    <div class="form-group calendars">
+    	<input type="date" class="form-control" name="begin" placeholder="Début (jj/mm/aaaa)">
+    	<input type="date" class="form-control" name="end" value="Fin (jj/mm/aaaa)">
+    </div>
+
   <p class="text-center"><button type="submit" class="btn btn-primary btn-lg">Générer</button>
 <hr>
 
