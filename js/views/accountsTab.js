@@ -38,8 +38,8 @@ define([
     		},
 
     		detailAccount: function (event) {
-            	Backbone.View.prototype.goTo($(event.currentTarget).attr("href"));
             	this.close();
+            	Backbone.View.prototype.goTo($(event.currentTarget).attr("href"));
 
     		},
 

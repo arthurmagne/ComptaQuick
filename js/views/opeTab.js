@@ -95,9 +95,9 @@ define([
 
    				listOpe = listOpe.reverse();
 
-   				evolutionY.push(this.accountBalance);
-   				evolutionX.push(Date.parse(new Date()));
-   				evolutionOp.push("Solde actuel");
+   				// evolutionY.push(this.accountBalance);
+   				// evolutionX.push(Date.parse(new Date()));
+   				// evolutionOp.push("Solde actuel");
    				
    				for(var i = 0; i < listOpe.length; i++){
    					if(listOpe[i].get("is_credit") == 1){

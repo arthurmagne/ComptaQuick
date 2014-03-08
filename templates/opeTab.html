@@ -39,7 +39,7 @@
           <td></td>
           <td class='debit'><%= operation.get("value") %></td>
         <% } %>
-          <td><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"$2\"> #$2</a>') 
+          <td><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"#/$2\"> #$2</a>') 
 
           %></td>
       </tr>
