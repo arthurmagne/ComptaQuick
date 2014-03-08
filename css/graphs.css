@@ -4,7 +4,21 @@
 	overflow: hidden;
 }
 
+.graph-form .graph-op-form{
+	max-height: 0px;
+	transition: .5s all ease-in-out;
+	overflow: hidden;
+}
+
 .graph-form .calendars.show{
 	max-height: 80px;
+}
+
+.graph-form .graph-op-form.show{
+	max-height: 110px;
+}
+
+.graph-form .form-control{
+	margin: 5px auto;
 }
 

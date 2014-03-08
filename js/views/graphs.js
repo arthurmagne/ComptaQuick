@@ -8,13 +8,16 @@
   'collections/operations',
   'models/operation',
   'text!../../templates/graphs.html',
-  'collections/accounts'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts){
+  'collections/accounts',
+  'models/account'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account){
     var addDebitPage = Backbone.View.extend({
   	  events: {
-        'submit .graph-form': 'generate',
+        'submit .graph-form': 'switchType',
         'click .display-cal': 'displayCal',
-        'click .hide-cal': 'hideCal'
+        'click .display-op-form': 'displayOpForm',
+        'click .hide-cal': 'hideCal',
+        'click .hide-op-form': 'hideOpForm'
       },
 	
   	el: '#center-page',
@@ -31,10 +34,27 @@
           console.log("accounts fetch success");
           var template = _.template(graphsTemplate, {accounts: accounts.models});
           that.$el.html(template);   
-          that.account = that.$el.find('select[name=list_account]');
+          that.typeOp = that.$el.find('select[name=select-op-type]');
           that.calendars = that.$el.find('.calendars');
+          that.opForm = that.$el.find('.graph-op-form');
         }
       });
+    },
+
+    switchType: function (event) {
+      event.preventDefault(); 
+      var graphType = this.$el.find('input[name=graphType]:checked').val();
+      switch (graphType) {
+        case 'op':
+          this.generateOpGraph();
+          break;
+        case 'pie':
+          this.generateTagGraph();
+          break;
+        case 'balance':
+          this.generateBalanceGraph();
+          break;
+      }
     },
 
     displayCal: function (event) {
@@ -45,13 +65,22 @@
       this.calendars.removeClass("show");
     },
 
-   generate: function (event) {
-      event.preventDefault(); 
-      console.log("generate graphs ...");
+    displayOpForm: function (event) {
+      this.opForm.addClass("show");
+    },
+
+    hideOpForm: function (event) {
+      this.opForm.removeClass("show");
+    },
+
+   generateOpGraph: function (event) {
+      console.log("generate operations graphs ...");
 
       var that = this;
       var begin, end, type;
-     
+
+      var account_id = this.$el.find('select[name=list_account]').val();
+
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
       if (duration == 'current')
@@ -74,12 +103,16 @@
       }
 
 
-      console.log("durée",duration);
       var limit = this.$el.find('input[name=limit]').val();
       if (limit == '')
         limit = undefined;
 
-      var operations = new Operations({accountId: this.account.val(), maxOpe: limit, dateDebut: begin, typeOp: type});
+      var type = this.typeOp.val();
+       if (type == 'all')
+        type = undefined;
+      
+
+      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type});
       var that = this;
       operations.fetch({
         success: function (operations) {
@@ -94,13 +127,139 @@
       });       
     },
 
+    
+
+    generateBalanceGraph: function () {
+      console.log("generate balance graph");
+      var that = this;
+      var begin, end, type;
+      
+      var account_id = this.$el.find('select[name=list_account]').val();
+
+      // get the duration
+      var duration = this.$el.find('input[name=duration]:checked').val();
+      if (duration == 'current')
+        duration = undefined;
+      if (duration == 'future'){
+        begin = new Date().toJSON();
+      }
+      if (duration == 'all'){
+        begin = 'all';
+      }
+      if (duration == 'manuel'){
+        
+        begin =  this.$el.find('input[name=begin]').val();
+        end   =  this.$el.find('input[name=end]').val();
+
+        if (begin == '')
+          begin = undefined;
+        if (end == '')
+         end = undefined;
+      }
+
+      var operations = new Operations({accountId: account_id, dateDebut: begin, dateFin: end});
+      var account = new Account({account_id: account_id});
+
+      account.fetch({
+        success: function (account) {
+          console.log("account recupéré : ",account);
+          that.account = account;
+          that.accountBalance = account.get("balance");
+          operations.fetch({
+                success: function (operations) {
+                  console.log("operations recupérées : ",operations);
+                  that.operations = operations;
+                  that.initBalanceGraphOptions(operations);
+                  
+                },
+            error: function() {
+              console.log("Error during fetch account operation");
+            }
+              });
+        },
+        error: function() {
+          console.log("Error during fetch account operation");
+        }
+      });
+
+    },
+
+    initBalanceGraphOptions: function (operations) {
+      // options for graph
+      var graphOptions = {
+          chart: {
+              type: 'spline'
+          },
+          title: {
+              text: 'Évolution du solde du compte'
+          },
+          xAxis: {
+              type: 'datetime'
+          },
+          yAxis: {
+              title: {
+                  text: 'Montant (euros)'
+              }
+          },
+         plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+          series: [{
+            name: 'solde'
+           }]
+          };
+
+
+        var balance   = this.accountBalance;
+        var listOpe   = operations.toArray();
+        var evolutionX  = []; 
+        var evolutionY  = []; 
+        var evolutionOp = [];
+
+        listOpe = listOpe.reverse();
+        
+        for(var i = 0; i < listOpe.length; i++){
+          // we put the previous balance in the tab
+          evolutionY.push(parseInt(balance));
+          if(listOpe[i].get("is_credit") == 1){
+            balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+          }else{
+            balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+          }
+          evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+          evolutionOp.push(listOpe[i].get("operation_name"));
+        }
+
+        evolutionX.reverse();
+        evolutionY.reverse();
+        evolutionOp.reverse();
+
+        var jsonArray = [];
+        for(var i = 0; i < evolutionX.length; i++){
+            jsonArray.push({
+              x: evolutionX[i],
+              name: evolutionOp[i],
+              color: '#483D8B',
+              y: parseInt(evolutionY[i])
+          });
+        };
+
+        graphOptions.series[0].data = jsonArray;
+        console.log(graphOptions);
+        this.$el.find('#graphs').highcharts(graphOptions);
+      },
+
     initGraphOptions: function (object) {
        var graphOptions = {
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Opération du mois'
+            text: 'Opérations'
         },
         xAxis: {
             type: 'datetime'
@@ -111,6 +270,7 @@
             }
         },
         series: [{
+          name: 'Opérations'
          }]
       };
      var jsonArray = [];

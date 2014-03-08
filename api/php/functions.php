@@ -36,13 +36,13 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
     if($end != 0)
       $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
   }
-  						
+
   switch($type)
   {
-    case CREDIT:
+    case "CREDIT":
       $query->addWhere('o.is_credit');
       break;
-    case DEBIT:
+    case "DEBIT":
       $query->addWhere('NOT o.is_credit');
   }
   

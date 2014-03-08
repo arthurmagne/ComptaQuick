@@ -64,7 +64,7 @@ define([
 			            type: 'spline'
 			        },
 			        title: {
-			            text: 'Opération du mois'
+			            text: 'Opérations du mois'
 			        },
 			        xAxis: {
 			            type: 'datetime'
