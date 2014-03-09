@@ -26,7 +26,7 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
   
   if($begin == 0 && $end == 0)
   {
-   $query->addWhere('to_days(now()) - to_days(operation_date)');
+   $query->addWhere('to_days(now()) - to_days(operation_date) < 30');
   }
   
    
