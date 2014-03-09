@@ -9,7 +9,7 @@ define([
     initialize: function(options) {
 
         if (options){
-            this.operationId = options.id;
+          this.operationId = options.id;
         }
         // set the id of this model !! (no need for operation)
         //this.set('id', this.get("account_id"));
@@ -19,10 +19,10 @@ define([
     },
     url: function() {
         if (this.operationId){
-            return 'api/index.php/account/operation' + this.accountId;
+            return 'api/index.php/account/operation/' + this.operationId;
         }
         if (this.get("id")){
-            return 'api/index.php/account/operation' + this.get("id");
+            return 'api/index.php/account/operation/' + this.get("id");
         }
 		return 'api/index.php/editOperation';
         console.log("Aucun id");

@@ -7,15 +7,19 @@ define([
 	'text!../../templates/opeTab.html',
 	'views/graphs',
 	'collections/operations',
+	'models/operation',
 	'models/account',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Account, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Account, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
 				'click .account-name-ope-tab .name': 'renameAccount',
-				'keypress :input': 'logKey'
+				'keypress :input': 'logKey',
+				'click .delete-op': 'deleteOp',
+				'click .edit-op': 'editOp',
+				'click .valid-op-edit': 'validEdit'
 			},
 
 			el: '#center-page',
@@ -24,19 +28,17 @@ define([
 				console.log("operation view");
 				var that = this;
 				this.accountId = options.account_id;
-				var operations = new Operations({accountId: this.accountId});
+				this.operations = new Operations({accountId: this.accountId});
 				var account = new Account({account_id: this.accountId});
-				this.operations = operations;
 
 				account.fetch({
 					success: function (account) {
 						console.log("account recupéré : ",account);
 						that.account = account;
 						that.accountBalance = account.get("balance");
-						operations.fetch({
+						that.operations.fetch({
 				        	success: function (operations) {
 								console.log("operations recupérées : ",operations);
-								that.operations = operations;
 								var extendObject = $.extend({},account.attributes,operations);
 				        		var template = _.template(opeTabTemplate, {object: extendObject});
 				        		that.$el.html(template);
@@ -146,6 +148,97 @@ define([
 				var graphview = new GraphView();
 				graphview.render({hashtagName : hashtagName, accountId : this.accountId, operations : this.operations});
    			},
+
+    		deleteOp: function (event) {
+    			//event.stopImmediatePropagation();
+
+    			var that = this;
+    			BootstrapDialog.confirm('Voulez vous vraiment supprimer cette opération?', function(result){
+		            if(result) {
+		                var opId = $(event.currentTarget).data('value');
+		    			console.log("Delete op with id : ", opId);
+		    			// remove model (from server and collection by bubbling)
+		    			that.operations.get(opId).destroy();
+
+		    			// remove row from tab
+		    			that.$el.find('.clickableRow[data-value='+opId+']').remove();
+		            
+		            }else {
+		                console.log("Suppression annulée");
+		            }
+		        });  
+
+    		},
+
+    		editOp: function (event) {
+    			//event.stopImmediatePropagation();
+    			// Ajouter un input à la place du nom avec un bouton valider
+    			console.log("editOp");
+		        var opId = $(event.currentTarget).data('value');
+		    	var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+		    	//var opDescTag = this.$el.find('.op-row[data-value='+opId+'] .op-desc');
+		    	var editOpBtn = this.$el.find('.edit-op[data-value='+opId+']');
+		    	var opName = opNameTag.html();
+		    	//var opDesc = opDescTag.html();
+
+		    	opNameTag.html("<input class='form-control' type='text' value='"+opName+"'/>");
+		    	//opDescTag.html("<input class='form-control' type='text' value='"+opDesc+"'/>");
+		    	editOpBtn.html("Valider");
+		    	editOpBtn.removeClass("edit-op");
+		    	editOpBtn.addClass("valid-op-edit");
+
+    		},
+
+    		validEdit: function (event) {
+    			//event.stopImmediatePropagation();
+    			console.log("validEdit");
+    			var that = this;
+    			var opId = $(event.currentTarget).data('value');
+		    	var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+		    	var opNameInput = this.$el.find('.op-row[data-value='+opId+'] .op-name input');
+		    	var editOpBtn = this.$el.find('.valid-op-edit[data-value='+opId+']');
+		    	// On récupère la valeur de l'input
+		    	var opName = opNameInput.val();
+
+
+      			$(".error-msg").html();
+
+		    	var error_msg = '';
+		    	if (opName == ''){
+		    		error_msg += "Le nom de l'opération ne peut être vide.<br>";
+     			    opNameInput.addClass("form-error");
+      				
+		    	}
+
+      			$(".error-msg").html(error_msg);
+
+
+		    	if (error_msg != ''){
+		    		return ;
+		    	}
+		    	// on update l'account sur le serveur
+
+		    	var operation = this.operations.get(opId);
+		    	operation.set('operation_name', opName);
+		    	operation.save(null, {
+			        success: function (operation){
+
+			          console.log("Operation push au serveur avec succès");
+			          console.log(operation);			          
+			          
+
+			        },
+			        error: function (){
+			          console.log("An error occured");
+			        }
+			      });
+
+		    	opNameTag.html(opName);
+		    	console.log(opName);
+		    	editOpBtn.html("Éditer");
+		    	editOpBtn.removeClass("valid-edit");
+		    	editOpBtn.addClass("edit-op");
+    		},
 
 			logKey: function(event) {
 			    if (event.which == 13){

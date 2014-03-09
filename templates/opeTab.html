@@ -11,6 +11,9 @@
 <% if (operations.length == 0) { %>
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
 <% }else{ %>
+
+<p class="error-msg"></p>
+
 <div class="table-responsive">
   <table class="table table-striped ope-tab">
     <thead>
@@ -26,12 +29,12 @@
     </thead>
     <tbody>
     <% _.each(operations, function(operation, cpt) { %>
-      <tr>
+      <tr class="op-row" data-value="<%= operation.get('id') %>">
         <!-- account_id  type_id operation_date  operation_name  operation_desc  is_credit value -->
         <td><%= cpt+1 %></td>
         <td><%= operation.get("operation_date") %></td>
         <td><%= operation.get("type_name") %></td>
-          <td><%= operation.get("operation_name") %></td>
+        <td class="op-name"><%= operation.get("operation_name") %></td>
         <% if (operation.get("is_credit") == 1) {%>
           <td class='credit'><%= operation.get("value") %></td>
           <td></td>
@@ -39,9 +42,11 @@
           <td></td>
           <td class='debit'><%= operation.get("value") %></td>
         <% } %>
-          <td><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"#/$2\"> #$2</a>') 
+          <td class="op-desc"><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"#/$2\"> #$2</a>') 
 
           %></td>
+        <td class="delete-op" data-value="<%= operation.get('id') %>">Supprimer</td>
+        <td class="edit-op" data-value="<%= operation.get('id') %>">Éditer</td>
       </tr>
     <% }); %>
     </tbody>

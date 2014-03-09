@@ -8,11 +8,11 @@
 	z-index: 10;
 }
 
-.account-tab {
+.account-tab, .ope-tab {
 	text-align: center;
 }
 
-.account-tab thead tr th{
+.account-tab thead tr th, .ope-tab thead tr th{
 	text-align: center;
 }
 
@@ -20,12 +20,12 @@
 	z-index: 100;
 
 }
-.delete-account:hover{
+.delete-account:hover, .delete-op:hover{
 	background-color: rgb(252, 201, 194) !important;
 
 }
 
-.edit-account:hover, .valid-edit:hover{
+.edit-account:hover, .valid-edit:hover, .edit-op:hover, .valid-op-edit:hover{
 	background-color: rgb(194, 255, 196) !important;
 
 }

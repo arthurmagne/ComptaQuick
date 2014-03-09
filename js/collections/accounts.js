@@ -11,14 +11,14 @@ define([
     model: Account,
 
     initialize: function(options) {
-      this.model.bind("remove", function() {
+      /*this.model.bind("remove", function() {
           console.log("remove trigger");
           this.model.destroy({
             success: function () {
-              console.log("Artist supprimée du serveur avec succès");
+              console.log("Compte supprimée du serveur avec succès");
             }
           });
-        });
+        });*/
 
     },
     url: function() {

@@ -101,6 +101,38 @@ $app->post('/editOperation', 'authenticate', function () {
 	}*/
 });
 
+$app->put('/account/operation/:id', 'authenticate', function ($id) {
+	global $app;
+
+	$body = $app->request()->getBody();
+
+    // on récupère les données du formulaire
+    $body = json_decode($body, true);
+
+    $name = $body['operation_name'];
+
+    $operation = Doctrine_Core::getTable('Operation')->findOneById($id);
+
+    $operation->operation_name = $name;
+
+	$response = $app->response();
+
+	if($operation->trySave()){
+		try{
+			$response['Content-Type'] = 'application/json';
+			// on crée notre objet
+			$operation_object = json_encode($operation->toArray());
+			$response->body($operation_object);
+ 		} catch (Exception $e) {
+			$app->response()->status(400);
+			$app->response()->header('X-Status-Reason', $e->getMessage());
+		}
+	}
+	else{
+		$app->halt(400);
+	}
+});
+
 $app->post('/editAccount', 'authenticate', function () {
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
