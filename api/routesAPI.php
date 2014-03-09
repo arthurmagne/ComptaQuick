@@ -211,6 +211,22 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end', 'authenticate', fu
 });
 
 
+$app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
+	global $app;
+	$uid = $app->getEncryptedCookie('uid');
+	$operations = getOperationsByUser($idUser);
+
+	$response = $app->response();
+      $response['Content-Type'] = 'application/json';
+      $json = json_encode($operations->toArray());
+
+	$response->body($json);
+});
+
+
+$app->delete('/operation/:id', 'authenticate', deleteOperation($id));
+
+
 $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;
     $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);

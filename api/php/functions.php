@@ -15,7 +15,7 @@ function getAccounts($idUser)
 
 
 
-function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
+function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
 {
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
@@ -23,28 +23,35 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
 				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
   
   
-  if ($begin != 'all'){
-    if($begin == 0 && $end == 0)
-    {
-     $month = date('m');
-     $query->addWhere('MONTH(o.operation_date) = :month', array(":month" => $month));
-    }
-    
-    if($begin != 0)
-      $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
-  								 
-    if($end != 0)
-      $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
+  
+  if($begin == 0 && $end == 0)
+  {
+   $query->addWhere('to_days(now()) - to_days(operation_date)');
   }
-
+  
+   
+  
+  
+  if($begin != 0)
+    $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
+								 
+  if($end != 0)
+    $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
+								
   switch($type)
   {
-    case "CREDIT":
+    case CREDIT:
       $query->addWhere('o.is_credit');
       break;
-    case "DEBIT":
+    case DEBIT:
       $query->addWhere('NOT o.is_credit');
   }
+  
+  if($paymentId != 0)
+    $query->addWhere('p.type_id = :paymentId', array(':paymentId' => $paymentId));
+  
+  if($tag != 0)
+    $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag);
   
   $query->orderBy('operation_date', 'DESC');
   
@@ -53,6 +60,32 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0)
     
   return $query->execute();  
 }
+
+
+function getOperationsByUser($idUser, $limit = 0)
+{
+
+  $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
+				  ->from('Operation o')
+				  ->leftJoin('User u')
+				  ->where('u.user_id = :idUser', array(":idUser" => $idUser))
+				  ->addWhere('to_days(now()) - to_days(operation_date)');
+				  ->orderBy('operation_date', 'DESC');
+  
+  if($limit > 0)
+    $query->limit($limit);
+    
+  return $query->execute();  
+}
+
+
+
+function deleteOperation($idOperation)
+{
+  $operation = Doctrine::getTable('Operation')->findOneById($idOperation);
+  $operation->remove();
+}
+
 
 
 
