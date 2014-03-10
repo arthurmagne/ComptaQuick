@@ -8,13 +8,19 @@ define([
  
     initialize: function(options) {
 
-        if (options.id){
-            this.accountId = options.id;
-        }else{
-          // set the id of this model !!
-          console.log("set the id");
-          this.set('id', this.get("account_id"));
+      this.on('change', 
+        function(){
+          this.updated_at = new Date();
         }
+        , this);
+
+      if (options.id){
+        this.accountId = options.id;
+      }else{
+        // set the id of this model !!
+        console.log("set the id");
+        this.set('id', this.get("account_id"));
+      }
         
     },
     url: function() {

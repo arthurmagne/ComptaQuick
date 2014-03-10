@@ -19,6 +19,8 @@ define([
             }
           });
         });*/
+      this.storage = new Offline.Storage('localAccounts', this);
+      
 
     },
     url: function() {
