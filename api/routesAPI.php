@@ -256,7 +256,10 @@ $app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
 });
 
 
-$app->delete('/operation/:id', 'authenticate', deleteOperation($id));
+$app->delete('/operation/:id', 'authenticate', function($id) {
+	deleteOperation($id); 
+
+});
 
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
