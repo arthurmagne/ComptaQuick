@@ -15,7 +15,7 @@ define([
 
     initialize: function(options) {
       // first param is a name of storage, second is a link to collection
-      this.storage = new Offline.Storage('operations', this);
+      this.storage = new Offline.Storage('localOperations', this);
 
       if (options){
         this.dateDebut = options.dateDebut;
