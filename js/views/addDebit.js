@@ -18,24 +18,25 @@
 	
 	el: '#center-page', 
 	
-	render: function () {
+	render: function (options) {
 		console.log("addDebit view");
 		$(this.el).empty();
 		$(this.el).append("<h1 class='page-header'>Effectuer une Opération de Débit</h1>");
 		$(this.el).append("<form class='add-operation-form'><p class='error-msg'></p>"+
+							"<select type='number' placeholder='Compte à débiter' name='list_account' id='list_account' class='form-control' required></select>"+
 							"<select type='text' placeholder='Type de payment' name='list_type'  id='list_type' class='form-control' required></select>" + 
-							"<select type='number' placeholder='Compte à débiter' name='list_account' id='list_account'class='form-control' required></select>"+
 							"<p id='form_operation'></p></form>");
 
 		this.accountListView = new AccountListView();
 		this.paymentTypeListView = new PaymentTypeListView();
 		this.addOperationFormView = new AddOperationFormView();
 
-		this.accountListView.render();
+		this.accountListView.render({account_id: options.account_id});
 		this.paymentTypeListView.render();
 		this.addOperationFormView.render();
 		
 		this.error_msg = $(".error-msg");
+		
     },
 	
 	attributes: function () {

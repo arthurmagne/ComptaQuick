@@ -9,9 +9,11 @@ define([
 	'collections/operations',
 	'models/operation',
 	'models/account',
+	'views/addDebit',
+	'views/addCredit',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Account, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Account, AddDebitView, AddCreditView, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
@@ -19,7 +21,9 @@ define([
 				'keypress :input': 'logKey',
 				'click .delete-op': 'deleteOp',
 				'click .edit-op': 'editOp',
-				'click .valid-op-edit': 'validEdit'
+				'click .valid-op-edit': 'validEdit',
+				'click .add-debit': 'addOpDebit',
+				'click .add-credit': 'addOpCredit'
 			},
 
 			el: '#center-page',
@@ -283,6 +287,18 @@ define([
 			    	accountNameTag.html("<span class='name'>"+accountName+"</span><span class='info text-muted'>Clickez pour modifier</span>");
 
 			    }
+			},
+
+			addOpDebit: function (event){
+				  addDebitView = new AddDebitView();
+				  //addDebitView.render(this.accountId);
+				  addDebitView.render({account_id: this.accountId});				
+			},		
+			
+			addOpCredit: function (event){
+				  addCreditView = new AddCreditView();
+				  //addCreditView.render(this.accountId);	
+				  addCreditView.render({account_id: this.accountId});		
 			},
 
 			drawGraphs: function (graphOptions) {
