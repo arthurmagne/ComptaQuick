@@ -225,7 +225,7 @@ $app->get('/paymentTypes', 'authenticate', function () {
 $app->get('/operations/:select/:id/:limit/:type/:begin/:end', 'authenticate', function ($select, $id, $limit, $type, $begin, $end) {
 	#echo "Connexion automatique réussie";
 	global $app;
-	$uid = $app->getEncryptedCookie('uid');
+// 	$uid = $app->getEncryptedCookie('uid');
 
 	if ($select == 'byAccount'){
 		$operations = getOperations($id, $begin, $end, $type, $limit);
@@ -256,10 +256,9 @@ $app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
 });
 
 
-$app->delete('/operation/:id', 'authenticate', function($id) {
-	deleteOperation($id); 
-
-});
+$app->delete('/operation/:id', 'authenticate', function($id){
+    deleteOperation($id);
+ });
 
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
