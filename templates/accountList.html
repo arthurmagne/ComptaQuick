@@ -1,7 +1,11 @@
-		<% if (accounts.length == 0) { %>
-		<option value=""> Aucun compte disponible</option>
-		<% }else{ %>
-		<% _.each(accounts, function(account, cpt) { %>
-		<option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
-		<% }); %>
+<% if (object.length == 0) { %>
+	<option value=""> Aucun compte disponible</option>
+<% } else { %>
+	<% _.each(object.accounts, function(account, cpt) { %>
+		<% if (account.get("account_id") == object.account_id) { %>
+			<option value="<%= account.get("account_id") %>" selected="selected"><%= account.get("account_name") %>
+		<% } else { %>
+			<option value="<%= account.get("account_id") %>"><%= account.get("account_name") %>
 		<% } %>
+	<% }); %>
+<% } %>

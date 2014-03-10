@@ -12,20 +12,25 @@ define([
 	
 	el: '#list_account',
 
-	render: function () {
+	render: function (options) {
 		console.log("Account tab view");
 		this.accounts = new Accounts();
 		console.log("account list :");
 		console.log(this.accounts);
 		var that = this;
+
 		this.accounts.fetch({
 			success: function (accounts) {
 				console.log("accounts fetch success");
-				var template = _.template(accountListTemplate, {accounts: accounts.models});
+				var object1 = {
+					account_id: options.account_id,
+					accounts: accounts.models
+				};
+				console.log(object1);
+				var template = _.template(accountListTemplate, {object: object1});
 				that.$el.html(template);			
 			}
 		});
-
     },
 	
 	getAccount: function () {

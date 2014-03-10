@@ -8,17 +8,23 @@
   'collections/operations',
   'models/operation',
   'text!../../templates/graphs.html',
-  'collections/accounts'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts){
+  'collections/accounts',
+  'models/account'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account){
     var addDebitPage = Backbone.View.extend({
   	  events: {
-        'submit .graph-form': 'generate'
+        'submit .graph-form': 'switchType',
+        'click .display-cal': 'displayCal',
+        'click .display-op-form': 'displayOpForm',
+        'click .hide-cal': 'hideCal',
+        'click .hide-op-form': 'hideOpForm'
       },
 	
   	el: '#center-page',
   	
-  	render: function () {
-  		console.log("graphs view");
+  	render: function (options) {
+      console.log("graphs view");
+      console.log(options);
       this.accounts = new Accounts();
       console.log("account list :");
       console.log(this.accounts);
@@ -28,54 +34,164 @@
           console.log("accounts fetch success");
           var template = _.template(graphsTemplate, {accounts: accounts.models});
           that.$el.html(template);   
+          that.typeOp = that.$el.find('select[name=select-op-type]');
+          that.calendars = that.$el.find('.calendars');
+          that.opForm = that.$el.find('.graph-op-form');
         }
       });
-      this.account = this.$el.find('select[name=list_account]');          
+    },
 
-      },
-  	
-  	attributes: function () {
-        return {
-          account: this.account
-        };
-      },
+    switchType: function (event) {
+      event.preventDefault(); 
+      var graphType = this.$el.find('input[name=graphType]:checked').val();
+      switch (graphType) {
+        case 'op':
+          this.generateOpGraph();
+          break;
+        case 'pie':
+          this.generateTagGraph();
+          break;
+        case 'balance':
+          this.generateBalanceGraph();
+          break;
+      }
+    },
 
-     generate: function (event) {
-        event.preventDefault(); 
-        console.log("generate graphs ...");
-        var that = this;
-  	    var _data = this.attributes();
-       
+    displayCal: function (event) {
+      this.calendars.addClass("show");
+    },
 
-        /*var balance = this.accountBalance;
-        var balanceTab = [];
-        object.each(function(op) {
-          console.log('value :',op.get("value"));
-        });*/
-        var operations = new Operations({accountId: this.$el.find('select[name=list_account]').val()});
-        var that = this;
-        operations.fetch({
-          success: function (operations) {
-            console.log("operations recupérées : ",operations);
-            that.operations = operations;
-            that.initGraphOptions(operations);
-            
-          },
-          error: function() {
-            console.log("Error during fetch account operation");
-          }
-        });
+    hideCal: function (event) {
+      this.calendars.removeClass("show");
+    },
 
+    displayOpForm: function (event) {
+      this.opForm.addClass("show");
+    },
+
+    hideOpForm: function (event) {
+      this.opForm.removeClass("show");
+    },
+
+   generateOpGraph: function (event) {
+      console.log("generate operations graphs ...");
+
+      var that = this;
+      var begin, end, type;
+
+      var account_id = this.$el.find('select[name=list_account]').val();
+
+      // get the duration
+      var duration = this.$el.find('input[name=duration]:checked').val();
+      if (duration == 'current')
+        duration = undefined;
+      if (duration == 'future'){
+        begin = new Date().toJSON();
+      }
+      if (duration == 'all'){
+        begin = 'all';
+      }
+      if (duration == 'manuel'){
         
+        begin =  this.$el.find('input[name=begin]').val();
+        end   =  this.$el.find('input[name=end]').val();
+
+        if (begin == '')
+          begin = undefined;
+        if (end == '')
+         end = undefined;
+      }
+
+
+      var limit = this.$el.find('input[name=limit]').val();
+      if (limit == '')
+        limit = undefined;
+
+      var type = this.typeOp.val();
+       if (type == 'all')
+        type = undefined;
+      
+
+      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type});
+      var that = this;
+      operations.fetch({
+        success: function (operations) {
+          console.log("operations recupérées : ",operations);
+          that.operations = operations;
+          that.initGraphOptions(operations);
+          
+        },
+        error: function() {
+          console.log("Error during fetch account operation");
+        }
+      });       
+    },
+
+    
+
+    generateBalanceGraph: function () {
+      console.log("generate balance graph");
+      var that = this;
+      var begin, end, type;
+      
+      var account_id = this.$el.find('select[name=list_account]').val();
+
+      // get the duration
+      var duration = this.$el.find('input[name=duration]:checked').val();
+      if (duration == 'current')
+        duration = undefined;
+      if (duration == 'future'){
+        begin = new Date().toJSON();
+      }
+      if (duration == 'all'){
+        begin = 'all';
+      }
+      if (duration == 'manuel'){
         
-      },
-      initGraphOptions: function (object) {
-         var graphOptions = {
+        begin =  this.$el.find('input[name=begin]').val();
+        end   =  this.$el.find('input[name=end]').val();
+
+        if (begin == '')
+          begin = undefined;
+        if (end == '')
+         end = undefined;
+      }
+
+      var operations = new Operations({accountId: account_id, dateDebut: begin, dateFin: end});
+      var account = new Account({account_id: account_id});
+
+      account.fetch({
+        success: function (account) {
+          console.log("account recupéré : ",account);
+          that.account = account;
+          that.accountBalance = account.get("balance");
+          operations.fetch({
+                success: function (operations) {
+                  console.log("operations recupérées : ",operations);
+                  that.operations = operations;
+                  that.initBalanceGraphOptions(operations);
+                  
+                },
+            error: function() {
+              console.log("Error during fetch account operation");
+            }
+              });
+        },
+        error: function() {
+          console.log("Error during fetch account operation");
+        }
+      });
+
+    },
+
+    initBalanceGraphOptions: function (operations) {
+      // options for graph
+      var graphOptions = {
           chart: {
-              type: 'column'
+              type: 'spline'
           },
           title: {
-              text: 'Opération du mois'
+              text: 'Évolution du solde du compte'
           },
           xAxis: {
               type: 'datetime'
@@ -85,30 +201,97 @@
                   text: 'Montant (euros)'
               }
           },
+         plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
           series: [{
+            name: 'solde'
            }]
-        };
-       var jsonArray = [];
-        object.each(function(op) {
-            jsonArray.push({
-              x: Date.parse(op.get("operation_date")),
-              name: op.get("operation_name"),
-              color: '#FF00FF',
-              y: parseInt(op.get("value"))
-          });
-        }); 
-        // don't forget to reverse it
-        graphOptions.series[0].data = jsonArray.reverse();
-        this.$el.find('#graphs').highcharts(graphOptions);
-    
-      },
-      
+          };
 
+
+        var balance   = this.accountBalance;
+        var listOpe   = operations.toArray();
+        var evolutionX  = []; 
+        var evolutionY  = []; 
+        var evolutionOp = [];
+
+        listOpe = listOpe.reverse();
         
-      close: function () {
-        $(this.el).unbind();
-        $(this.el).empty();
-      }
+        for(var i = 0; i < listOpe.length; i++){
+          // we put the previous balance in the tab
+          evolutionY.push(parseInt(balance));
+          if(listOpe[i].get("is_credit") == 1){
+            balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+          }else{
+            balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+          }
+          evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+          evolutionOp.push(listOpe[i].get("operation_name"));
+        }
+
+        evolutionX.reverse();
+        evolutionY.reverse();
+        evolutionOp.reverse();
+
+        var jsonArray = [];
+        for(var i = 0; i < evolutionX.length; i++){
+            jsonArray.push({
+              x: evolutionX[i],
+              name: evolutionOp[i],
+              color: '#483D8B',
+              y: parseInt(evolutionY[i])
+          });
+        };
+
+        graphOptions.series[0].data = jsonArray;
+        console.log(graphOptions);
+        this.$el.find('#graphs').highcharts(graphOptions);
+      },
+
+    initGraphOptions: function (object) {
+       var graphOptions = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Opérations'
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: 'Montant (euros)'
+            }
+        },
+        series: [{
+          name: 'Opérations'
+         }]
+      };
+     var jsonArray = [];
+      object.each(function(op) {
+          jsonArray.push({
+            x: Date.parse(op.get("operation_date")),
+            name: op.get("operation_name"),
+            color: '#483D8B',
+            y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
+        });
+      }); 
+      // don't forget to reverse it
+      graphOptions.series[0].data = jsonArray;
+      this.$el.find('#graphs').highcharts(graphOptions);
+  
+    },
+      
+    close: function () {
+      $(this.el).unbind();
+      $(this.el).empty();
+    }
 
   	});
 

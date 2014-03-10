@@ -7,6 +7,7 @@
 @import "forms.css";
 @import "opeTab.css";
 @import "addOperation.css";
+@import "graphs.css";
 
 #bg-video VIDEO {
 	  /* Set rules to fill background */
@@ -21,6 +22,11 @@
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+.form-horizontal .form-group {
+   margin-right: 0px !important; 
+   margin-left: 0px !important; 
 }
 
 /* TODO */

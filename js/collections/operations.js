@@ -20,21 +20,17 @@ define([
       if (options){
         this.dateDebut = options.dateDebut;
         this.dateFin = options.dateFin;
-        this.maxOpe = options.maxOp;
+        this.maxOpe = options.maxOpe;
         this.typeOpe = options.typeOpe;
         this.accountId = options.accountId;
       }
     },
 
     url: function() {
-      /*if (this.maxOpe){
-        return 'api/index.php/operation/limited/' + this.maxOpe;
-      }else if (this.typeOpe){
-        return 'api/index.php/operation/byType/' + this.typeOpe;
-      }else if (this.dateDebut && this.dateFin){
-        return 'api/index.php/operation/byDate/' + this.dateDebut + '/' + this.dateFin;
-      }*/
-      return 'api/index.php/operation/all/' + this.accountId
+      // TODO : tester si on a un id de compte ou d'user
+     
+      console.log("Id pour collection operations : ",this.accountId);
+      return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin;
     }
 	
 
