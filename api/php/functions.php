@@ -51,7 +51,7 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
     $query->addWhere('p.type_id = :paymentId', array(':paymentId' => $paymentId));
   
   if($tag != 0)
-    $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag);
+    $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag));
   
   $query->orderBy('operation_date', 'DESC');
   
@@ -69,7 +69,7 @@ function getOperationsByUser($idUser, $limit = 0)
 				  ->from('Operation o')
 				  ->leftJoin('User u')
 				  ->where('u.user_id = :idUser', array(":idUser" => $idUser))
-				  ->addWhere('to_days(now()) - to_days(operation_date)');
+				  ->addWhere('to_days(now()) - to_days(operation_date)')
 				  ->orderBy('operation_date', 'DESC');
   
   if($limit > 0)
