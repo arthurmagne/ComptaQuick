@@ -22,21 +22,24 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
 				  ->leftJoin('o.PaymentType p')
 				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
   
-  
-  
-  if($begin == 0 && $end == 0)
+  if($begin != 'all')
   {
-   $query->addWhere('to_days(now()) - to_days(operation_date) < 30');
-  }
-  
-   
-  
-  
-  if($begin != 0)
-    $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
-								 
-  if($end != 0)
-    $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
+      
+    if($begin == 0 && $end == 0)
+    {
+      $query->addWhere('(to_days(now()) - to_days(operation_date)) < 30');
+
+    }
+    
+    
+    
+    
+    if($begin != 0)
+      $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
+								  
+    if($end != 0)
+      $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
+   }
 								
   switch($type)
   {
