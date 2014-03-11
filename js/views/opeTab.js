@@ -4,16 +4,18 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+	'backbone_offline',
 	'text!../../templates/opeTab.html',
 	'views/graphs',
 	'collections/operations',
 	'models/operation',
+	'collections/accounts',
 	'models/account',
 	'views/addDebit',
 	'views/addCredit',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Account, AddDebitView, AddCreditView, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, Offline, opeTabTemplate, GraphView, Operations, Operation, Accounts, Account, AddDebitView, AddCreditView, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
@@ -33,35 +35,46 @@ define([
 				var that = this;
 				this.accountId = options.account_id;
 				this.operations = new Operations({accountId: this.accountId});
-				var account = new Account({account_id: this.accountId});
+				//var account = new Account({account_id: this.accountId});
+				var accounts = new Accounts();
 
-				account.fetch({
-					success: function (account) {
-						console.log("account recupéré : ",account);
-						that.account = account;
-						that.accountBalance = account.get("balance");
-						that.operations.fetch({
-				        	success: function (operations) {
-								console.log("operations recupérées : ",operations);
-								var extendObject = $.extend({},account.attributes,operations);
-				        		var template = _.template(opeTabTemplate, {object: extendObject});
-				        		that.$el.html(template);
-				        		that.initGraphOptions(operations);
-				        		
-				        	},
-							error: function() {
-								console.log("Error during fetch account operation");
-							}
-		       			});
+				accounts.fetch({
+					local: Offline.onLine(),
+					success: function (accounts) {
+						console.log("account recupéré : ",accounts);
+						that.getOperations(accounts);
 					},
 					error: function() {
-						console.log("Error during fetch account operation");
+						console.log("Error during fetch account operation: render");
 					}
 				});
-				
+			},
 
-		        
-   			},
+			getOperations: function (accounts) {
+				var that = this;
+				//DEBUG
+				console.log('getOperation: accounts =', accounts);
+				console.log('getOperation: this.accountId =', this.accountId)
+
+				that.account = accounts.get(this.accountId);
+				//DEBUG
+				console.log('getOperation: account =',that.account);
+
+				that.accountBalance = that.account.get("balance");
+				that.operations.fetch({
+					local: Offline.onLine(),
+					success: function (operations) {
+						console.log("Operations recupérées : ",operations);
+						var extendObject = $.extend({},account.attributes,operations);
+				    	var template = _.template(opeTabTemplate, {object: extendObject});
+				    	that.$el.html(template);
+				    	that.initGraphOptions(operations);
+					},
+					error: function() {
+						console.log("Error during fetch account operation: getOperation");
+					}
+		   		});
+			},   			
 
    			initGraphOptions: function (operations) {
    				// options for graph

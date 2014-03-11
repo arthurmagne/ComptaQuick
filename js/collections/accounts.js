@@ -19,7 +19,7 @@ define([
             }
           });
         });*/
-      this.storage = new Offline.Storage('localAccounts', this);
+      this.storage = new Offline.Storage('localAccounts', this/*, autoPush: true*/);
       
 
     },

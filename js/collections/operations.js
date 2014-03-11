@@ -15,7 +15,7 @@ define([
 
     initialize: function(options) {
       // first param is a name of storage, second is a link to collection
-      this.storage = new Offline.Storage('localOperations', this);
+      this.storage = new Offline.Storage('localOperations', this/*, autoPush: true*/);
 
       if (options){
         this.dateDebut = options.dateDebut;
@@ -23,6 +23,7 @@ define([
         this.maxOpe = options.maxOpe;
         this.typeOpe = options.typeOpe;
         this.accountId = options.accountId;
+        
       }
     },
 

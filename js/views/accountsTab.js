@@ -31,6 +31,10 @@ define([
 		        		console.log("accounts fetch success");
 		        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
 		        		that.$el.html(template);
+		        	},
+		        	error: function() {
+		        		console.log('Unbound server.');
+
 		        	}
 		        });
 
