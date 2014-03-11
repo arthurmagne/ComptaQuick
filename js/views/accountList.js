@@ -13,7 +13,9 @@ define([
 	el: '#list_account',
 
 	render: function (options) {
-		console.log("Account tab view");
+		console.log("Account list view");
+		console.log(options);
+
 		this.accounts = new Accounts();
 		console.log("account list :");
 		console.log(this.accounts);
@@ -22,13 +24,20 @@ define([
 		this.accounts.fetch({
 			success: function (accounts) {
 				console.log("accounts fetch success");
-				var object1 = {
-					account_id: options.account_id,
-					accounts: accounts.models
-				};
+				if (options){
+					var object1 = {
+						account_id: options.account_id,
+						accounts: accounts.models
+					};				
+				}else{
+					var object1 = {
+						account_id: "",
+						accounts: accounts.models
+					};
+				}
 				console.log(object1);
 				var template = _.template(accountListTemplate, {object: object1});
-				that.$el.html(template);			
+				that.$el.html(template);	
 			}
 		});
     },
@@ -36,7 +45,6 @@ define([
 	getAccount: function () {
 	  console.log("account:"+ $('select[name=list_account]').val());
 	  this.account = $('select[name=list_account]').val();		
-		
       return this.account;
     },
 	

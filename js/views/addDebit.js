@@ -31,7 +31,13 @@
 		this.paymentTypeListView = new PaymentTypeListView();
 		this.addOperationFormView = new AddOperationFormView();
 
-		this.accountListView.render({account_id: options.account_id});
+		if (options){
+			console.log("ICI");
+			this.accountListView.render({account_id: options.account_id});
+		}else{
+			console.log("LA");
+			this.accountListView.render();
+		}
 		this.paymentTypeListView.render();
 		this.addOperationFormView.render();
 		
