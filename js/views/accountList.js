@@ -24,13 +24,21 @@ define([
 		this.accounts.fetch({
 			success: function (accounts) {
 				console.log("accounts fetch success");
-				if (options){
+				if (options.account_id){
 					var object1 = {
+						allOptions: undefined,
 						account_id: options.account_id,
 						accounts: accounts.models
 					};				
+				}else if (options.allOptions){
+					var object1 = {
+						allOptions: true,
+						account_id: "",
+						accounts: accounts.models
+					};
 				}else{
 					var object1 = {
+						allOptions: undefined,
 						account_id: "",
 						accounts: accounts.models
 					};

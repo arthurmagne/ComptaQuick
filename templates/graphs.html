@@ -19,7 +19,8 @@
 		<label>
 			Numéro de compte
 		</label>
-		<select type="number" placeholder="Sélectionnez le compte" name="list_account" class="form-control" required>
+		<select type='number' placeholder='Sélectionnez le compte' name='list_account' id='list_account'class='form-control' required></select>
+		<!--<select type="number" placeholder="" name="list_account" class="form-control" required>
 			<% if (accounts.length == 0) { %>
 				<option value=""> Aucun compte disponible</option>
 			<% }else{ %>
@@ -27,7 +28,7 @@
 					<option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
 				<% }); %>
 			<% } %>
-		</select>
+		</select>-->
 	<div class="form-group graph-op-form show">
 		<label>
 				Type d'opérations

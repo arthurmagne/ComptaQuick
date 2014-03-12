@@ -10,8 +10,9 @@
   'text!../../templates/graphs.html',
   'collections/accounts',
   'models/account',
-  'views/paymentTypeList'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account, PaymentTypeListView){
+  'views/paymentTypeList',
+  'views/accountList'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account, PaymentTypeListView, AccountListView){
     var addDebitPage = Backbone.View.extend({
   	  events: {
         'submit .graph-form': 'switchType',
@@ -38,6 +39,8 @@
           that.typeOp = that.$el.find('select[name=select-op-type]');
           that.calendars = that.$el.find('.calendars');
           that.opForm = that.$el.find('.graph-op-form');
+          that.accountListView = new AccountListView();
+          that.accountListView.render({allOptions: true});
           that.payementTypeListView = new PaymentTypeListView();
           that.payementTypeListView.render({allOptions: true});
         }
@@ -83,6 +86,8 @@
       var begin, end, type;
 
       var account_id = this.$el.find('select[name=list_account]').val();
+      if (account_id == 'all')
+        account_id = undefined;
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();

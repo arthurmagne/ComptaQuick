@@ -199,11 +199,12 @@ $app->get('/paymentTypes', 'authenticate', function () {
 	
 $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'authenticate', function ($select, $id, $limit, $type, $begin, $end, $payementType) {
 	global $app;
+	$uid = $app->getEncryptedCookie('uid');
 
 	if ($select == 'byAccount'){
 		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType);
 	}else if ($select == 'byUser'){
-		// to change
+		$operations = getOperationsByUser($uid);
 	}else{
 		$app->halt(400);
 	}
@@ -220,7 +221,7 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'aut
 $app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
-	$operations = getOperationsByUser($idUser);
+	$operations = getOperationsByUser($uid);
 
 	$response = $app->response();
       $response['Content-Type'] = 'application/json';

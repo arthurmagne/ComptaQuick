@@ -22,9 +22,11 @@ define([
       }
     },
     url: function() {
-      // TODO : tester si on a un id de compte ou d'user
-     
       console.log("Id pour collection operations : ",this.accountId);
+      if (this.accountId == undefined){
+        return 'api/index.php/operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
+      }
+      // default case
       return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
     }
 	
