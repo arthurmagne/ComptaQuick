@@ -7,9 +7,11 @@ define([
 	'bootstrap-dialog.min',
 	'text!../../templates/accountsTab.html',
 	'collections/accounts',
-	'models/account'
+	'models/account',
+	'collections/operations',
+  	'models/paymentType'
 	], 
-	function(bootstrap, holder, $, _, Backbone, dialog, accountsTabTemplate, Accounts, Account){
+	function(bootstrap, holder, $, _, Backbone, dialog, accountsTabTemplate, Accounts, Account, Operations, PayementList){
 		var AccountsTab = Backbone.View.extend({
 			events: {
 				'click .clickableRow': 'detailAccount',
@@ -26,17 +28,48 @@ define([
 				this.accounts = new Accounts();
 				var that = this;
 
-		        this.accounts.fetch({
-		        	success: function (accounts) {
-		        		console.log("accounts fetch success");
-		        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
-		        		that.$el.html(template);
-		        	},
-		        	error: function() {
-		        		console.log('Unbound server.');
+				// we need to get all the data from the server first and put it in localStorage
+				localStorage.removeItem("localAccounts");
+				localStorage.removeItem("localOperations");
+				/*if (localStorage.getItem("localAccounts") !== null){
+					console.log("On a du storage");
+				}else{*/
+					// Accounts from this user
+			        this.accounts.fetch({
+			        	success: function (accounts) {
+			        		console.log("accounts fetch success");
+			        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
+			        		that.$el.html(template);
+			        		accounts.each(function (account) {
+			        			console.log( "accccccccccouuuuuut ",account);
+			        			var operations = new Operations({userId: account.get('account_id')});
+			        			operations.fetch({
+			        				success: function (operations) {
+			        					console.log("Operation fetch with success", operations);
+			        				},
+			        				error: function () {
+			        					console.log("Operation fetch error");
+			        				}
+			        			})
+			        		});
+			        	},
+			        	error: function() {
+			        		console.log('Unbound server.');
 
-		        	}
-		        });
+			        	}
+			        });
+
+			       /*var payementList = new PayementList();
+			        payementList.fetch({
+			        	success: function (operations) {
+	    					console.log("PayementList fetch with success");
+	    				},
+	    				error: function () {
+	    					console.log("PayementList fetch error");
+	    				}
+			        });*/
+				
+
 
 
     		},
