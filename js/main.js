@@ -12,6 +12,7 @@ require.config({
     holder: 'holder',
     backbone_rails: 'libs/backbone_rails/backbone_rails_sync',
     backbone_auth: 'libs/backbone_auth/backbone.basicauth',
+    backbone_dualstorage: 'libs/backbone_dualstorage/backbone.dualstorage.amd',
     highcharts: 'libs/highcharts/highcharts'
   },
 
@@ -36,13 +37,16 @@ require.config({
         backbone_auth: {
             deps: ['underscore']
         },
+
+        backbone_dualstorage: {
+          deps: ['underscore', 'backbone']
+        },
         
         highcharts: {
-            deps: ['jquery']
+          deps: ['jquery']
         }
 
     }
-
 });
 
 require([

@@ -4,13 +4,20 @@ define([
   'jquery',     // lib/jquery/jquery
   'underscore', // lib/underscore/underscore
   'backbone',
+  'backbone_dualstorage',
   'models/account'    // lib/backbone/backbone
-  ], function($, _, Backbone, Account){
+  ], function($, _, Backbone, DualStorage, Account){
    var Accounts = Backbone.Collection.extend({
 
     model: Account,
 
+    /****** DUALSTORAGE *******/
+    //remote: true // never cached, dualStorage is bypassed entirely
+    //local: true  // always fetched and saved only locally, never saves on remote
+    //local: function() { return trueOrFalse; } // local and remote can also be dynamic
+
     initialize: function(options) {
+
       /*this.model.bind("remove", function() {
           console.log("remove trigger");
           this.model.destroy({
@@ -19,8 +26,8 @@ define([
             }
           });
         });*/
-
     },
+
     url: function() {
       console.log("On va chercher l'url");
 

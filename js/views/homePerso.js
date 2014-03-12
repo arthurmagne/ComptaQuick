@@ -4,16 +4,17 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  //'backbone_storage',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   'text!../../templates/homePerso.html',
   'views/accountsTab'
-  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView){
-  var HomePage = Backbone.View.extend({
-    events: {
-      'click #logout': 'logout',
-      'click .drop-down-toggle': 'dropDownMenu'
-    },
+  ], function(bootstrap, holder, $, _, Backbone/*, DualStorage*/, homePersoTemplate, AccountsTabView){
+    var HomePage = Backbone.View.extend({
+      events: {
+        'click #logout': 'logout',
+        'click .drop-down-toggle': 'dropDownMenu'
+      },
 
     el: '#page',
 
@@ -55,7 +56,6 @@ define([
       this.$el.find('.drop-down-menu').toggleClass('show');
 
     },
-
 
     close: function () {
       $(this.el).unbind();

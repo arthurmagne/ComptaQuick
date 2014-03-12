@@ -8,15 +8,13 @@ define([
  
     initialize: function(options) {
 
-        if (options){
-          this.operationId = options.id;
-        }
-        // set the id of this model !! (no need for operation)
-        //this.set('id', this.get("account_id"));
-
-
-        
+      if (options){
+        this.operationId = options.id;
+      }
+      // set the id of this model !! (no need for operation)
+      //this.set('id', this.get("account_id"));        
     },
+
     url: function() {
         if (this.operationId){
             return 'api/index.php/account/operation/' + this.operationId;
@@ -24,8 +22,8 @@ define([
         if (this.get("id")){
             return 'api/index.php/account/operation/' + this.get("id");
         }
-		return 'api/index.php/editOperation';
-        console.log("Aucun id");
+		  return 'api/index.php/editOperation';
+      console.log("Aucun id");
     } 	
     });
   // Above we have passed in jQuery, Underscore and Backbone

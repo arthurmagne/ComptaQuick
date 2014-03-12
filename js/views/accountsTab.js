@@ -4,12 +4,13 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+	'backbone_dualstorage',
 	'bootstrap-dialog.min',
 	'text!../../templates/accountsTab.html',
 	'collections/accounts',
 	'models/account'
 	], 
-	function(bootstrap, holder, $, _, Backbone, dialog, accountsTabTemplate, Accounts, Account){
+	function(bootstrap, holder, $, _, Backbone, DualStorage, dialog, accountsTabTemplate, Accounts, Account){
 		var AccountsTab = Backbone.View.extend({
 			events: {
 				'click .clickableRow': 'detailAccount',
@@ -24,6 +25,7 @@ define([
 			render: function () {
 				console.log("Account tab view");
 				this.accounts = new Accounts();
+				//Accounts.create({name: "AccountList"})
 				var that = this;
 
 		        this.accounts.fetch({
