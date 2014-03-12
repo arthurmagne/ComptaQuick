@@ -203,7 +203,10 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'aut
 	if ($select == 'byAccount'){
 		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType);
 	}else if ($select == 'byUser'){
-		$operations = getOperations(getAccounts($id), $begin, $end, $type, $limit, $payementType);
+	        global $app;
+	        $uid = $app->getEncryptedCookie('uid');
+
+		$operations = getOperations(getAccounts($uid), $begin, $end, $type, $limit, $payementType);
 	}else{
 		$app->halt(400);
 	}
