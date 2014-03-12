@@ -18,14 +18,14 @@ function getAccounts($idUser)
 
 function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
 {
-  $accounts = (is_array($idAccounts)) ? $idAccounts : array(idAccounts);
+  $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
 
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
 				  ->leftJoin('o.PaymentType p')
 				  ->where('o.account_id = :idAccount', array(":idAccount" => $accounts[0]));
  
-  for($i = 1; $i < count($array); ++$i)
+  for($i = 1; $i < count($accounts); ++$i)
     $query->orWhere('o = :idAccount', array(":idAccount" => $accounts[$i]));
  
   if($begin != 'all')
