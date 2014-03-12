@@ -203,7 +203,7 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'aut
 	if ($select == 'byAccount'){
 		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType);
 	}else if ($select == 'byUser'){
-		// to change
+		$operations = getOperations(getAccounts($id), $begin, $end, $type, $limit, $payementType);
 	}else{
 		$app->halt(400);
 	}
@@ -217,17 +217,7 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'aut
 });
 
 
-$app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
-	global $app;
-	$uid = $app->getEncryptedCookie('uid');
-	$operations = getOperationsByUser($idUser);
 
-	$response = $app->response();
-      $response['Content-Type'] = 'application/json';
-      $json = json_encode($operations->toArray());
-
-	$response->body($json);
-});
 
 
 $app->delete('/account/operation/:id', 'authenticate', function($id){
