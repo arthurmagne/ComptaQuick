@@ -12,7 +12,7 @@ define([
 			
 	el: '#list_type',
 	
-	render: function () {
+	render: function (options) {
 		console.log("Payment List View : ");
 		this.paymentTypes = new PaymentTypes();
 		var that = this;
@@ -22,7 +22,18 @@ define([
 		this.paymentTypes.fetch({
 			success: function (paymentTypes) {
 				console.log("Payment Types fetch success");
-				var template = _.template(paymentTypeListTemplate, {paymentTypes: paymentTypes.models});
+				if (options) {
+					var concatObject = {
+						allOptions: options.allOptions,
+						payementTypes: paymentTypes.models
+					};
+				}else{
+					var concatObject = {
+						allOptions: undefined,
+						payementTypes: paymentTypes.models
+					};				
+				}
+				var template = _.template(paymentTypeListTemplate, {object: concatObject});
 				that.$el.html(template);
 				
 			}

@@ -74,31 +74,7 @@ $app->post('/editOperation', 'authenticate', function () {
 		$app->response()->header('X-Status-Reason', $e->getMessage());
 	}
 	
-	/*$operation = new Operation();
-	$operation->account_id = $account_id;
-	$operation->type_id = $type_id;
-	$operation->operation_date = $operation_date;
-	$operation->operation_desc = $operation_desc;
-	$operation->operation_name = $operation_name;
-	$operation->is_credit = $is_credit;
-	$operation->value = $value;
-
-	$response = $app->response();
-
-	if($operation->trySave()){
-		try{
-			$response['Content-Type'] = 'application/json';
-			// on crée notre objet
-			$operation_object = json_encode($operation->toArray());
-			$response->body($operation_object);
- 		} catch (Exception $e) {
-			$app->response()->status(400);
-			$app->response()->header('X-Status-Reason', $e->getMessage());
-		}
-	}
-	else{
-		$app->halt(400);
-	}*/
+	
 });
 
 $app->put('/account/operation/:id', 'authenticate', function ($id) {
@@ -212,7 +188,6 @@ $app->put('/editAccount', 'authenticate', function () {
 });
 
 $app->get('/paymentTypes', 'authenticate', function () {
-	#echo "Connexion automatique réussie";
 	global $app;
     $paymentTypes = Doctrine_Core::getTable('PaymentType')->findAll();
 	$response = $app->response();
@@ -222,16 +197,15 @@ $app->get('/paymentTypes', 'authenticate', function () {
 
 });
 	
-$app->get('/operations/:select/:id/:limit/:type/:begin/:end', 'authenticate', function ($select, $id, $limit, $type, $begin, $end) {
-	#echo "Connexion automatique réussie";
+$app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'authenticate', function ($select, $id, $limit, $type, $begin, $end, $payementType) {
 	global $app;
-// 	$uid = $app->getEncryptedCookie('uid');
 
 	if ($select == 'byAccount'){
-		$operations = getOperations($id, $begin, $end, $type, $limit);
-	}else{
+		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType);
+	}else if ($select == 'byUser'){
 		// to change
-		$app->halt(401);
+	}else{
+		$app->halt(400);
 	}
 	       		
 
@@ -256,7 +230,7 @@ $app->get('/operation/byUser/:idUser', 'authenticate', function($idUser){
 });
 
 
-$app->delete('/operation/:id', 'authenticate', function($id){
+$app->delete('/account/operation/:id', 'authenticate', function($id){
     deleteOperation($id);
  });
 

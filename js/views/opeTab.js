@@ -165,7 +165,8 @@ define([
 		    			that.operations.get(opId).destroy();
 
 		    			// remove row from tab
-		    			that.$el.find('.clickableRow[data-value='+opId+']').remove();
+		    			//that.$el.find('.op-row[data-value='+opId+']').remove();
+		    			that.render({account_id: that.accountId});
 		            
 		            }else {
 		                console.log("Suppression annulée");

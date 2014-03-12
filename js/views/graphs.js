@@ -9,8 +9,9 @@
   'models/operation',
   'text!../../templates/graphs.html',
   'collections/accounts',
-  'models/account'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account){
+  'models/account',
+  'views/paymentTypeList'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account, PaymentTypeListView){
     var addDebitPage = Backbone.View.extend({
   	  events: {
         'submit .graph-form': 'switchType',
@@ -37,6 +38,8 @@
           that.typeOp = that.$el.find('select[name=select-op-type]');
           that.calendars = that.$el.find('.calendars');
           that.opForm = that.$el.find('.graph-op-form');
+          that.payementTypeListView = new PaymentTypeListView();
+          that.payementTypeListView.render({allOptions: true});
         }
       });
     },
@@ -102,17 +105,20 @@
          end = undefined;
       }
 
+      var payementType = this.$el.find('select[name=list_type]').val();
+      if (payementType == 'all')
+        payementType = undefined;
 
       var limit = this.$el.find('input[name=limit]').val();
       if (limit == '')
         limit = undefined;
 
       var type = this.typeOp.val();
-       if (type == 'all')
+      if (type == 'all')
         type = undefined;
       
 
-      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type});
+      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type, payementType: payementType});
       var that = this;
       operations.fetch({
         success: function (operations) {

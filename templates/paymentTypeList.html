@@ -1,8 +1,12 @@
-		<% if (paymentTypes.length == 0) { %>
-		<option value=""> Aucun type de paiement disponible</option>
-		<% }else{ %>
-		<% _.each(paymentTypes, function(paymentType, cpt) { %>
-		<option value="<%= paymentType.get("type_id") %>"><%= paymentType.get("type_name") %></option>
-		<% }); %>
-		<% } %>							
+<% var payementTypes = object.payementTypes; %>
+<% if (payementTypes.length == 0) { %>
+	<option value=""> Aucun type de paiement disponible</option>
+<% }else{ %>
+	<% if (object.allOptions) { %>
+		<option value="all">Tous type de paiement</option>
+	<% } %>
+	<% _.each(payementTypes, function(payementType, cpt) { %>
+		<option value="<%= payementType.get("type_id") %>"><%= payementType.get("type_name") %></option>
+	<% }); %>
+<% } %>							
 

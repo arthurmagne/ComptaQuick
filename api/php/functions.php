@@ -86,7 +86,7 @@ function getOperationsByUser($idUser, $limit = 0)
 function deleteOperation($idOperation)
 {
   $operation = Doctrine::getTable('Operation')->findOneById($idOperation);
-  $operation->remove();
+  $operation->delete();
 }
 
 
@@ -105,7 +105,7 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   $operation->operation_desc = $operation_desc;
   
   if($payment_id != 0)
-     $operation->type_id;
+     $operation->type_id = $payment_id;
 
   //if date isn't set, use today's date with format "yyyy/mm/dd"
   $operation->operation_date = ($date == 0) ? date('Y-m-d') : $date;
