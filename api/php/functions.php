@@ -93,7 +93,7 @@ function deleteOperation($idOperation)
   $operation = Doctrine::getTable('Operation')->findOneById($idOperation);
   $account = Doctrine::getTable('Account')->findOneByAccount_id($operation->account_id);
   
-  $account->balance += ($operation->is_credit) ? $operation->value : (-$operation->value);
+  $account->balance += ($operation->is_credit) ? -($operation->value) : $operation->value;
   $account->save();
   
   $operation->delete();
