@@ -12,26 +12,39 @@ define([
 	
 	el: '#list_account',
 
-	render: function () {
-		console.log("Account tab view");
+	render: function (options) {
+		console.log("Account list view");
+		console.log(options);
+
 		this.accounts = new Accounts();
 		console.log("account list :");
 		console.log(this.accounts);
 		var that = this;
+
 		this.accounts.fetch({
 			success: function (accounts) {
 				console.log("accounts fetch success");
-				var template = _.template(accountListTemplate, {accounts: accounts.models});
-				that.$el.html(template);			
+				if (options){
+					var object1 = {
+						account_id: options.account_id,
+						accounts: accounts.models
+					};				
+				}else{
+					var object1 = {
+						account_id: "",
+						accounts: accounts.models
+					};
+				}
+				console.log(object1);
+				var template = _.template(accountListTemplate, {object: object1});
+				that.$el.html(template);	
 			}
 		});
-
     },
 	
 	getAccount: function () {
 	  console.log("account:"+ $('select[name=list_account]').val());
 	  this.account = $('select[name=list_account]').val();		
-		
       return this.account;
     },
 	
