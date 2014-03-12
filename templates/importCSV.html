@@ -2,14 +2,14 @@
 <div>
   <p>
     <select type="number" placeholder="Sélectionnez le compte" name="list_account" class="form-control" required>
-      <% if (accounts.length == 0) { %>
-        <option value=""> Aucun compte disponible</option>
-      <% }else{ %>
-        <% _.each(accounts, function(account, cpt) { %>
-          <option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
-        <% }); %>
-      <% } %>
-    </select>
+        <% if (accounts.length == 0) { %>
+          <option value=""> Aucun compte disponible</option>
+        <% }else{ %>
+          <% _.each(accounts, function(account, cpt) { %>
+            <option value="<%= account.get("account_id") %>"><%= account.get("account_name") %></option>
+          <% }); %>
+        <% } %>
+      </select>
   </p>
   <p>
     <select type="number" placeholder="Delimiteur" name="delimiteur" id="delimiteur" class="form-control" required>
