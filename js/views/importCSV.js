@@ -54,8 +54,10 @@ define([
 		var idacc = this.$el.find('select[name=list_account]').val();
 		console.log(idacc);
 		console.log(op);
-		if(parseInt(op) < 0){
+		var operation =  parseInt(op);
+		if(operation < 0){
 			var credit = 0;
+			operation= Math.abs(operation);
 		}else{
 			var credit = 1;
 		}
@@ -69,12 +71,12 @@ define([
     		operation_name: name,
     		operation_desc: desc,
     		is_credit: credit,
-    		value: parseInt(op),
+    		value: operation,
     		type_id: 3
 		};
-
-		console.log(data);	
+	
     	var operation = new Operation(data);
+    	console.log(operation);	
     	this.operations.add(operation);
     },
 
