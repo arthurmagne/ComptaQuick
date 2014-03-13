@@ -12,7 +12,8 @@ define([
   ], function(bootstrap, holder, $, _, Backbone, importCSVTemplate, Operations, Operation, Accounts, Account){
     var importfile = Backbone.View.extend({
 	events: {
-        'change #importFile': 'handleFileSelect'
+        'change #importFile': 'handleFileSelect',
+        'click #validImport': 'saveImport'
     },
 
 	el: '#center-page', 
@@ -20,51 +21,84 @@ define([
 	render: function () {
 	  	console.log("importCSV view");
 	  	this.accounts = new Accounts();
-      	console.log("account list :");
-      	console.log(this.accounts);
-      	var operations = new Operations();
-      	console.log(operations);
+	  	this.operations = new Operations();
+      	console.log("account list :" + this.accounts);
+      	console.log("operations :" + this.operations);
       	var that = this;
       	this.accounts.fetch({
-        success: function (accounts) {
-          console.log("accounts fetch success");
-          var template = _.template(importCSVTemplate, {accounts: accounts.models});
-          that.$el.html(template);   
-        }
-      });  
+	        success: function (accounts) {
+	          console.log("accounts fetch success");
+	          var template = _.template(importCSVTemplate, {accounts: accounts.models});
+	          that.$el.html(template);   
+	        }
+      	});  
     },
 
+    saveImport: function(event) {
+    	event.preventDefault();
+    	this.operations.each(function(operation){
+      		console.log(operation);
+      		operation.save({}, {
+			  success: function() {
+			    console.log("sauvegardé");
+			  },
+			  error: function() {
+			    console.log("oupss");
+			  }
+			});
+      	});
+    },
 
     saveOperation: function(date, name, desc, op) {
-		console.log(date + " " +  name + " " + desc +" "+ op);		
+		//console.log(date + " " +  name + " " + desc +" "+ op);		
 		var idacc = this.$el.find('select[name=list_account]').val();
 		console.log(idacc);
 		console.log(op);
-
 		if(parseInt(op) < 0){
 			var credit = 0;
 		}else{
 			var credit = 1;
 		}
 
+		var dateparsed = this.parseDate(date);
 		console.log(credit);
 
 		var data = {
 			account_id: idacc,
-    		type_id: "4",
-    		operation_date: date,
+    		operation_date: dateparsed,
     		operation_name: name,
     		operation_desc: desc,
-    		is_credit: 1,
-    		value: op
+    		is_credit: credit,
+    		value: parseInt(op),
+    		type_id: 3
 		};
 
 		console.log(data);	
     	var operation = new Operation(data);
-    	console.log(operation);
-    	console.log(this.operations);
-    	
+    	this.operations.add(operation);
     },
+
+ 	parseDate: function(date) {
+ 		var dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+	    if (date == "" ) {
+			console.log("Insérer une date");
+		}
+	  	if (!(dateRegex.test(date))) {
+        //error_msg += "La date de l'opération n'est pas valide. <br>";
+		//this.addOperationFormView.setErrorOpDate(true);
+		console.log("format de date invalide");
+      	}	
+
+  		dd = date.substring(0,2);
+		mm = date.substring(3,5);
+		yyyy = date.substring(6,10);
+
+		d = yyyy+"-"+mm+"-"+dd
+		console.log("transforme "+d);
+		return d;  
+ 	},
+
+
 
     parseCSV: function(text, lineTerminator, cellTerminator) {
     	var table = this.$el.find('#import-table');	 
