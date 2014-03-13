@@ -20,7 +20,7 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
 				  ->leftJoin('o.PaymentType p')
-				  ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount));
+				  ->where('o.id = :idAccount', array(":idAccount" => $idAccount));
   
   if($begin != 'all')
   {
@@ -114,7 +114,7 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   $operation->save();
 
 
-  $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($idAccount);
+  $account = Doctrine_Core::getTable('Account')->findOneById($idAccount);
   $account->balance += ($isCredit) ? $value : -($value);
   $account->save();
 
@@ -154,7 +154,7 @@ function balanceFromUser($idUser)
   $accounts = getAccounts($idUser);
   $arr = array();
   foreach($accounts as $account)
-    $arr[$account->account_id] = balanceFromAccount($account->account_id);
+    $arr[$account->id] = balanceFromAccount($account->id);
     
   return $arr;
 }

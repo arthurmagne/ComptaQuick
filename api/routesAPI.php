@@ -148,7 +148,7 @@ $app->post('/editAccount', 'authenticate', function () {
 
 	$account = new Account();
 	if ($id != ""){
-		$account->account_id = $id;
+		$account->id = $id;
 	}
 	$account->account_name = $name;
 	if ($balance != ""){
@@ -189,7 +189,7 @@ $app->put('/editAccount', 'authenticate', function () {
     $name 	    = $body['account_name'];
     $id 	    = $body['id'];
 
-    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+    $account = Doctrine_Core::getTable('Account')->findOneById($id);
 
     $account->account_name = $name;
 
@@ -262,16 +262,24 @@ $app->delete('/operation/:id', 'authenticate', function($id){
     deleteOperation($id);
  });
 
+$app->get('/ping', function(){
+    global $app;
+    $response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode("pong");
+	$response->body($json);
+ });
+
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;
-    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+    $account = Doctrine_Core::getTable('Account')->findOneById($id);
     $account->delete();
 });
 
 $app->get('/account/:id', 'authenticate', function ($id) {
 	global $app;
-    $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($id);
+    $account = Doctrine_Core::getTable('Account')->findOneById($id);
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
     $json = json_encode($account->toArray());

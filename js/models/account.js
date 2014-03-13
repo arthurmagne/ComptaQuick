@@ -18,10 +18,6 @@ define([
         this.accountId = options.id;
         this.set('id', options.id);
 
-      }else{
-        // set the id of this model !!
-        console.log("set the id");
-        this.set('id', this.get("account_id"));
       }
         
     },

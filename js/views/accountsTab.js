@@ -29,35 +29,29 @@ define([
 				var that = this;
 
 				// we need to get all the data from the server first and put it in localStorage
-				localStorage.removeItem("localAccounts");
-				localStorage.removeItem("localOperations");
+				if (navigator.onLine) {
+					$.ajax({
+			            url:"api/index.php/ping",
+			            success: function(response){
+			            	console.log("DEBUG :",response);
+			            	if (response == "pong")
+								localStorage.removeItem("localAccounts");
+							that.fetchAccount();
+			            },
+			            error: function() {
+			            	console.log("DEBUG : localStorage dirty");
+							that.fetchAccount();
+			            }
+		        	});
+				}
+				//localStorage.clear();
+				//localStorage.removeItem("localOperations");
 				/*if (localStorage.getItem("localAccounts") !== null){
 					console.log("On a du storage");
 				}else{*/
 					// Accounts from this user
-			        this.accounts.fetch({
-			        	success: function (accounts) {
-			        		console.log("accounts fetch success");
-			        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
-			        		that.$el.html(template);
-			        		accounts.each(function (account) {
-			        			console.log( "accccccccccouuuuuut ",account);
-			        			var operations = new Operations({userId: account.get('account_id')});
-			        			operations.fetch({
-			        				success: function (operations) {
-			        					console.log("Operation fetch with success", operations);
-			        				},
-			        				error: function () {
-			        					console.log("Operation fetch error");
-			        				}
-			        			})
-			        		});
-			        	},
-			        	error: function() {
-			        		console.log('Unbound server.');
-
-			        	}
-			        });
+			        
+			    
 
 			       /*var payementList = new PayementList();
 			        payementList.fetch({
@@ -72,6 +66,34 @@ define([
 
 
 
+    		},
+
+    		fetchAccount: function () {
+    			var that = this;
+    			this.accounts.fetch({
+		        	local: false,
+		        	success: function (accounts) {
+		        		console.log("accounts fetch success");
+		        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
+		        		that.$el.html(template);
+		        		accounts.each(function (account) {
+		        			console.log( "accccccccccouuuuuut ",account);
+		        			var operations = new Operations({userId: account.get('account_id')});
+		        			operations.fetch({
+		        				success: function (operations) {
+		        					console.log("Operation fetch with success", operations);
+		        				},
+		        				error: function () {
+		        					console.log("Operation fetch error");
+		        				}
+		        			})
+		        		});
+		        	},
+		        	error: function() {
+		        		console.log('Unbound server.');
+
+		        	}
+		        });
     		},
 
     		detailAccount: function (event) {
