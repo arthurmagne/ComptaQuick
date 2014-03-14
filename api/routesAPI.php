@@ -25,7 +25,7 @@ $app->get('/loginAuto', 'authenticate', function () {
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
     $key = $app->getEncryptedCookie('key');
-    $user = Doctrine_Core::getTable('User')->findOneByUser_idAndPassword($uid, $key);
+    $user = Doctrine_Core::getTable('User')->findOneByIdAndPassword($uid, $key);
 	$response = $app->response();
     $response['Content-Type'] = 'application/json';  
 
@@ -118,14 +118,12 @@ $app->post('/editAccount', 'authenticate', function () {
     // on récupère les données du formulaire
     $body = json_decode($body, true);
 
-    $id 		= $body['account_number'];
+    $account_number 		= $body['account_number'];
     $name 	    = $body['account_name'];
     $balance 	= $body['balance'];
 
 	$account = new Account();
-	if ($id != ""){
-		$account->id = $id;
-	}
+	$account->account_number = $account_number;
 	$account->account_name = $name;
 	if ($balance != ""){
 		$account->balance = $balance;
@@ -256,7 +254,7 @@ $app->post('/login', function () {
     // On vérifie ici si l'user existe
     if ($user) {    	
 	    try {
-			$id = $user->user_id;
+			$id = $user->id;
 			$firstname = $user->firstname;
 			$lastname = $user->lastname;
 			$email = $user->email;
@@ -315,7 +313,7 @@ $app->post('/subscribe', function () {
 
 	if($user->trySave()){
 	    try {
-	    	$id = $user->user_id;
+	    	$id = $user->id;
 			$app->setEncryptedCookie('uid', $id, '60 minutes');
 			$app->setEncryptedCookie('uma', $email, '60 minutes');
 			$app->setEncryptedCookie('key', $password, '60 minutes');
