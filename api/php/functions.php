@@ -8,7 +8,7 @@ define('DEBIT', 2);
 
 function getAccounts($idUser)
 {
- $query =  Doctrine_Query::create()->select('account_id')
+ $query =  Doctrine_Query::create()->select('id')
 				  ->from('Account')
 				  ->where('user_id = :userId', array(":userId" => $idUser));
  $results = $query->execute();
@@ -16,7 +16,7 @@ function getAccounts($idUser)
  $accounts = array();
 
  for($i = 0; $i < count($results); ++$i)
-   array_push($accounts, $results[$i]->account_id);
+   array_push($accounts, $results[$i]->id);
 
  // print_r($accounts);
 
@@ -105,7 +105,7 @@ function getOperationsByUser($idUser, $limit = 0)
 function deleteOperation($idOperation)
 {
   $operation = Doctrine::getTable('Operation')->findOneById($idOperation);
-  $account = Doctrine::getTable('Account')->findOneByAccount_id($operation->account_id);
+  $account = Doctrine::getTable('Account')->findOneById($operation->account_id);
   
   $account->balance += ($operation->is_credit) ? -($operation->value) : $operation->value;
   $account->save();
@@ -138,7 +138,7 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   $operation->save();
 
 
-  $account = Doctrine_Core::getTable('Account')->findOneByAccount_id($idAccount);
+  $account = Doctrine_Core::getTable('Account')->findOneById($idAccount);
   $account->balance += ($isCredit) ? $value : -($value);
   $account->save();
 
@@ -178,7 +178,7 @@ function balanceFromUser($idUser)
   $accounts = getAccounts($idUser);
   $arr = array();
   foreach($accounts as $account)
-    $arr[$account->account_id] = balanceFromAccount($account->account_id);
+    $arr[$account->id] = balanceFromAccount($account->id);
     
   return $arr;
 }

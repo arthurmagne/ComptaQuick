@@ -112,7 +112,7 @@ define([
       if (route != 'route'){
         var routeName = route.split(':')[1];
         $('.nav-sidebar li').removeClass('active');
-        if ((routeName == "addAccount") || (routeName == 'graphs') || (routeName == 'addCredit') || (routeName == 'addDebit')){
+        if ((routeName == "addAccount") || (routeName == 'graphs') || (routeName == 'addCredit') || (routeName == 'addDebit') || (routeName == 'importCSV')){
           $('.nav-sidebar li.' + routeName).addClass('active');
         }else{
           $('.nav-sidebar li.perso').addClass('active');

@@ -22,7 +22,7 @@ abstract class BaseAccount extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->setTableName('account');
-        $this->hasColumn('account_id', 'integer', null, array(
+        $this->hasColumn('id', 'integer', null, array(
              'type' => 'integer',
              'primary' => true,
              'autoincrement' => true,
@@ -48,7 +48,7 @@ abstract class BaseAccount extends Doctrine_Record
              'foreign' => 'user_id'));
 
         $this->hasMany('Operation', array(
-             'local' => 'account_id',
+             'local' => 'id',
              'foreign' => 'account_id'));
     }
 }
