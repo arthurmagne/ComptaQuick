@@ -146,6 +146,8 @@
       var begin, end, type;
       
       var account_id = this.$el.find('select[name=list_account]').val();
+      if (account_id == 'all')
+        account_id = undefined;
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
