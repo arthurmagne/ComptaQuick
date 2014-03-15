@@ -67,9 +67,9 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
       $query->addWhere('NOT o.is_credit');
       break;
   }
-  
+
   if($paymentId != 0)
-    $query->addWhere('p.type_id = :paymentId', array(':paymentId' => $paymentId));
+    $query->addWhere('p.id = :paymentId', array(':paymentId' => $paymentId));
   
   if($tag != 0)
     $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag));

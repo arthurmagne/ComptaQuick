@@ -303,7 +303,11 @@ define([
 			},
 
 			drawGraphs: function (graphOptions) {
-				this.$el.find('#graphs').highcharts(graphOptions);
+				if (this.operations.length != 0){
+					this.$el.find('#graphs').highcharts(graphOptions);
+				}else{
+					this.$el.find('#graphs').remove();
+				}
 				
 			}
 			

@@ -297,7 +297,11 @@
       }); 
       // don't forget to reverse it
       graphOptions.series[0].data = jsonArray;
-      this.$el.find('#graphs').highcharts(graphOptions);
+      if (this.operations.length != 0){
+          this.$el.find('#graphs').highcharts(graphOptions);
+        }else{
+          this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
+        }
   
     },
       
