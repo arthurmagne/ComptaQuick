@@ -17,6 +17,9 @@ body {
   border-bottom: 1px solid #eee;
 }
 
+#background{
+  display: none;
+}
 
 /*
  * Sidebar
@@ -27,7 +30,7 @@ body {
   .sidebar {
     -webkit-transition: margin-left .5s;
     transition: margin-left .5s;
-    margin-left: -140px !important;
+    margin-left: -158px !important;
     position: fixed;
     z-index: 1000;
     background: white;
@@ -36,8 +39,45 @@ body {
   }
 
   /* Hide for mobile, show later */
-  .sidebar:hover {
+  .sidebar.disp {
     margin-left: 20px !important;
+  }
+
+  #bg-video VIDEO {
+    display: none;
+  }
+  #background.home-background{
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(126, 183, 255);
+  }
+  .device{
+    display: none;
+  }
+
+  .preview-img{
+    display: none;
+  } 
+
+  .download{
+    display: none;
+  }
+
+  .main-title{
+    margin-top: 130px !important;
+
+  }
+
+  .center-content{
+    width: 415px !important;
+  }
+
+  .main-title{
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 

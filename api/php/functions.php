@@ -8,20 +8,39 @@ define('DEBIT', 2);
 
 function getAccounts($idUser)
 {
-  $table = Doctrine_Core::getTable('Account');
-  
-  return $table->findByUser_id($idUser);
+ $query =  Doctrine_Query::create()->select('id')
+				  ->from('Account')
+				  ->where('user_id = :userId', array(":userId" => $idUser));
+ $results = $query->execute();
+
+ $accounts = array();
+
+ for($i = 0; $i < count($results); ++$i)
+   array_push($accounts, $results[$i]->id);
+
+ // print_r($accounts);
+
+ return $accounts;
 }
 
 
 
-function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
+function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
 {
+
+  $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
+
+
+
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
 				  ->leftJoin('o.PaymentType p')
-				  ->where('o.id = :idAccount', array(":idAccount" => $idAccount));
-  
+
+				  ->where('o.account_id IN ?', array($accounts));
+				//  ->where('o.account_id = :idAccount', array(":idAccount" => $accounts[0]));
+ 
+
+ 
   if($begin != 'all')
   {
       
@@ -33,12 +52,11 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
     
     
     
-    
     if($begin != 0)
-      $query->addwhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
+      $query->addWhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
 								  
     if($end != 0)
-      $query->addwhere('o.operation_date <= :endDate', array(':endDate' => $end));
+      $query->addWhere('o.operation_date <= :endDate', array(':endDate' => $end));
    }
 								
   switch($type)
@@ -48,10 +66,11 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
       break;
     case DEBIT:
       $query->addWhere('NOT o.is_credit');
+      break;
   }
-  
+
   if($paymentId != 0)
-    $query->addWhere('p.type_id = :paymentId', array(':paymentId' => $paymentId));
+    $query->addWhere('p.id = :paymentId', array(':paymentId' => $paymentId));
   
   if($tag != 0)
     $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag));
@@ -65,6 +84,7 @@ function getOperations($idAccount, $begin=0 , $end=0, $type=0, $limit=0, $paymen
 }
 
 
+/*
 function getOperationsByUser($idUser, $limit = 0)
 {
 
@@ -81,12 +101,17 @@ function getOperationsByUser($idUser, $limit = 0)
   return $query->execute();  
 }
 
-
+*/
 
 function deleteOperation($idOperation)
 {
   $operation = Doctrine::getTable('Operation')->findOneById($idOperation);
-  $operation->remove();
+  $account = Doctrine::getTable('Account')->findOneById($operation->account_id);
+  
+  $account->balance += ($operation->is_credit) ? -($operation->value) : $operation->value;
+  $account->save();
+  
+  $operation->delete();
 }
 
 
@@ -105,7 +130,7 @@ function operation($isCredit, $idAccount, $value, $payment_id="", $operation_nam
   $operation->operation_desc = $operation_desc;
   
   if($payment_id != 0)
-     $operation->type_id;
+     $operation->type_id = $payment_id;
 
   //if date isn't set, use today's date with format "yyyy/mm/dd"
   $operation->operation_date = ($date == 0) ? date('Y-m-d') : $date;
@@ -173,7 +198,6 @@ function balanceFromUser($idUser)
   echo "\t".$operations[$i]->type_name."\n";
   
 }*/
-//
 
 
 

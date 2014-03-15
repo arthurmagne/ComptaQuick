@@ -43,7 +43,11 @@
 	text-align: right;
 	margin-bottom: 70px;
 	font-size: 3em;
+	position: relative;
+	margin-left: 265px;
 	margin-right: 101px;
+	display: block;
+	height: 80px;
 }
 
 .device{
@@ -57,6 +61,8 @@
 .preview-img{
 	margin-top: 74px;
 	margin-left: 23px;
+	width: 200px;
+	height: 350px;
 }
 
 .download{

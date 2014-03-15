@@ -54,6 +54,7 @@ define([
       var _data = this.attributes();
       console.log(_data);
 
+
       if (!_data.account_name){
         error_msg += 'Veuillez indiquer un nom de compte.<br>';
         this.name.addClass("form-error");
@@ -62,6 +63,11 @@ define([
       var intRegex = /^\+?[1-9]\d*$/;
       if( (_data.account_number != "" ) && !(intRegex.test(_data.account_number))) {
         error_msg += 'Le numéro de compte doit être un entier positif.<br>';
+        this.number.addClass("form-error");
+      }
+
+      if (!_data.account_number){
+        error_msg += 'Veuillez indiquer un numéro de compte.<br>';
         this.number.addClass("form-error");
       }
       // ckeck if the balance is a number
@@ -93,8 +99,7 @@ define([
         },
         error: function (){
           console.log("Ann error occured");
-            error_msg += 'Ce numéro de compte existe déjà.<br>';
-            that.number.addClass("form-error");
+            error_msg += 'Une erreur est survenue.<br>';
             that.error_msg.html(error_msg);
         }
       });

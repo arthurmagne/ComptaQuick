@@ -9,8 +9,10 @@
   'models/operation',
   'text!../../templates/graphs.html',
   'collections/accounts',
-  'models/account'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account){
+  'models/account',
+  'views/paymentTypeList',
+  'views/accountList'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account, PaymentTypeListView, AccountListView){
     var addDebitPage = Backbone.View.extend({
   	  events: {
         'submit .graph-form': 'switchType',
@@ -37,6 +39,10 @@
           that.typeOp = that.$el.find('select[name=select-op-type]');
           that.calendars = that.$el.find('.calendars');
           that.opForm = that.$el.find('.graph-op-form');
+          that.accountListView = new AccountListView();
+          that.accountListView.render({allOptions: true});
+          that.payementTypeListView = new PaymentTypeListView();
+          that.payementTypeListView.render({allOptions: true});
         }
       });
     },
@@ -80,6 +86,8 @@
       var begin, end, type;
 
       var account_id = this.$el.find('select[name=list_account]').val();
+      if (account_id == 'all')
+        account_id = undefined;
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
@@ -102,17 +110,20 @@
          end = undefined;
       }
 
+      var payementType = this.$el.find('select[name=list_type]').val();
+      if (payementType == 'all')
+        payementType = undefined;
 
       var limit = this.$el.find('input[name=limit]').val();
       if (limit == '')
         limit = undefined;
 
       var type = this.typeOp.val();
-       if (type == 'all')
+      if (type == 'all')
         type = undefined;
       
 
-      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type});
+      var operations = new Operations({accountId: account_id, maxOpe: limit, dateDebut: begin, dateFin: end, typeOpe: type, payementType: payementType});
       var that = this;
       operations.fetch({
         success: function (operations) {
@@ -135,6 +146,8 @@
       var begin, end, type;
       
       var account_id = this.$el.find('select[name=list_account]').val();
+      if (account_id == 'all')
+        account_id = undefined;
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
@@ -284,7 +297,11 @@
       }); 
       // don't forget to reverse it
       graphOptions.series[0].data = jsonArray;
-      this.$el.find('#graphs').highcharts(graphOptions);
+      if (this.operations.length != 0){
+          this.$el.find('#graphs').highcharts(graphOptions);
+        }else{
+          this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
+        }
   
     },
       

@@ -23,15 +23,17 @@ define([
         this.maxOpe = options.maxOpe;
         this.typeOpe = options.typeOpe;
         this.accountId = options.accountId;
-        
+        this.payementType = options.payementType;
       }
     },
 
     url: function() {
-      // TODO : tester si on a un id de compte ou d'user
-     
       console.log("Id pour collection operations : ",this.accountId);
-      return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin;
+      if (this.accountId == undefined){
+        return 'api/index.php/operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
+      }
+      // default case
+      return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
     }
 	
 

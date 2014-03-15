@@ -183,7 +183,8 @@ define([
 		    			that.operations.get(opId).destroy();
 
 		    			// remove row from tab
-		    			that.$el.find('.clickableRow[data-value='+opId+']').remove();
+		    			//that.$el.find('.op-row[data-value='+opId+']').remove();
+		    			that.render({account_id: that.accountId});
 		            
 		            }else {
 		                console.log("Suppression annulée");
@@ -320,7 +321,11 @@ define([
 			},
 
 			drawGraphs: function (graphOptions) {
-				this.$el.find('#graphs').highcharts(graphOptions);
+				if (this.operations.length != 0){
+					this.$el.find('#graphs').highcharts(graphOptions);
+				}else{
+					this.$el.find('#graphs').remove();
+				}
 				
 			}
 			

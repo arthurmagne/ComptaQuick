@@ -21,6 +21,7 @@ define([
     render: function () {
       var template = _.template(homeTemplate);
       this.$el.html(template);
+      $("#background").addClass("home-background");
     },
 
     showConnexionForm: function () {

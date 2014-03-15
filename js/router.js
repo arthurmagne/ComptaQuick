@@ -12,8 +12,9 @@ define([
   'views/addDebit',
   'views/addCredit',
   'views/graphs',
-  'views/accountsTab'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView, AccountsTabView){
+  'views/accountsTab',
+  'views/importCSV'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView, AccountsTabView, ImportCSV){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
@@ -26,7 +27,8 @@ define([
         'addAccount': 'addAccount',
     		'addDebit': 'addDebit',
         'addCredit': 'addCredit',
-    		'graphs': 'graphs'
+    		'graphs': 'graphs',
+        'importCSV':'importCSV'
     }
   });
 
@@ -95,6 +97,12 @@ define([
       accountListView.render();
     });
 
+  app_router.on('route:importCSV', function() {
+      console.log("route: importCSV");
+      importCSV = new ImportCSV();
+      importCSV.render();
+    });
+
     Backbone.View.prototype.goTo = function (loc) {
       app_router.navigate(loc, true);
     };
@@ -104,7 +112,7 @@ define([
       if (route != 'route'){
         var routeName = route.split(':')[1];
         $('.nav-sidebar li').removeClass('active');
-        if ((routeName == "addAccount") || (routeName == 'graphs') || (routeName == 'addCredit') || (routeName == 'addDebit')){
+        if ((routeName == "addAccount") || (routeName == 'graphs') || (routeName == 'addCredit') || (routeName == 'addDebit') || (routeName == 'importCSV')){
           $('.nav-sidebar li.' + routeName).addClass('active');
         }else{
           $('.nav-sidebar li.perso').addClass('active');

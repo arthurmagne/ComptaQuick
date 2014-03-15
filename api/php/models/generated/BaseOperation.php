@@ -60,6 +60,6 @@ abstract class BaseOperation extends Doctrine_Record
 
         $this->hasOne('PaymentType', array(
              'local' => 'type_id',
-             'foreign' => 'type_id'));
+             'foreign' => 'id'));
     }
 }

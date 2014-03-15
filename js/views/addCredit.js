@@ -1,5 +1,4 @@
-	
-	define([
+define([
   'bootstrap',
   'holder',
   'jquery',
@@ -30,8 +29,12 @@
 		this.accountListView = new AccountListView();
 		this.paymentTypeListView = new PaymentTypeListView();
 		this.addOperationFormView = new AddOperationFormView();
-
-		this.accountListView.render({account_id: options.account_id});
+		if (options){
+			this.accountListView.render({account_id: options.account_id});
+		}else{
+			this.accountListView.render();
+		}
+		
 		this.paymentTypeListView.render();
 		this.addOperationFormView.render();	
 		
