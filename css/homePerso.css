@@ -46,6 +46,32 @@
 	color: #2a6496;
 }
 
+.display-menu-arrow{
+	display: none;
+}
+
+@media (max-width: 768px) {
+	.display-menu-arrow{
+		width: 34px;
+		height: 90px;
+		float: right;
+		display: block;
+		background: url("../img/right-arrow.png") no-repeat;
+		background-size: 34px 90px;
+		position: absolute;
+		top: 50%;
+		left: 164px;
+		z-index: 1000;
+
+	}
+
+	.display-menu-arrow.disp{
+		background: url("../img/left-arrow.png") no-repeat;
+		background-size: 34px 90px;
+	}
+
+}
+
 
 
 

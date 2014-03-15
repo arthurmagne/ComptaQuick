@@ -12,7 +12,8 @@ define([
   var HomePage = Backbone.View.extend({
     events: {
       'click #logout': 'logout',
-      'click .drop-down-toggle': 'dropDownMenu'
+      'click .drop-down-toggle': 'dropDownMenu',
+      'click .display-menu-arrow': 'displayMenu'
     },
 
     el: '#page',
@@ -23,6 +24,7 @@ define([
       console.log("home perso avec comme model : ", window.userSession.attributes.model);
       var accountsTabView = new AccountsTabView();
       accountsTabView.render();
+      $("#background").removeClass("home-background");
 
     },
 
@@ -36,7 +38,7 @@ define([
         statusCode: {
           200: function (response) {
             console.log("Déconnexion réussie.");
-            that.close();
+            //that.close();
             Backbone.View.prototype.goTo('/');
 
           },
@@ -54,6 +56,12 @@ define([
       event.preventDefault();
       this.$el.find('.drop-down-menu').toggleClass('show');
 
+    },
+
+    displayMenu: function (event) {
+      event.preventDefault();
+      this.$el.find('.sidebar').toggleClass('disp');
+      this.$el.find('.display-menu-arrow').toggleClass('disp');
     },
 
 

@@ -151,7 +151,7 @@ $app->post('/editAccount', 'authenticate', function () {
 });
 
 
-$app->put('/editAccount', 'authenticate', function () {
+$app->put('/account/:id', 'authenticate', function ($id) {
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
 
@@ -161,7 +161,6 @@ $app->put('/editAccount', 'authenticate', function () {
     $body = json_decode($body, true);
 
     $name 	    = $body['account_name'];
-    $id 	    = $body['id'];
 
     $account = Doctrine_Core::getTable('Account')->findOneById($id);
 

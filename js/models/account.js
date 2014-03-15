@@ -18,7 +18,7 @@ define([
             return 'api/index.php/account/' + this.get("account_id");
         }// update
         if (this.get("id")){
-            return 'api/index.php/editAccount';
+            return 'api/index.php/account/' + this.get("id");
         }
 
         console.log("Aucun accountId");
