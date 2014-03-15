@@ -29,3 +29,17 @@
 	width:100%;
 	height:400px;
 }
+
+.ope-tab .add-credit, .ope-tab .add-debit{
+	width: 50%;
+} 
+
+.add-op-btn td{
+	background-color: #428bca !important;
+	color: white;
+	cursor: pointer;
+}
+
+.add-op-btn td:hover{
+	background-color: rgb(111, 172, 223) !important;
+}

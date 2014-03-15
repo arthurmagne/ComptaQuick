@@ -74,6 +74,11 @@ body {
   .center-content{
     width: 415px !important;
   }
+
+  .main-title{
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 }
 
 
