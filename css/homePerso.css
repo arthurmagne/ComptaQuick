@@ -50,6 +50,14 @@
 	display: none;
 }
 
+#sync.offline{
+	color: rgb(216, 79, 79);
+}
+
+#sync.online{
+	color: rgb(138, 211, 97);
+}
+
 @media (max-width: 768px) {
 	.display-menu-arrow{
 		width: 34px;

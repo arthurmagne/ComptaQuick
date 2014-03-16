@@ -13,7 +13,9 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"> <%= user.firstname %>  <%= user.lastname %></a></li>
+        <li><a href="#" id="sync" class="online">Online</a></li>
+        <li><a href="#" id="syncBtn" class="nosync">Synchronisé</a></li>
+        <li><a href="#" id="username"> <%= user.firstname %>  <%= user.lastname %></a></li>
         <li><a href="#" id="logout">Logout</a></li>
 
       </ul>

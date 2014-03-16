@@ -19,15 +19,25 @@ define([
             }
           });
         });*/
-      this.storage = new Offline.Storage('localAccounts', this/*, autoPush: true*/);
+      //this.storage = new Offline.Storage('localAccounts', this/*, autoPush: true*/);
       
 
     },
+
+    saveAll: function( ) {
+        // Loop over my collection...
+        _(this.models).each( function(account) {
+            // And POST for each object in the collection
+            console.log("Iterate : ",account);
+            account.save();
+        } );
+    },
+
     url: function() {
       console.log("On va chercher l'url");
 
       
-      return 'api/index.php/accounts';
+      return 'accounts';
 
     }
     

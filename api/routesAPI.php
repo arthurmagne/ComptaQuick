@@ -7,6 +7,11 @@ require_once 'php/config.php';
 
 \Slim\Slim::registerAutoloader();
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
+
 $app = new \Slim\Slim();
 
 $app->get('/hello/:name', 'authenticate', function ($name) {
@@ -28,13 +33,16 @@ $app->get('/loginAuto', 'authenticate', function () {
     $user = Doctrine_Core::getTable('User')->findOneByIdAndPassword($uid, $key);
 	$response = $app->response();
     $response['Content-Type'] = 'application/json';  
+    $response->header('Access-Control-Allow-Origin', '*'); 
+    $response->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, X-authentication, X-client');
+    $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
 	$user_object = json_encode($user->toArray());
 
 	$response->body($user_object);
 });
 
-$app->get('/accounts', 'authenticate', function () {
+$app->get('/accounts', function () {
 	#echo "Connexion automatique réussie";
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
@@ -216,7 +224,15 @@ $app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'aut
 });
 
 $app->delete('/account/operation/:id', 'authenticate', function($id){
+	global $app;
+
     deleteOperation($id);
+
+ //    $response = $app->response();
+ //    $response['Content-Type'] = 'application/json';
+ //    $json = json_encode($operations->toArray());
+
+	// $response->body($json);
  });
 
 $app->get('/ping', function(){
@@ -230,8 +246,16 @@ $app->get('/ping', function(){
 
 $app->delete('/account/:id', 'authenticate', function ($id) {
 	global $app;
+    
     $account = Doctrine_Core::getTable('Account')->findOneById($id);
+
+    $response = $app->response();
+    $response['Content-Type'] = 'application/json';
+    $json = json_encode($account->toArray());
+
     $account->delete();
+
+	$response->body($json);
 });
 
 $app->get('/account/:id', 'authenticate', function ($id) {

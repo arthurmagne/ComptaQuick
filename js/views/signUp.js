@@ -60,7 +60,7 @@ define([
       this.lastname.removeClass("form-error");
       this.captcha.removeClass("form-error");
       this.error_msg.html();
-      var url = 'api/index.php/subscribe';
+      var url = 'subscribe';
       console.log('Subscribing ... ');
       var that = this;
 

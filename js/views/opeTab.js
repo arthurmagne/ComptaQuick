@@ -36,7 +36,7 @@ define([
 				this.accountId = options.account_id;
 				this.operations = new Operations({accountId: this.accountId});
 				//var account = new Account({account_id: this.accountId});
-				var accounts = new Accounts();
+				/*var accounts = new Accounts();
 
 				accounts.fetch({
 					local: Offline.onLine(),
@@ -47,25 +47,36 @@ define([
 					error: function() {
 						console.log("Error during fetch account operation: render");
 					}
-				});
+				});*/
+				this.getOperations();
 			},
 
-			getOperations: function (accounts) {
-				var that = this;
+			getOperations: function () {
 				//DEBUG
-				console.log('getOperation: accounts =', accounts);
+				console.log('getOperation: accounts =', window.accounts);
 				console.log('getOperation: this.accountId =', this.accountId)
 
-				that.account = accounts.get(this.accountId);
+				this.account = window.accounts.get(this.accountId);
 				//DEBUG
-				console.log('getOperation: account =',that.account);
+				console.log('getOperation: account =',this.account);
 
-				that.accountBalance = that.account.get("balance");
-				that.operations.fetch({
+				this.accountBalance = this.account.get("balance");
+
+				// get the right operations
+				var operations = window.operationsTab[this.accountId];
+
+
+				console.log("OPERATIONS ",operations);
+
+				var extendObject = $.extend({},this.account.attributes,operations);
+		    	var template = _.template(opeTabTemplate, {object: extendObject});
+		    	this.$el.html(template);
+		    	this.initGraphOptions(operations);
+				/*that.operations.fetch({
 					local: Offline.onLine(),
 					success: function (operations) {
 						console.log("Operations recupérées : ",operations);
-						var extendObject = $.extend({},account.attributes,operations);
+						var extendObject = $.extend({},that.account.attributes,operations);
 				    	var template = _.template(opeTabTemplate, {object: extendObject});
 				    	that.$el.html(template);
 				    	that.initGraphOptions(operations);
@@ -73,7 +84,7 @@ define([
 					error: function() {
 						console.log("Error during fetch account operation: getOperation");
 					}
-		   		});
+		   		});*/
 			},   			
 
    			initGraphOptions: function (operations) {

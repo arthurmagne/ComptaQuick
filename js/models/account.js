@@ -23,14 +23,14 @@ define([
     },
     url: function() {
         if (this.get("account_id")){
-            return 'api/index.php/account/' + this.get("account_id");
+            return 'account/' + this.get("account_id");
         }// update
         if (this.get("id")){
-            return 'api/index.php/account/' + this.get("id");
+            return 'account/' + this.get("id");
         }
 
         console.log("Aucun accountId");
-        return 'api/index.php/editAccount';
+        return 'editAccount';
 		
     } 	
     });

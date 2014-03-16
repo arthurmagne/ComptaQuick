@@ -9,7 +9,7 @@ define([
 
     
   
-  url: 'api/index.php/login'
+  url: 'login'
  	
 });
   // Above we have passed in jQuery, Underscore and Backbone

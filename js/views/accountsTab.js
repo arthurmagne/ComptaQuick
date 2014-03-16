@@ -25,25 +25,11 @@ define([
 
 			render: function () {
 				console.log("Account tab view");
-				this.accounts = new Accounts();
 				var that = this;
-
-				// we need to get all the data from the server first and put it in localStorage
-				if (navigator.onLine) {
-					$.ajax({
-			            url:"api/index.php/ping",
-			            success: function(response){
-			            	console.log("DEBUG :",response);
-			            	if (response == "pong")
-								localStorage.removeItem("localAccounts");
-							that.fetchAccount();
-			            },
-			            error: function() {
-			            	console.log("DEBUG : localStorage dirty");
-							that.fetchAccount();
-			            }
-		        	});
-				}
+				var template = _.template(accountsTabTemplate, {accounts: window.accounts.models});
+                this.$el.html(template);
+                console.log("GLOBAL ",window.accounts);
+				
 				//localStorage.clear();
 				//localStorage.removeItem("localOperations");
 				/*if (localStorage.getItem("localAccounts") !== null){
@@ -51,50 +37,14 @@ define([
 				}else{*/
 					// Accounts from this user
 			        
-			    
-
-			       /*var payementList = new PayementList();
-			        payementList.fetch({
-			        	success: function (operations) {
-	    					console.log("PayementList fetch with success");
-	    				},
-	    				error: function () {
-	    					console.log("PayementList fetch error");
-	    				}
-			        });*/
+			 
 				
 
 
 
     		},
 
-    		fetchAccount: function () {
-    			var that = this;
-    			this.accounts.fetch({
-		        	local: false,
-		        	success: function (accounts) {
-		        		console.log("accounts fetch success");
-		        		var template = _.template(accountsTabTemplate, {accounts: accounts.models});
-		        		that.$el.html(template);
-		        		accounts.each(function (account) {
-		        			console.log( "accccccccccouuuuuut ",account);
-		        			var operations = new Operations({userId: account.get('account_id')});
-		        			operations.fetch({
-		        				success: function (operations) {
-		        					console.log("Operation fetch with success", operations);
-		        				},
-		        				error: function () {
-		        					console.log("Operation fetch error");
-		        				}
-		        			})
-		        		});
-		        	},
-		        	error: function() {
-		        		console.log('Unbound server.');
-
-		        	}
-		        });
-    		},
+    		
 
     		detailAccount: function (event) {
             	this.close();
@@ -110,8 +60,17 @@ define([
 		            if(result) {
 		                var accountId = $(event.currentTarget).data('value');
 		    			console.log("Delete account with id : ", accountId);
+		    			
+		    			console.log("Delete account AAAAA : ", window.accounts.get(accountId));
+
 		    			// remove model (from server and collection by bubbling)
-		    			that.accounts.get(accountId).destroy();
+		    			// TODO -> save the deletion somewhere
+		    			if (window.isOnline()){
+		    				window.accounts.get(accountId).destroy();
+		    			}else{
+			    			window.deletedAccounts.push(accountId);
+			    			window.accounts.remove(window.accounts.get(accountId));
+			    		}
 
 		    			// remove row from tab
 		    			that.$el.find('.clickableRow[data-value='+accountId+']').remove();
@@ -165,21 +124,24 @@ define([
 		    		return ;
 		    	}
 		    	// on update l'account sur le serveur
+		    	if (window.isOnline()){
+			    	var account = new Account({id: accountId, account_name: accountName});
+			    	account.save(null, {
+				        success: function (account){
 
-		    	var account = new Account({id: accountId, account_name: accountName});
-		    	account.save(null, {
-			        success: function (account){
+				          console.log("Account push au serveur avec succès");
+				          console.log(account);			          
+				          
 
-			          console.log("Account push au serveur avec succès");
-			          console.log(account);			          
-			          
-
-			        },
-			        error: function (){
-			          console.log("Ann error occured");
-			        }
-			      });
-
+				        },
+				        error: function (){
+				          console.log("Ann error occured");
+				        }
+				      });
+			    }else{
+					var account = window.accounts.get(accountId);
+					account.set('account_name', accountName);
+				}
 		    	accountNameTag.html(accountName);
 		    	editAccountBtn.html("Éditer");
 		    	editAccountBtn.removeClass("valid-edit");

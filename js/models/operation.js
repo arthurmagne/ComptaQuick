@@ -24,12 +24,12 @@ define([
 
       url: function() {
         if (this.operationId){
-            return 'api/index.php/account/operation/' + this.operationId;
+            return 'account/operation/' + this.operationId;
         }
         if (this.get("id")){
-            return 'api/index.php/account/operation/' + this.get("id");
+            return 'account/operation/' + this.get("id");
         }
-		    return 'api/index.php/editOperation';
+		    return 'editOperation';
         console.log("Aucun id");
       } 	
     });

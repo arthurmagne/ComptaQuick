@@ -15,7 +15,7 @@ define([
 
     initialize: function(options) {
       // first param is a name of storage, second is a link to collection
-      this.storage = new Offline.Storage('localOperations', this/*, autoPush: true*/);
+      //this.storage = new Offline.Storage('localOperations', this/*, autoPush: true*/);
 
       if (options){
         this.dateDebut = options.dateDebut;
@@ -26,14 +26,22 @@ define([
         this.payementType = options.payementType;
       }
     },
+    saveAll: function( ) {
+        // Loop over my collection...
+        _(this.models).each( function(post) {
+            // And POST for each object in the collection
+            console.log("Iterate : ",post);
+            //post.save();
+        } );
+    },
 
     url: function() {
       console.log("Id pour collection operations : ",this.accountId);
       if (this.accountId == undefined){
-        return 'api/index.php/operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
+        return 'operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
       }
       // default case
-      return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
+      return 'operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType;
     }
 	
 
