@@ -68,9 +68,11 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
       break;
   }
 
+
   if($paymentId != 0)
-    $query->addWhere('p.id = :paymentId', array(':paymentId' => $paymentId));
+    $query->addWhere('o.type_id = ?', array($paymentId));
   
+
   if($tag != 0)
     $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag));
   
@@ -82,6 +84,7 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
   return $query->execute();  
 }
 
+getOperations(1, 'all', 0,0,0,5);
 
 /*
 function getOperationsByUser($idUser, $limit = 0)
