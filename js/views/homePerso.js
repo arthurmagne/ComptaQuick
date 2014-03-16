@@ -19,7 +19,7 @@ define([
       'click .display-menu-arrow': 'displayMenu',
       'click #username': 'preventLink',
       'click #sync': 'preventLink',
-      'click #syncBtn.nosync': 'syncWithServer'
+      'click #syncBtn': 'syncWithServer'
     },
 
     el: '#page',
@@ -34,7 +34,7 @@ define([
       // check for connection
       setInterval(function() {
         // Test for connection every 10 seconds
-        if (window.isOnline()){
+        if (navigator.onLine){
           if (syncBtn.html() != "Online"){
             syncBtn.html("Online");
             syncBtn.removeClass("offline");
@@ -71,18 +71,12 @@ define([
     },
 
     syncWithServer: function (event) {
-      if (event){
-        console.log("EVENT");
+        console.log("Sync with server");
         event.preventDefault();
         if (!window.isOnline()){
           BootstrapDialog.alert('Échec de la connexion');
-          //return;
+          return;
         }
-        // sync with server
-        window.syncData();
-      }else{
-        console.log("Not EVENT");
-      }
 
 
       
@@ -116,6 +110,7 @@ define([
                   })
                 });
                 window.operationsTab = operationsTab;
+
               },
               error: function() {
                 console.log('Unbound server.');

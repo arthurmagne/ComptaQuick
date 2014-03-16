@@ -34,7 +34,7 @@ define([
 				console.log("operation view");
 				var that = this;
 				this.accountId = options.account_id;
-				this.operations = new Operations({accountId: this.accountId});
+				//this.operations = new Operations({accountId: this.accountId});
 				//var account = new Account({account_id: this.accountId});
 				/*var accounts = new Accounts();
 
@@ -63,15 +63,15 @@ define([
 				this.accountBalance = this.account.get("balance");
 
 				// get the right operations
-				var operations = window.operationsTab[this.accountId];
+				this.operations = window.operationsTab[this.accountId];
 
 
-				console.log("OPERATIONS ",operations);
+				console.log("OPERATIONS ",this.operations);
 
-				var extendObject = $.extend({},this.account.attributes,operations);
+				var extendObject = $.extend({},this.account.attributes,this.operations);
 		    	var template = _.template(opeTabTemplate, {object: extendObject});
 		    	this.$el.html(template);
-		    	this.initGraphOptions(operations);
+		    	this.initGraphOptions(this.operations);
 				/*that.operations.fetch({
 					local: Offline.onLine(),
 					success: function (operations) {
@@ -191,7 +191,13 @@ define([
 		                var opId = $(event.currentTarget).data('value');
 		    			console.log("Delete op with id : ", opId);
 		    			// remove model (from server and collection by bubbling)
-		    			that.operations.get(opId).destroy();
+		    			if (window.isOnline()){
+		    				window.operations.get(opId).destroy();
+		    			}else{
+			    			window.deletedAccounts.push(opId);
+			    			this.operations.remove(this.operations.get(opId));
+
+			    		}
 
 		    			// remove row from tab
 		    			//that.$el.find('.op-row[data-value='+opId+']').remove();
@@ -254,18 +260,20 @@ define([
 
 		    	var operation = this.operations.get(opId);
 		    	operation.set('operation_name', opName);
-		    	operation.save(null, {
-			        success: function (operation){
+		    	if (window.isOnline){
+			    	operation.save(null, {
+				        success: function (operation){
 
-			          console.log("Operation push au serveur avec succès");
-			          console.log(operation);			          
-			          
+				          console.log("Operation push au serveur avec succès");
+				          console.log(operation);			          
+				          
 
-			        },
-			        error: function (){
-			          console.log("An error occured");
-			        }
-			      });
+				        },
+				        error: function (){
+				          console.log("An error occured");
+				        }
+				      });
+			    }
 
 		    	opNameTag.html(opName);
 		    	console.log(opName);

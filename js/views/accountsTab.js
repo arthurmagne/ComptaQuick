@@ -37,11 +37,6 @@ define([
 				}else{*/
 					// Accounts from this user
 			        
-			 
-				
-
-
-
     		},
 
     		
@@ -124,8 +119,9 @@ define([
 		    		return ;
 		    	}
 		    	// on update l'account sur le serveur
+		    	var account = window.accounts.get(accountId);
+				account.set('account_name', accountName);
 		    	if (window.isOnline()){
-			    	var account = new Account({id: accountId, account_name: accountName});
 			    	account.save(null, {
 				        success: function (account){
 
@@ -139,8 +135,7 @@ define([
 				        }
 				      });
 			    }else{
-					var account = window.accounts.get(accountId);
-					account.set('account_name', accountName);
+					
 				}
 		    	accountNameTag.html(accountName);
 		    	editAccountBtn.html("Éditer");

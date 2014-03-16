@@ -113,11 +113,13 @@ define([
       importCSV.render();
     });
 
+    window.isSync = true;
+
     Backbone.View.prototype.goTo = function (loc) {
       app_router.navigate(loc, true);
     };
 
-    window.isOnline = function() {
+    /*window.isOnline = function() {
         if (navigator.onLine) {
           console.log("online");
           return true;
@@ -135,20 +137,45 @@ define([
                     console.log("DEBUG : localStorage dirty");
                     return false;
                   }
-              });*/
+              });
         }else{
           console.log("Offline ...");
           return false;
 
         }
       
-    };
+    };*/
+
+
+
+    window.isOnline = function() {
+        if (navigator.onLine) {
+          if (window.isSync == false){
+            // server on : sync
+            window.syncData();
+            window.isSync = true;
+          }
+          console.log("online");
+          return true;
+        }
+        window.isSync = false;
+        console.log("Offline ...");
+        return false;
+
+        
+    }
 
     window.syncData = function() {
         console.log("Sync Data");
+        if (window.isSync == true){
+          console.log("already sync");
+          return ;
+        }
         // save collections
         window.accounts.saveAll();
-        //window.operations.save();
+        for (var i = 0; i < window.operationsTab.length ; i++) {
+          window.operationsTab[i].saveAll();
+        }
 
         // delete deleted objects
         if (window.deletedAccounts){
@@ -169,6 +196,7 @@ define([
 
         if (window.deletedOperations){
           for (var i = 0; i < window.deletedOperations.length ; i++) {
+              // TODO -> make a second loop !
               console.log(window.deletedOperations[i]);
               var operation = new Operation({id: window.deletedOperations[i]});
               operation.destroy({

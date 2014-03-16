@@ -28,10 +28,10 @@ define([
     },
     saveAll: function( ) {
         // Loop over my collection...
-        _(this.models).each( function(post) {
+        _(this.models).each( function(op) {
             // And POST for each object in the collection
-            console.log("Iterate : ",post);
-            //post.save();
+            console.log("Iterate : ",op);
+            op.save();
         } );
     },
 
