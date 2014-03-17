@@ -228,11 +228,11 @@ $app->delete('/account/operation/:id', 'authenticate', function($id){
 
     deleteOperation($id);
 
- //    $response = $app->response();
- //    $response['Content-Type'] = 'application/json';
- //    $json = json_encode($operations->toArray());
+     $response = $app->response();
+     $response['Content-Type'] = 'application/json';
+     $json = json_encode("delete operation succeed");
 
-	// $response->body($json);
+	 $response->body($json);
  });
 
 $app->get('/ping', function(){

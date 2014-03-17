@@ -51,7 +51,7 @@ define([
 
       }, 10000);
 
-      window.deletedOperatios = [];
+      window.deletedOperations = [];
       window.deletedAccounts = [];
 
       console.log("home perso avec comme model : ", window.userSession.attributes.model);

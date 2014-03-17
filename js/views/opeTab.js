@@ -41,7 +41,7 @@ define([
 				//DEBUG
 				console.log('getOperation: accounts =', window.accounts);
 				console.log('getOperation: this.accountId =', this.accountId)
-
+				var that = this;
 				this.account = window.accounts.get(this.accountId);
 				//DEBUG
 				console.log('getOperation: account =',this.account);
@@ -49,28 +49,32 @@ define([
 				this.accountBalance = this.account.get("balance");
 
 				// get the right operations
-				this.operations = window.operationsTab[this.accountId];
+				if (window.isOnline()){
+					this.operations = new Operations({id: this.accountId});
+					this.operations.fetch({
+						success: function (operations) {
+							console.log("Operations recupérées : ",operations);
+							var extendObject = $.extend({},that.account.attributes,operations);
+					    	var template = _.template(opeTabTemplate, {object: extendObject});
+					    	that.$el.html(template);
+					    	that.initGraphOptions(operations);
+						},
+						error: function() {
+							console.log("Error during fetch account operation: getOperation");
+						}
+		   			});
+				}else{
 
+					this.operations = window.operationsTab[this.accountId];
+					
+					console.log("OPERATIONS ",this.operations);
 
-				console.log("OPERATIONS ",this.operations);
-
-				var extendObject = $.extend({},this.account.attributes,this.operations);
-		    	var template = _.template(opeTabTemplate, {object: extendObject});
-		    	this.$el.html(template);
-		    	this.initGraphOptions(this.operations);
-				/*that.operations.fetch({
-					local: Offline.onLine(),
-					success: function (operations) {
-						console.log("Operations recupérées : ",operations);
-						var extendObject = $.extend({},that.account.attributes,operations);
-				    	var template = _.template(opeTabTemplate, {object: extendObject});
-				    	that.$el.html(template);
-				    	that.initGraphOptions(operations);
-					},
-					error: function() {
-						console.log("Error during fetch account operation: getOperation");
-					}
-		   		});*/
+					var extendObject = $.extend({},this.account.attributes,this.operations);
+			    	var template = _.template(opeTabTemplate, {object: extendObject});
+			    	this.$el.html(template);
+			    	this.initGraphOptions(this.operations);
+			    }
+				
 			},   			
 
    			initGraphOptions: function (operations) {
@@ -177,17 +181,27 @@ define([
 		                var opId = $(event.currentTarget).data('value');
 		    			console.log("Delete op with id : ", opId);
 		    			// remove model (from server and collection by bubbling)
+			    		window.deletedOperations.push(opId);
+			    		window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
 		    			if (window.isOnline()){
-		    				window.operations.get(opId).destroy();
-		    			}else{
-			    			window.deletedAccounts.push(opId);
-			    			this.operations.remove(this.operations.get(opId));
 
+		    				that.operations.get(opId).destroy({ 
+		    					success: function () {
+		    						that.$el.find('.op-row[data-value='+opId+']').remove();
+		    						that.render({account_id: that.accountId});
+		    					},
+		    					error: function () {
+		    						console.log("DEBUG : Error during destroy deleteOp");
+		    					}
+		    				});
+		    			}else{
+		    				console.log("AaAAAAAAAAAAAAAÀ", that.accountId);
+							that.$el.find('.op-row[data-value='+opId+']').remove();
+		    				that.render({account_id: that.accountId});
 			    		}
 
 		    			// remove row from tab
-		    			//that.$el.find('.op-row[data-value='+opId+']').remove();
-		    			that.render({account_id: that.accountId});
+		    			
 		            
 		            }else {
 		                console.log("Suppression annulée");
@@ -246,7 +260,7 @@ define([
 
 		    	var operation = this.operations.get(opId);
 		    	operation.set('operation_name', opName);
-		    	if (window.isOnline){
+		    	if (window.isOnline()){
 			    	operation.save(null, {
 				        success: function (operation){
 
