@@ -83,26 +83,29 @@ define([
       }
 
       var account = new Account(_data);
-      account.save(null, {
-        success: function (account){
+      window.accounts.add(account);
+      if (window.isOnline()){
+        account.save(null, {
+          success: function (account){
 
-          console.log("Account push au serveur avec succès");
-          console.log(account);
-          $(that.el).empty();
-          
-          $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
-          
-          setTimeout(function(){
-            that.close();
-            Backbone.View.prototype.goTo('#/accountList');
-          },2000);
-        },
-        error: function (){
-          console.log("Ann error occured");
-            error_msg += 'Une erreur est survenue.<br>';
-            that.error_msg.html(error_msg);
-        }
-      });
+            console.log("Account push au serveur avec succès");
+            console.log(account);
+            $(that.el).empty();
+            
+            $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
+            
+            setTimeout(function(){
+              that.close();
+              Backbone.View.prototype.goTo('#/accountList');
+            },2000);
+          },
+          error: function (){
+            console.log("Ann error occured");
+              error_msg += 'Une erreur est survenue.<br>';
+              that.error_msg.html(error_msg);
+          }
+        });
+      }
       
     },
 

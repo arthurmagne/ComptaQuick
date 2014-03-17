@@ -19,25 +19,44 @@ define([
 		console.log("Le type list :");
 		console.log(this.paymentTypes);
 		console.log(this.paymentTypes.id);		
-		this.paymentTypes.fetch({
-			success: function (paymentTypes) {
-				console.log("Payment Types fetch success");
-				if (options) {
-					var concatObject = {
-						allOptions: options.allOptions,
-						payementTypes: paymentTypes.models
-					};
-				}else{
-					var concatObject = {
-						allOptions: undefined,
-						payementTypes: paymentTypes.models
-					};				
+		if (window.isOnline()){
+			this.paymentTypes.fetch({
+				success: function (paymentTypes) {
+					console.log("Payment Types fetch success");
+					if (options) {
+						var concatObject = {
+							allOptions: options.allOptions,
+							payementTypes: paymentTypes.models
+						};
+					}else{
+						var concatObject = {
+							allOptions: undefined,
+							payementTypes: paymentTypes.models
+						};				
+					}
+					var template = _.template(paymentTypeListTemplate, {object: concatObject});
+					that.$el.html(template);
+					
+				},
+				error: function () {
+					console.log("DEBUG: Payment Types list error online");
 				}
-				var template = _.template(paymentTypeListTemplate, {object: concatObject});
-				that.$el.html(template);
-				
+			});
+		}else{
+			if (options) {
+				var concatObject = {
+					allOptions: options.allOptions,
+					payementTypes: window.paymentList.models
+				};
+			}else{
+				var concatObject = {
+					allOptions: undefined,
+					payementTypes: window.paymentList.models
+				};				
 			}
-		});
+			var template = _.template(paymentTypeListTemplate, {object: concatObject});
+			that.$el.html(template);
+		}
 
     },
 

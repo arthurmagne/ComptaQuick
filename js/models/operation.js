@@ -18,8 +18,6 @@ define([
         if (options){
           this.operationId = options.id;
         }
-        // set the id of this model !! (no need for operation)
-        //this.set('id', this.get("account_id"));  
       },
 
       url: function() {

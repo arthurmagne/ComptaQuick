@@ -93,7 +93,7 @@ define([
                 window.accounts = accounts;
                 var accountsTabView = new AccountsTabView();
                 accountsTabView.render();
-                var operationsTab = {};
+                var operationsTab = [];
 
                 accounts.each(function (account) {
                   console.log( "accccccccccouuuuuut ",account);

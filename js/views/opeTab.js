@@ -4,7 +4,6 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'backbone_offline',
 	'text!../../templates/opeTab.html',
 	'views/graphs',
 	'collections/operations',
@@ -15,7 +14,7 @@ define([
 	'views/addCredit',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, Offline, opeTabTemplate, GraphView, Operations, Operation, Accounts, Account, AddDebitView, AddCreditView, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Accounts, Account, AddDebitView, AddCreditView, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
@@ -34,20 +33,7 @@ define([
 				console.log("operation view");
 				var that = this;
 				this.accountId = options.account_id;
-				//this.operations = new Operations({accountId: this.accountId});
-				//var account = new Account({account_id: this.accountId});
-				/*var accounts = new Accounts();
-
-				accounts.fetch({
-					local: Offline.onLine(),
-					success: function (accounts) {
-						console.log("account recupéré : ",accounts);
-						that.getOperations(accounts);
-					},
-					error: function() {
-						console.log("Error during fetch account operation: render");
-					}
-				});*/
+				
 				this.getOperations();
 			},
 

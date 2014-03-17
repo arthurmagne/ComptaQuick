@@ -21,35 +21,66 @@ define([
 		console.log(this.accounts);
 		var that = this;
 
-		this.accounts.fetch({
-			success: function (accounts) {
-				console.log("accounts fetch success");
-				if (options){
-					if (options.account_id){
+		if (window.isOnline()){
+			this.accounts.fetch({
+				success: function (accounts) {
+					console.log("accounts fetch success");
+					if (options){
+						if (options.account_id){
+							var object1 = {
+								allOptions: undefined,
+								account_id: options.account_id,
+								accounts: accounts.models
+							};				
+						}else if (options.allOptions){
+							var object1 = {
+								allOptions: true,
+								account_id: "",
+								accounts: accounts.models
+							};
+						}
+					}else{
 						var object1 = {
 							allOptions: undefined,
-							account_id: options.account_id,
-							accounts: accounts.models
-						};				
-					}else if (options.allOptions){
-						var object1 = {
-							allOptions: true,
 							account_id: "",
 							accounts: accounts.models
 						};
 					}
-				}else{
+					console.log(object1);
+					var template = _.template(accountListTemplate, {object: object1});
+					that.$el.html(template);	
+				},
+				error: function () {
+					console.log("DEBUG: Error fetch account_list Online");
+				}
+			});
+		}else{
+
+			if (options){
+				if (options.account_id){
 					var object1 = {
 						allOptions: undefined,
+						account_id: options.account_id,
+						accounts: window.accounts.models
+					};				
+				}else if (options.allOptions){
+					var object1 = {
+						allOptions: true,
 						account_id: "",
-						accounts: accounts.models
+						accounts: window.accounts.models
 					};
 				}
-				console.log(object1);
-				var template = _.template(accountListTemplate, {object: object1});
-				that.$el.html(template);	
+			}else{
+				var object1 = {
+					allOptions: undefined,
+					account_id: "",
+					accounts: window.accounts.models
+				};
 			}
-		});
+			console.log(object1);
+			var template = _.template(accountListTemplate, {object: object1});
+			that.$el.html(template);
+		}
     },
 	
 	getAccount: function () {

@@ -4,18 +4,15 @@ define([
   'jquery',                 // lib/jquery/jquery
   'underscore',             // lib/underscore/underscore
   'backbone',               // lib/backbone/backbone
-  'backbone_offline',       // lib/backbone_offline/backbone.offline.js
   'models/operation'
   ], 
 
-  function($, _, Backbone, Offline, Operation){
+  function($, _, Backbone, Operation){
     var Operations = Backbone.Collection.extend({
 
     model : Operation,
 
     initialize: function(options) {
-      // first param is a name of storage, second is a link to collection
-      //this.storage = new Offline.Storage('localOperations', this/*, autoPush: true*/);
 
       if (options){
         this.dateDebut = options.dateDebut;

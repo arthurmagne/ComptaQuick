@@ -29,14 +29,6 @@ define([
 				var template = _.template(accountsTabTemplate, {accounts: window.accounts.models});
                 this.$el.html(template);
                 console.log("GLOBAL ",window.accounts);
-				
-				//localStorage.clear();
-				//localStorage.removeItem("localOperations");
-				/*if (localStorage.getItem("localAccounts") !== null){
-					console.log("On a du storage");
-				}else{*/
-					// Accounts from this user
-			        
     		},
 
     		
@@ -134,9 +126,7 @@ define([
 				          console.log("Ann error occured");
 				        }
 				      });
-			    }else{
-					
-				}
+			    }
 		    	accountNameTag.html(accountName);
 		    	editAccountBtn.html("Éditer");
 		    	editAccountBtn.removeClass("valid-edit");

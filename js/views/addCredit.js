@@ -10,7 +10,7 @@ define([
   'collections/operations',
   'models/operation'
   ], function(bootstrap, holder, $, _, Backbone, PaymentTypeListView, AccountListView, AddOperationFormView, Operations, Operation){
-    var addDebitPage = Backbone.View.extend({
+    var addCreditPage = Backbone.View.extend({
   	  events: {
         'click #submit_btn': 'validerOp'
       },
@@ -116,21 +116,24 @@ define([
       }
 	  	  
       var operation = new Operation(_data);
-	  operation.save(null, {
-		success: function () {
-			  console.log("Operation POST avec succès");
-			  console.log(operation);
-			  $(that.el).empty();
-			  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
-			  setTimeout(function(){
-				that.close();
-				Backbone.View.prototype.goTo('#/accountList');
-			  },2000);
-			},
-        error: function (){
-          console.log("Ann error occured");
-        }
-	  });
+      window.operationsTab[this.accountListView.getAccount()].add(operation);
+      if (window.isOnline()){
+		  operation.save(null, {
+			success: function () {
+				  console.log("Operation POST avec succès");
+				  console.log(operation);
+				  $(that.el).empty();
+				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
+				  setTimeout(function(){
+					that.close();
+					Backbone.View.prototype.goTo('#/accountList');
+				  },2000);
+				},
+	        error: function (){
+	          console.log("Ann error occured");
+	        }
+		  });
+		}
 
     },
 	
@@ -141,5 +144,5 @@ define([
 
 	});
 
-  return addDebitPage;
+  return addCreditPage;
 });

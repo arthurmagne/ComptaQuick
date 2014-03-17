@@ -173,9 +173,10 @@ define([
         }
         // save collections
         window.accounts.saveAll();
-        for (var i = 0; i < window.operationsTab.length ; i++) {
-          window.operationsTab[i].saveAll();
-        }
+        
+        window.operationsTab.forEach(function(operations) {
+          operations.saveAll();
+        });
 
         // delete deleted objects
         if (window.deletedAccounts){
