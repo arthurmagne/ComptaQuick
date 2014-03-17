@@ -194,14 +194,14 @@ $app->get('/paymentTypes', 'authenticate', function () {
 
 });
 	
-$app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType', 'authenticate', function ($select, $id, $limit, $type, $begin, $end, $payementType) {
+$app->get('/operations/:select/:id/:limit/:type/:begin/:end/:payementType/:tag', 'authenticate', function ($select, $id, $limit, $type, $begin, $end, $payementType, $tag) {
 	global $app;
 	$uid = $app->getEncryptedCookie('uid');
 
 	if ($select == 'byAccount'){
-		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType);
+		$operations = getOperations($id, $begin, $end, $type, $limit, $payementType, $tag);
 	}else if ($select == 'byUser'){
-		$operations = getOperations(getAccounts($uid), $begin, $end, $type, $limit, $payementType);
+		$operations = getOperations(getAccounts($uid), $begin, $end, $type, $limit, $payementType, $tag);
 	}else{
 		$app->halt(400);
 	}

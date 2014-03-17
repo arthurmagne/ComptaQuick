@@ -93,6 +93,8 @@ define([
       		  	};
 
 
+			    console.log("OKEYYYYY");
+			    
    				var balance 	= this.accountBalance;
    				var listOpe 	= operations.toArray();
    				var evolutionX 	= []; 
@@ -131,6 +133,8 @@ define([
 				    });
 			    };
 
+			    console.log("OKEYYYYY");
+
 	    		graphOptions.series[0].data = jsonArray;
 	    		console.log(graphOptions);
 	    		this.drawGraphs(graphOptions);
@@ -149,8 +153,10 @@ define([
    				var hashtagName = $(event.currentTarget).attr("href");
    				//console.log(hashtagName);
 
+
 				var graphview = new GraphView();
-				graphview.render({hashtagName : hashtagName, accountId : this.accountId, operations : this.operations});
+				graphview.render({hashtagName : hashtagName, accountId : this.accountId});
+
    			},
 
     		deleteOp: function (event) {

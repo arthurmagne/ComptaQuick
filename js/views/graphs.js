@@ -45,6 +45,12 @@
           that.payementTypeListView.render({allOptions: true});
         }
       });
+      if(options){
+        if (options.hashtagName){
+          console.log("hashtag graph");
+           this.initTagGraphOptions(options);
+        }
+      }
     },
 
     switchType: function (event) {
@@ -264,6 +270,51 @@
         graphOptions.series[0].data = jsonArray;
         console.log(graphOptions);
         this.$el.find('#graphs').highcharts(graphOptions);
+      },
+
+      initTagGraphOptions: function (options) {
+      // options for graph
+      var graphOptions = {
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Graphe hashtag ' + options.hashtagName
+          },
+          xAxis: {
+            type: 'datetime'
+          },
+          yAxis: {
+            title: {
+                text: 'Montant (euros)'
+            }
+          },
+          series: [{
+            name: 'Opérations'
+          }]
+      };
+
+      var balance   = 0;
+      var listOpe   = new Operations({accountId : options.accountId, tag : options.hashtagName, dateDebut : 'all' });
+      var jsonArray = [];
+
+      listOpe.each(function(op) {
+          jsonArray.push({
+            x: Date.parse(op.get("operation_date")),
+            name: op.get("operation_name"),
+            color: '#483D8B',
+            y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
+        });
+      }); 
+      // don't forget to reverse it
+      graphOptions.series[0].data = jsonArray;
+      if (listOpe.length != 0){
+          this.$el.find('#graphs').highcharts(graphOptions);
+        }else{
+          this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
+        }
+
+
       },
 
     initGraphOptions: function (object) {
