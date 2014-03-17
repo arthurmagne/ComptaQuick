@@ -8,12 +8,13 @@ define([
 	'views/graphs',
 	'collections/operations',
 	'models/operation',
+	'collections/accounts',
 	'models/account',
 	'views/addDebit',
 	'views/addCredit',
 	'highcharts'
 	], 
-	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Account, AddDebitView, AddCreditView, Highcharts){
+	function(bootstrap, holder, $, _, Backbone, opeTabTemplate, GraphView, Operations, Operation, Accounts, Account, AddDebitView, AddCreditView, Highcharts){
 		var OpeTab = Backbone.View.extend({
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
@@ -32,36 +33,49 @@ define([
 				console.log("operation view");
 				var that = this;
 				this.accountId = options.account_id;
-				this.operations = new Operations({accountId: this.accountId});
-				var account = new Account({account_id: this.accountId});
-
-				account.fetch({
-					success: function (account) {
-						console.log("account recupéré : ",account);
-						that.account = account;
-						that.accountBalance = account.get("balance");
-						that.operations.fetch({
-				        	success: function (operations) {
-								console.log("operations recupérées : ",operations);
-								var extendObject = $.extend({},account.attributes,operations);
-				        		var template = _.template(opeTabTemplate, {object: extendObject});
-				        		that.$el.html(template);
-				        		that.initGraphOptions(operations);
-				        		
-				        	},
-							error: function() {
-								console.log("Error during fetch account operation");
-							}
-		       			});
-					},
-					error: function() {
-						console.log("Error during fetch account operation");
-					}
-				});
 				
+				this.getOperations();
+			},
 
-		        
-   			},
+			getOperations: function () {
+				//DEBUG
+				console.log('getOperation: accounts =', window.accounts);
+				console.log('getOperation: this.accountId =', this.accountId)
+				var that = this;
+				this.account = window.accounts.get(this.accountId);
+				//DEBUG
+				console.log('getOperation: account =',this.account);
+
+				this.accountBalance = this.account.get("balance");
+
+				// get the right operations
+				if (window.isOnline()){
+					this.operations = new Operations({id: this.accountId});
+					this.operations.fetch({
+						success: function (operations) {
+							console.log("Operations recupérées : ",operations);
+							var extendObject = $.extend({},that.account.attributes,operations);
+					    	var template = _.template(opeTabTemplate, {object: extendObject});
+					    	that.$el.html(template);
+					    	that.initGraphOptions(operations);
+						},
+						error: function() {
+							console.log("Error during fetch account operation: getOperation");
+						}
+		   			});
+				}else{
+
+					this.operations = window.operationsTab[this.accountId];
+					
+					console.log("OPERATIONS ",this.operations);
+
+					var extendObject = $.extend({},this.account.attributes,this.operations);
+			    	var template = _.template(opeTabTemplate, {object: extendObject});
+			    	this.$el.html(template);
+			    	this.initGraphOptions(this.operations);
+			    }
+				
+			},   			
 
    			initGraphOptions: function (operations) {
    				// options for graph
@@ -73,7 +87,12 @@ define([
 			            text: 'Opérations du mois'
 			        },
 			        xAxis: {
-			            type: 'datetime'
+			            type: 'datetime',
+			            plotLines: [{
+						    color: 'red', // Color value
+						    value: Date.parse(new Date()), // Value of where the line will appear
+						    width: '1' // Width of the line    
+						  }]
 			        },
 			        yAxis: {
 			            title: {
@@ -103,9 +122,9 @@ define([
 
    				listOpe = listOpe.reverse();
 
-   				// evolutionY.push(this.accountBalance);
-   				// evolutionX.push(Date.parse(new Date()));
-   				// evolutionOp.push("Solde actuel");
+   				//evolutionY.push(this.accountBalance);
+   				//evolutionX.push(Date.parse(new Date()));
+   				//evolutionOp.push("Solde actuel");
    				
    				for(var i = 0; i < listOpe.length; i++){
    					// we put the previous balance in the tab
@@ -168,11 +187,27 @@ define([
 		                var opId = $(event.currentTarget).data('value');
 		    			console.log("Delete op with id : ", opId);
 		    			// remove model (from server and collection by bubbling)
-		    			that.operations.get(opId).destroy();
+			    		window.deletedOperations.push(opId);
+			    		window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
+		    			if (window.isOnline()){
+
+		    				that.operations.get(opId).destroy({ 
+		    					success: function () {
+		    						that.$el.find('.op-row[data-value='+opId+']').remove();
+		    						that.render({account_id: that.accountId});
+		    					},
+		    					error: function () {
+		    						console.log("DEBUG : Error during destroy deleteOp");
+		    					}
+		    				});
+		    			}else{
+		    				console.log("AaAAAAAAAAAAAAAÀ", that.accountId);
+							that.$el.find('.op-row[data-value='+opId+']').remove();
+		    				that.render({account_id: that.accountId});
+			    		}
 
 		    			// remove row from tab
-		    			//that.$el.find('.op-row[data-value='+opId+']').remove();
-		    			that.render({account_id: that.accountId});
+		    			
 		            
 		            }else {
 		                console.log("Suppression annulée");
@@ -231,18 +266,20 @@ define([
 
 		    	var operation = this.operations.get(opId);
 		    	operation.set('operation_name', opName);
-		    	operation.save(null, {
-			        success: function (operation){
+		    	if (window.isOnline()){
+			    	operation.save(null, {
+				        success: function (operation){
 
-			          console.log("Operation push au serveur avec succès");
-			          console.log(operation);			          
-			          
+				          console.log("Operation push au serveur avec succès");
+				          console.log(operation);			          
+				          
 
-			        },
-			        error: function (){
-			          console.log("An error occured");
-			        }
-			      });
+				        },
+				        error: function (){
+				          console.log("An error occured");
+				        }
+				      });
+			    }
 
 		    	opNameTag.html(opName);
 		    	console.log(opName);

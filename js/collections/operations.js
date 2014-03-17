@@ -1,12 +1,14 @@
 
 define([
   // These are path alias that we configured in our bootstrap
-  'jquery',     // lib/jquery/jquery
-  'underscore', // lib/underscore/underscore
-  'backbone',    // lib/backbone/backbone
+  'jquery',                 // lib/jquery/jquery
+  'underscore',             // lib/underscore/underscore
+  'backbone',               // lib/backbone/backbone
   'models/operation'
-  ], function($, _, Backbone, Operation){
-   var Operations = Backbone.Collection.extend({
+  ], 
+
+  function($, _, Backbone, Operation){
+    var Operations = Backbone.Collection.extend({
 
     model : Operation,
 
@@ -22,6 +24,15 @@ define([
         this.tag = options.tag;
       }
     },
+    saveAll: function( ) {
+        // Loop over my collection...
+        _(this.models).each( function(op) {
+            // And POST for each object in the collection
+            console.log("Iterate : ",op);
+            op.save();
+        } );
+    },
+
     url: function() {
       console.log("Id pour collection operations : ",this.accountId);
       if (this.accountId == undefined){
@@ -29,6 +40,7 @@ define([
       }
       // default case
       return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType + '/' + this.tag;
+
     }
 	
 

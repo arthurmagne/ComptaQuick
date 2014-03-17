@@ -13,8 +13,10 @@ define([
   'views/addCredit',
   'views/graphs',
   'views/accountsTab',
-  'views/importCSV'
-  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView, AccountsTabView, ImportCSV){
+  'views/importCSV',
+  'models/account',
+  'models/operation'
+  ], function($, _, Backbone, HomeView, SignInView, SignUpView, HomePersoView, OpeTabView, AddAccountView, AddDebitView, AddCreditView, GraphsView, AccountsTabView, ImportCSV, Account, Operation){
 
   var AppRouter = Backbone.Router.extend({
     routes: {
@@ -33,6 +35,14 @@ define([
   });
 
   var initialize = function(){
+
+      $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+         options.url = 'api/index.php/' + options.url;
+         if (!options.crossDomain) {
+            options.crossDomain = true;
+         };
+      });
+      
 
 
     var app_router = new AppRouter;
@@ -103,9 +113,124 @@ define([
       importCSV.render();
     });
 
+    window.isSync = true;
+
     Backbone.View.prototype.goTo = function (loc) {
       app_router.navigate(loc, true);
     };
+
+    /*window.isOnline = function() {
+        if (navigator.onLine) {
+          console.log("online");
+          return true;
+          /*$.ajax({
+                  async: false,
+                  url:"ping",
+                  success: function(response){
+                    console.log("DEBUG :",response);
+                    if (response == "pong")
+                      return true;
+                    return false;
+                
+                  },
+                  error: function() {
+                    console.log("DEBUG : localStorage dirty");
+                    return false;
+                  }
+              });
+        }else{
+          console.log("Offline ...");
+          return false;
+
+        }
+      
+    };*/
+
+
+
+    window.isOnline = function() {
+        if (navigator.onLine) {
+          if (window.isSync == false){
+            // server on : sync
+            window.syncData();
+            window.isSync = true;
+          }
+          console.log("online");
+          return true;
+        }
+        window.isSync = false;
+        console.log("Offline ...");
+        return false;
+
+        
+    }
+
+    window.syncData = function() {
+        console.log("Sync Data");
+        if (window.isSync == true){
+          console.log("already sync");
+          return ;
+        }
+        // save collections
+        window.accounts.saveAll();
+        
+        window.operationsTab.forEach(function(operations) {
+          operations.saveAll();
+        });
+
+        // delete deleted objects
+        if (window.deletedAccounts){
+          for (var i = 0; i < window.deletedAccounts.length ; i++) {
+              console.log(window.deletedAccounts[i]);
+              var account = new Account({id: window.deletedAccounts[i]});
+              account.destroy({
+                success: function () {
+                  console.log("Account deleted");
+
+                },
+                error: function () {
+                  console.log("Account deletion failed");
+                }
+              });
+          }
+        }
+
+        if (window.deletedOperations){
+          for (var i = 0; i < window.deletedOperations.length ; i++) {
+              // TODO -> make a second loop !
+              console.log(window.deletedOperations[i]);
+              var operation = new Operation({id: window.deletedOperations[i]});
+              operation.destroy({
+                success: function () {
+                  console.log("Operation deleted");
+
+                },
+                error: function () {
+                  console.log("Operation deletion failed");
+                }
+              });
+          }
+        }
+        // check if the server is online
+          /*$.ajax({
+                  async: false,
+                  url:"ping",
+                  success: function(response){
+                    console.log("DEBUG :",response);
+                    if (response == "pong")
+                      return true;
+                    return false;
+                
+                  },
+                  error: function() {
+                    console.log("DEBUG : localStorage dirty");
+                    return false;
+                  }
+              });*/
+        
+      
+    };
+
     console.log("initialize");
 
     app_router.bind('all', function(route, router) {

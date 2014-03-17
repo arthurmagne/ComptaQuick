@@ -7,13 +7,19 @@ define([
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   'text!../../templates/homePerso.html',
-  'views/accountsTab'
-  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView){
+  'views/accountsTab',
+  'collections/accounts',
+  'collections/operations',
+  'collections/paymentTypes'
+  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView, Accounts, Operations, PaymentTypes){
   var HomePage = Backbone.View.extend({
     events: {
       'click #logout': 'logout',
       'click .drop-down-toggle': 'dropDownMenu',
-      'click .display-menu-arrow': 'displayMenu'
+      'click .display-menu-arrow': 'displayMenu',
+      'click #username': 'preventLink',
+      'click #sync': 'preventLink',
+      'click #syncBtn': 'syncWithServer'
     },
 
     el: '#page',
@@ -21,19 +27,115 @@ define([
     render: function (options) {
       var template = _.template(homePersoTemplate, {user: window.userSession.attributes.model});
       this.$el.html(template);
+      var that = this;
+      this.accounts = new Accounts();
+      var syncBtn = that.$el.find('#sync');
+
+      // check for connection
+      setInterval(function() {
+        // Test for connection every 10 seconds
+        if (navigator.onLine){
+          if (syncBtn.html() != "Online"){
+            syncBtn.html("Online");
+            syncBtn.removeClass("offline");
+            syncBtn.addClass("online");
+          }
+
+        }else{
+          if (syncBtn.html() != "Offline"){
+            syncBtn.html("Offline");
+            syncBtn.removeClass("online");
+            syncBtn.addClass("offline");
+          }
+        }
+
+      }, 10000);
+
+      window.deletedOperations = [];
+      window.deletedAccounts = [];
+
       console.log("home perso avec comme model : ", window.userSession.attributes.model);
-      var accountsTabView = new AccountsTabView();
-      accountsTabView.render();
+      // we need to get all the data from the server first and put it in localStorage
+        if (window.isOnline()) {
+          localStorage.removeItem("localAccounts");
+        }
+
+        that.fetchAccount();
+      
       $("#background").removeClass("home-background");
 
     },
+
+    preventLink: function (event) {
+      event.preventDefault();
+    },
+
+    syncWithServer: function (event) {
+        console.log("Sync with server");
+        event.preventDefault();
+        if (!window.isOnline()){
+          BootstrapDialog.alert('Échec de la connexion');
+          return;
+        }
+
+
+      
+
+    },
+
+    fetchAccount: function () {
+          var that = this;
+          this.accounts.fetch({
+              local: false,
+              success: function (accounts) {
+                console.log("accounts fetch success");
+                
+                window.accounts = accounts;
+                var accountsTabView = new AccountsTabView();
+                accountsTabView.render();
+                var operationsTab = [];
+
+                accounts.each(function (account) {
+                  console.log( "accccccccccouuuuuut ",account);
+                  var operations = new Operations({accountId: account.get('id')});
+                  operations.fetch({
+                    success: function (operations) {
+                      console.log("Operation fetch with success", operations);
+                      operationsTab[account.get('id')] = operations;
+
+                    },
+                    error: function () {
+                      console.log("Operation fetch error");
+                    }
+                  })
+                });
+                window.operationsTab = operationsTab;
+
+              },
+              error: function() {
+                console.log('Unbound server.');
+
+              }
+            });
+
+            var payementList = new PaymentTypes();
+            payementList.fetch({
+              success: function (paymentList) {
+                console.log("PayementList fetch with success");
+                window.paymentList = paymentList;
+              },
+              error: function () {
+                console.log("PayementList fetch error");
+              }
+            });
+        },
 
     logout: function (event) {
       event.preventDefault(); 
 
       var that = this;
       $.ajax({
-        url: "api/index.php/logout",
+        url: "logout",
         type:'GET',
         statusCode: {
           200: function (response) {

@@ -19,7 +19,7 @@ define([
 	
 	url: function() {
       console.log("On va chercher l'url"); 
-      return 'api/index.php/paymentTypes';
+      return 'paymentTypes';
 	}
 	
   });

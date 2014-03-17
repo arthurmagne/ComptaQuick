@@ -35,6 +35,7 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
 				  ->leftJoin('o.PaymentType p')
+
 				  ->where('o.account_id IN ?', array($accounts));
 				//  ->where('o.account_id = :idAccount', array(":idAccount" => $accounts[0]));
  
