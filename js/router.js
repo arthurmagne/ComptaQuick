@@ -157,10 +157,12 @@ define([
           }
           console.log("online");
           $("#graph-btn").removeClass("off");
+          $("#import-btn").removeClass("off");
 
           return true;
         }
         $("#graph-btn").addClass("off");
+        $("#import-btn").addClass("off");
         window.isSync = false;
         $("#syncBtn").addClass("no-sync");
         console.log("Offline ...");

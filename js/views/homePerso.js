@@ -19,7 +19,8 @@ define([
       'click .display-menu-arrow': 'displayMenu',
       'click #username': 'preventLink',
       'click #sync': 'preventLink',
-      'click #syncBtn': 'syncWithServer'
+      'click #syncBtn': 'syncWithServer',
+      'click #graph-btn.off, #import-btn.off': 'preventLink'
     },
 
     el: '#page',
@@ -41,6 +42,7 @@ define([
             syncBtn.addClass("online");
           }
           $("#graph-btn").removeClass("off");
+          $("#import-btn").removeClass("off");
 
 
         }else{
@@ -50,6 +52,7 @@ define([
             syncBtn.addClass("offline");
           }
           $("#graph-btn").addClass("off");
+          $("#import-btn").addClass("off");
 
         }
 

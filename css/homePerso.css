@@ -62,8 +62,13 @@
 	color: white;
 }
 
-#graph-btn.off{
+#graph-btn.off, #import-btn.off{
 	background: rgb(213, 213, 213);
+
+}
+
+#graph-btn.off a, #import-btn.off a{
+	color: rgb(187, 187, 187);
 }
 
 @media (max-width: 768px) {

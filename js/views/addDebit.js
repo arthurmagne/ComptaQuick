@@ -120,7 +120,6 @@
       }
 	  	  
       var operation = new Operation(_data);
-      window.operationsTab[this.accountListView.getAccount()].add(operation);
       if (window.isOnline()){
 		  operation.save(null, {
 			success: function () {
@@ -137,8 +136,15 @@
 	        error: function (){
 	          console.log("Ann error occured");
 	        }
-	  	});
-		}
+	  		});
+		}else{
+        // set temporary id to work with this new model like it was real
+        var uniqueId = new Date();
+        uniqueId = uniqueId.getTime();
+        console.log("UniqueId : ",uniqueId);
+        operation.set("id",uniqueId);
+      }
+      window.operationsTab[this.accountListView.getAccount()].add(operation);
 
     },
 	

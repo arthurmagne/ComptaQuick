@@ -48,6 +48,7 @@ define([
     		operation_date: this.addOperationFormView.getOpDate(),
     		operation_name: this.addOperationFormView.getOpName(),
     		operation_desc: this.addOperationFormView.getOpDesc(),
+    		type_name: this.paymentTypeListView.getTypeName(),
     		is_credit: "1",
     		value: this.addOperationFormView.getOpValue()
       };
@@ -116,7 +117,6 @@ define([
       }
 	  	  
       var operation = new Operation(_data);
-      window.operationsTab[this.accountListView.getAccount()].add(operation);
       if (window.isOnline()){
 		  operation.save(null, {
 			success: function () {
@@ -133,7 +133,14 @@ define([
 	          console.log("Ann error occured");
 	        }
 		  });
-		}
+		}else{
+        // set temporary id to work with this new model like it was real
+        var uniqueId = new Date();
+        uniqueId = uniqueId.getTime();
+        console.log("UniqueId : ",uniqueId);
+        operation.set("id",uniqueId);
+      }
+      window.operationsTab[this.accountListView.getAccount()].add(operation);
 
     },
 	

@@ -65,6 +65,12 @@ define([
 		this.type = $('select[name=list_type]').val();
 		return this.type;	
     },
+
+    getTypeName: function () {
+    	console.log("typeName:"+ $('select[name=list_type] option:selected').text());
+		this.typeName = $('select[name=list_type] option:selected').text();
+		return this.typeName;
+    },
 	
     close: function () {
       $(this.el).unbind();

@@ -93,27 +93,48 @@ $app->put('/account/operation/:id', 'authenticate', function ($id) {
     // on récupère les données du formulaire
     $body = json_decode($body, true);
 
-    $name = $body['operation_name'];
+    $account_id = $body['account_id'];
+	$type_id = $body['type_id'];
+	$operation_date = $body['operation_date'] ;
+	$operation_desc = $body['operation_desc'];
+	$operation_name = $body['operation_name'];
+	$is_credit = $body['is_credit'];
+	$value = $body['value'];
 
     $operation = Doctrine_Core::getTable('Operation')->findOneById($id);
 
-    $operation->operation_name = $name;
-
-	$response = $app->response();
-
-	if($operation->trySave()){
+    if (!$operation) {
+    	// create new operation
+		$operation = operation($is_credit, $account_id, $value, $type_id, $operation_name, $operation_desc, $operation_date);
+		$response = $app->response();
 		try{
 			$response['Content-Type'] = 'application/json';
-			// on crée notre objet
 			$operation_object = json_encode($operation->toArray());
 			$response->body($operation_object);
- 		} catch (Exception $e) {
+		} catch (Exception $e) {
 			$app->response()->status(400);
 			$app->response()->header('X-Status-Reason', $e->getMessage());
 		}
-	}
-	else{
-		$app->halt(400);
+    }else{
+
+	    $operation->operation_name = $operation_name;
+
+		$response = $app->response();
+
+		if($operation->trySave()){
+			try{
+				$response['Content-Type'] = 'application/json';
+				// on crée notre objet
+				$operation_object = json_encode($operation->toArray());
+				$response->body($operation_object);
+	 		} catch (Exception $e) {
+				$app->response()->status(400);
+				$app->response()->header('X-Status-Reason', $e->getMessage());
+			}
+		}
+		else{
+			$app->halt(400);
+		}
 	}
 });
 
