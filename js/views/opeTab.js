@@ -111,8 +111,6 @@ define([
            		 }]
       		  	};
 
-
-			    console.log("OKEYYYYY");
 			    
    				var balance 	= this.accountBalance;
    				var listOpe 	= operations.toArray();
@@ -138,21 +136,34 @@ define([
    					evolutionOp.push(listOpe[i].get("operation_name"));
    				}
 
+   				evolutionY.push(parseInt(balance));
+   				var today = new Date();
+   				today.setTime(today.getTime()-30*24*3600*1000);
+   				evolutionX.push(Date.parse(today));
+   				evolutionOp.push("Ancien solde");
+
    				evolutionX.reverse();
    				evolutionY.reverse();
    				evolutionOp.reverse();
 
    				var jsonArray = [];
    				for(var i = 0; i < evolutionX.length; i++){
-			        jsonArray.push({
-			        	x: evolutionX[i],
-			        	name: evolutionOp[i],
-			        	color: '#483D8B',
-				        y: parseInt(evolutionY[i])
-				    });
+   					if(evolutionY[i] < 0){
+				        jsonArray.push({
+				        	x: evolutionX[i],
+				        	name: evolutionOp[i],
+				        	color: 'red',
+					        y: parseInt(evolutionY[i])
+					    });
+   					}else {
+				        jsonArray.push({
+				        	x: evolutionX[i],
+				        	name: evolutionOp[i],
+				        	color: '#483D8B',
+					        y: parseInt(evolutionY[i])
+					    });
+					}
 			    };
-
-			    console.log("OKEYYYYY");
 
 	    		graphOptions.series[0].data = jsonArray;
 	    		console.log(graphOptions);
