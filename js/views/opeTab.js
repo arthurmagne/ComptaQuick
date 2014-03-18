@@ -148,12 +148,21 @@ define([
 
    				var jsonArray = [];
    				for(var i = 0; i < evolutionX.length; i++){
-			        jsonArray.push({
-			        	x: evolutionX[i],
-			        	name: evolutionOp[i],
-			        	color: '#483D8B',
-				        y: parseInt(evolutionY[i])
-				    });
+   					if(evolutionY[i] < 0){
+				        jsonArray.push({
+				        	x: evolutionX[i],
+				        	name: evolutionOp[i],
+				        	color: 'red',
+					        y: parseInt(evolutionY[i])
+					    });
+   					}else {
+				        jsonArray.push({
+				        	x: evolutionX[i],
+				        	name: evolutionOp[i],
+				        	color: '#483D8B',
+					        y: parseInt(evolutionY[i])
+					    });
+					}
 			    };
 
 	    		graphOptions.series[0].data = jsonArray;
