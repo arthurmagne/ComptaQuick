@@ -156,9 +156,13 @@ define([
             window.isSync = true;
           }
           console.log("online");
+          $("#graph-btn").removeClass("off");
+
           return true;
         }
+        $("#graph-btn").addClass("off");
         window.isSync = false;
+        $("#syncBtn").addClass("no-sync");
         console.log("Offline ...");
         return false;
 
@@ -178,10 +182,11 @@ define([
           operations.saveAll();
         });
 
+        console.log("DEBUG : deletedAccounts", window.deletedAccounts);
         // delete deleted objects
         if (window.deletedAccounts){
           for (var i = 0; i < window.deletedAccounts.length ; i++) {
-              console.log(window.deletedAccounts[i]);
+              console.log("DEBUG : id du compte à supprimer ",window.deletedAccounts[i]);
               var account = new Account({id: window.deletedAccounts[i]});
               account.destroy({
                 success: function () {
@@ -194,10 +199,13 @@ define([
               });
           }
         }
+        // empty tab
+        window.deletedAccounts = [];
+        console.log("DEBUG : deletedAccounts après ", window.deletedAccounts);
+
 
         if (window.deletedOperations){
           for (var i = 0; i < window.deletedOperations.length ; i++) {
-              // TODO -> make a second loop !
               console.log(window.deletedOperations[i]);
               var operation = new Operation({id: window.deletedOperations[i]});
               operation.destroy({
@@ -211,6 +219,10 @@ define([
               });
           }
         }
+        window.deletedOperations = [];
+
+        $("#syncBtn").removeClass("no-sync");
+
         // check if the server is online
           /*$.ajax({
                   async: false,

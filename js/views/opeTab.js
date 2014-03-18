@@ -49,8 +49,8 @@ define([
 				this.accountBalance = this.account.get("balance");
 
 				// get the right operations
-				if (window.isOnline()){
-					this.operations = new Operations({id: this.accountId});
+				if (navigator.onLine){
+					this.operations = new Operations({accountId: this.accountId});
 					this.operations.fetch({
 						success: function (operations) {
 							console.log("Operations recupérées : ",operations);

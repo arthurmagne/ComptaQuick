@@ -40,6 +40,8 @@ define([
             syncBtn.removeClass("offline");
             syncBtn.addClass("online");
           }
+          $("#graph-btn").removeClass("off");
+
 
         }else{
           if (syncBtn.html() != "Offline"){
@@ -47,6 +49,8 @@ define([
             syncBtn.removeClass("online");
             syncBtn.addClass("offline");
           }
+          $("#graph-btn").addClass("off");
+
         }
 
       }, 10000);
@@ -55,10 +59,7 @@ define([
       window.deletedAccounts = [];
 
       console.log("home perso avec comme model : ", window.userSession.attributes.model);
-      // we need to get all the data from the server first and put it in localStorage
-        if (window.isOnline()) {
-          localStorage.removeItem("localAccounts");
-        }
+
 
         that.fetchAccount();
       

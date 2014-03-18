@@ -170,8 +170,23 @@ $app->put('/account/:id', 'authenticate', function ($id) {
     $body = json_decode($body, true);
 
     $name 	    = $body['account_name'];
+    $account_number = $body['account_number'];
+    $balance 	= $body['balance'];
 
     $account = Doctrine_Core::getTable('Account')->findOneById($id);
+    
+    if (!$account) {
+    	// Ce compte a été créé hors ligne
+    	$account = new Account();
+
+		$account->account_number = $account_number;
+		if ($balance != ""){
+			$account->balance = $balance;
+		}else{	
+			$account->balance = 0;
+		}
+		$account->user_id = $uid;
+    }
 
     $account->account_name = $name;
 

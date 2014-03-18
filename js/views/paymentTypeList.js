@@ -19,7 +19,7 @@ define([
 		console.log("Le type list :");
 		console.log(this.paymentTypes);
 		console.log(this.paymentTypes.id);		
-		if (window.isOnline()){
+		if (navigator.onLine){
 			this.paymentTypes.fetch({
 				success: function (paymentTypes) {
 					console.log("Payment Types fetch success");

@@ -5,8 +5,9 @@ define([
   'underscore',
   'backbone',
   'text!../../templates/addAccount.html',
-  'models/account'
-  ], function(bootstrap, holder, $, _, Backbone, addAccountTemplate, Account){
+  'models/account',
+  'collections/operations'
+  ], function(bootstrap, holder, $, _, Backbone, addAccountTemplate, Account, Operations){
   var HomePage = Backbone.View.extend({
     events: {
       'submit .add-account-form': 'createAccount'
@@ -83,7 +84,6 @@ define([
       }
 
       var account = new Account(_data);
-      window.accounts.add(account);
       if (window.isOnline()){
         account.save(null, {
           success: function (account){
@@ -105,7 +105,18 @@ define([
               that.error_msg.html(error_msg);
           }
         });
+      }else{
+        // set temporary id to work with this new model like it was real
+        var uniqueId = new Date();
+        uniqueId = uniqueId.getTime();
+        console.log("UniqueId : ",uniqueId);
+        account.set("id",uniqueId);
+        // create an empty collection for this model
+        var operations = new Operations();
+        window.operationsTab[uniqueId] = operations;
       }
+      window.accounts.add(account);
+
       
     },
 

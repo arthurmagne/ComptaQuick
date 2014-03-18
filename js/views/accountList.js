@@ -21,7 +21,7 @@ define([
 		console.log(this.accounts);
 		var that = this;
 
-		if (window.isOnline()){
+		if (navigator.onLine){
 			this.accounts.fetch({
 				success: function (accounts) {
 					console.log("accounts fetch success");

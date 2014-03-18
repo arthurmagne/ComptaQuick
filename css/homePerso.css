@@ -58,6 +58,14 @@
 	color: rgb(138, 211, 97);
 }
 
+#syncBtn.no-sync{
+	color: white;
+}
+
+#graph-btn.off{
+	background: rgb(213, 213, 213);
+}
+
 @media (max-width: 768px) {
 	.display-menu-arrow{
 		width: 34px;

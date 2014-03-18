@@ -36,10 +36,10 @@ define([
     url: function() {
       console.log("Id pour collection operations : ",this.accountId);
       if (this.accountId == undefined){
-        return 'api/index.php/operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType + '/' + this.tag;
+        return 'operations/byUser/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType + '/' + this.tag;
       }
       // default case
-      return 'api/index.php/operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType + '/' + this.tag;
+      return 'operations/byAccount/' + this.accountId + '/' + this.maxOpe + '/' + this.typeOpe + '/' + this.dateDebut + '/' + this.dateFin + '/' + this.payementType + '/' + this.tag;
 
     }
 	
