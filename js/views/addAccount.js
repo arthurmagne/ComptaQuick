@@ -61,7 +61,7 @@ define([
         this.name.addClass("form-error");
       }
       // check if the number is an integer
-      var intRegex = /^\+?[1-9]\d*$/;
+      var intRegex = /^\+?[0-9]\d*$/;
       if( (_data.account_number != "" ) && !(intRegex.test(_data.account_number))) {
         error_msg += 'Le numéro de compte doit être un entier positif.<br>';
         this.number.addClass("form-error");
