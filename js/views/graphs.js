@@ -203,9 +203,8 @@
 
     },
 
-    generateOpTagGraph: function (options) {
-      console.log("DEBUG generateOpTagGraph tagName: ",options.hashtagName)
-      var operations   = new Operations({accountId : options.accountId, tag : 'test', dateDebut : 'all' });
+    generateOpTagGraph: function (options) {      
+      var operations   = new Operations({accountId : options.accountId, tag : options.hashtagName, dateDebut : 'all' });
       var that = this;
       operations.fetch({
         success: function (operations) {
@@ -276,12 +275,21 @@
 
         var jsonArray = [];
         for(var i = 0; i < evolutionX.length; i++){
-            jsonArray.push({
-              x: evolutionX[i],
-              name: evolutionOp[i],
-              color: '#483D8B',
-              y: parseInt(evolutionY[i])
-          });
+          if(evolutionY[i] < 0){
+                jsonArray.push({
+                  x: evolutionX[i],
+                  name: evolutionOp[i],
+                  color: 'red',
+                  y: parseInt(evolutionY[i])
+              });
+            }else {
+                jsonArray.push({
+                  x: evolutionX[i],
+                  name: evolutionOp[i],
+                  color: '#483D8B',
+                  y: parseInt(evolutionY[i])
+              });
+          }
         };
 
         graphOptions.series[0].data = jsonArray;
@@ -359,7 +367,7 @@
           jsonArray.push({
             x: Date.parse(op.get("operation_date")),
             name: op.get("operation_name"),
-            color: '#483D8B',
+            color: (op.get("is_credit") == 1) ? 'green' : 'red',
             y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
         });
       }); 
