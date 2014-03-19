@@ -181,7 +181,7 @@ define([
    			graphHashtag: function(event){
    				event.preventDefault();
    				var hashtagName = $(event.currentTarget).attr("href");
-   				//console.log(hashtagName);
+   				console.log("hashtagName : ", hashtagName);
 
 
 				var graphview = new GraphView();
