@@ -149,11 +149,10 @@
     generateBalanceGraph: function () {
       console.log("generate balance graph");
       var that = this;
+      var win = this;
       var begin, end, type;
       
       var account_id = this.$el.find('select[name=list_account]').val();
-      if (account_id == 'all')
-        account_id = undefined;
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
@@ -176,31 +175,46 @@
          end = undefined;
       }
 
-      var operations = new Operations({accountId: account_id, dateDebut: begin, dateFin: end});
-      var account = new Account({account_id: account_id});
-
-      account.fetch({
-        success: function (account) {
-          console.log("account recupéré : ",account);
-          that.account = account;
-          that.accountBalance = account.get("balance");
-          operations.fetch({
-                success: function (operations) {
-                  console.log("operations recupérées : ",operations);
-                  that.operations = operations;
-                  that.initBalanceGraphOptions(operations);
-                  
+      if (account_id == 'all'){
+        var allAccOp;
+        var i = 1;
+        this.accounts = new Accounts(); 
+        console.log(this.accounts);
+        this.accounts.fetch({
+              success: function (accounts) {
+                console.log(accounts.models);
+                win.initGraphAllAccOptions(accounts, begin, end);
                 },
-            error: function() {
-              console.log("Error during fetch account operation");
-            }
-              });
-        },
-        error: function() {
-          console.log("Error during fetch account operation");
-        }
-      });
-
+              error: function() {
+                  console.log("Error during fetch account operation");
+              }
+        }); 
+      
+      }else{  
+        var operations = new Operations({accountId: account_id, dateDebut: begin, dateFin: end});
+        var account = new Account({account_id: account_id});
+        account.fetch({
+          success: function (account) {
+            console.log("account recupéré : ",account);
+            that.account = account;
+            that.accountBalance = account.get("balance");
+            operations.fetch({
+                  success: function (operations) {
+                    console.log("operations recupérées : ",operations);
+                    that.operations = operations;
+                    that.initBalanceGraphOptions(operations);
+                    
+                  },
+              error: function() {
+                console.log("Error during fetch account operation");
+              }
+                });
+          },
+          error: function() {
+            console.log("Error during fetch account operation");
+          }
+        });
+      }
     },
 
     initBalanceGraphOptions: function (operations) {
@@ -354,6 +368,104 @@
           this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
         }
   
+    },
+
+
+    initGraphAllAccOptions: function (accounts, begin , end) {
+         var series_name = [];
+         var win = this;
+        _.each(accounts.models, function(account, cpt) {
+                      var accid = account.get("account_id");
+                      var name = account.get("account_name");
+                      series_name.push ("name: solde du compte " + name + "("+accid+")");
+        });              
+        var graphOptions = {
+          chart: {
+              type: 'spline'
+          },
+          title: {
+              text: 'Évolution du solde de tous les comptes'
+          },
+          xAxis: {
+              type: 'datetime'
+          },
+          yAxis: {
+              title: {
+                  text: 'Montant (euros)'
+              }
+          },
+         plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+          series: [series_name]
+        };
+        
+            var k = 0;
+             _.each(accounts.models, function(account, cpt) {
+                      var id = account.get("id");
+                      var balance = account.get("balance");
+                      var operations = new Operations({accountId: id, dateDebut: begin, dateFin: end});
+                      var that = this;
+                      operations.fetch({
+                        success: function (operations) {
+                          console.log("operations recupérées : ", operations);
+                          that.operations = operations;   
+                          var listOpe   = operations.toArray();
+                          var evolutionX  = []; 
+                          var evolutionY  = []; 
+                          var evolutionOp = [];
+
+                          listOpe = listOpe.reverse();
+        
+                          for(var i = 0; i < listOpe.length; i++){
+                            // we put the previous balance in the tab
+                            evolutionY.push(parseInt(balance));
+                            if(listOpe[i].get("is_credit") == 1){
+                              balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+                            }else{
+                              balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+                            }
+                            evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+                            evolutionOp.push(listOpe[i].get("operation_name"));
+                          }
+
+                          evolutionX.reverse();
+                          evolutionY.reverse();
+                          evolutionOp.reverse();
+                          var colorrandom = win.generateColor();
+                          var jsonArray = [];
+                          for(var i = 0; i < evolutionX.length; i++){
+                              jsonArray.push({
+                                x: evolutionX[i],
+                                name: evolutionOp[i],
+                                color: colorrandom,
+                                y: parseInt(evolutionY[i])
+                            });
+                          };
+                          console.log(k);
+                          console.log("jsonArray :");
+                          console.log(jsonArray);
+                          console.log("graphOptions :");
+                          console.log(graphOptions);
+
+                          graphOptions.series[k].data = jsonArray;
+                          console.log(graphOptions.series[k].data);
+                          k++;
+                         }                 
+                      })
+            });
+        win.$el.find('#graphs').highcharts(graphOptions);
+
+    },
+
+    generateColor: function() {
+      var green = Math.floor(Math.random()*255);
+      var red = Math.floor(Math.random()*255);
+      return color = '0x'+green.toString(16)+red.toString(16)+'ff';
     },
       
     close: function () {
