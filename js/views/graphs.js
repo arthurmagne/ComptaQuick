@@ -48,7 +48,7 @@
       if(options){
         if (options.hashtagName){
           console.log("hashtag graph");
-           this.initTagGraphOptions(options);
+          this.initTagGraphOptions(options);
         }
       }
     },
