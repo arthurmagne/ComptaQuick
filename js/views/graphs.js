@@ -211,7 +211,7 @@
         success: function (operations) {
           console.log("operations recupérées : ",operations);
           that.operations = operations;
-          that.initOpTagGraphOptions(operations);
+          that.initOpTagGraphOptions({operations : that.operations, tag : options.hashtagName});
           
         },
         error: function() {
@@ -289,14 +289,14 @@
         this.$el.find('#graphs').highcharts(graphOptions);
       },
 
-      initOpTagGraphOptions: function (operations) {
+      initOpTagGraphOptions: function (opAndTag) {
       // options for graph
       var graphOptions = {
           chart: {
               type: 'column'
           },
           title: {
-              text: 'Graphe hashtag '
+              text: 'Graphe hashtag ' + opAndTag.tag
           },
           xAxis: {
             type: 'datetime'
@@ -311,15 +311,14 @@
           }]
       };
 
-      var balance   = 0;
       var jsonArray = [];
-        
+      var operations = opAndTag.operations;
 
       operations.each(function(op) {
           jsonArray.push({
             x: Date.parse(op.get("operation_date")),
             name: op.get("operation_name"),
-            color: '#483D8B',
+            color: (op.get("is_credit") == 1) ? 'green' : 'red',
             y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
         });
       }); 
