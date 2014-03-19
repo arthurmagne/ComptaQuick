@@ -375,10 +375,10 @@
          var series_name = [];
          var win = this;
         _.each(accounts.models, function(account, cpt) {
-                      var accid = account.get("account_id");
                       var name = account.get("account_name");
-                      series_name.push ("name: solde du compte " + name + "("+accid+")");
-        });              
+                      series_name.push ({name:+" solde du compte"+ name});
+        });  
+        console.log(series_name);            
         var graphOptions = {
           chart: {
               type: 'spline'
