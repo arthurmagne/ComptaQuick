@@ -93,6 +93,7 @@ define([
             $(that.el).empty();
             
             $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
+            window.accounts.add(account);
             
             setTimeout(function(){
               that.close();
@@ -114,8 +115,15 @@ define([
         // create an empty collection for this model
         var operations = new Operations();
         window.operationsTab[uniqueId] = operations;
+        window.accounts.add(account);
+        $(that.el).empty();
+            
+        $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
+        setTimeout(function(){
+          that.close();
+          Backbone.View.prototype.goTo('#/accountList');
+        },2000);
       }
-      window.accounts.add(account);
 
       
     },

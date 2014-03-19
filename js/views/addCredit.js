@@ -57,7 +57,6 @@ define([
     validerOp: function (event) {
       event.preventDefault(); 
       console.log("creating credit op ...");
-
 	  
 	  var that = this;
       var error_msg = '';
@@ -124,9 +123,10 @@ define([
 				  console.log(operation);
 				  $(that.el).empty();
 				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
+      		window.operationsTab[this.accountListView.getAccount()].add(operation);
 				  setTimeout(function(){
-					that.close();
-					Backbone.View.prototype.goTo('#/accountList');
+						that.close();
+						Backbone.View.prototype.goTo('#/accountList');
 				  },2000);
 				},
 	        error: function (){
@@ -139,8 +139,14 @@ define([
         uniqueId = uniqueId.getTime();
         console.log("UniqueId : ",uniqueId);
         operation.set("id",uniqueId);
+      	window.operationsTab[this.accountListView.getAccount()].add(operation);
+        $(that.el).empty();
+				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
+				 	setTimeout(function(){
+						that.close();
+						Backbone.View.prototype.goTo('#/accountList');
+				  },2000);
       }
-      window.operationsTab[this.accountListView.getAccount()].add(operation);
 
     },
 	

@@ -177,6 +177,7 @@ define([
           console.log("already sync");
           return ;
         }
+        
         // save collections
         window.accounts.saveAll();
         

@@ -76,14 +76,17 @@ define([
 
     syncWithServer: function (event) {
         console.log("Sync with server");
+        // display loader
+        $(".circle, .circle1").removeClass("hide");
         event.preventDefault();
-        if (!window.isOnline()){
-          BootstrapDialog.alert('Échec de la connexion');
-          return;
-        }
-
-
-      
+         setTimeout(function(){
+           if (!window.isOnline()){
+              BootstrapDialog.alert('Échec de la connexion');
+              $(".circle, .circle1").addClass("hide");
+              return;
+            }
+            $(".circle, .circle1").addClass("hide");
+          },500);
 
     },
 

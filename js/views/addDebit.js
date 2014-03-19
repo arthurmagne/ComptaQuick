@@ -51,6 +51,7 @@
     		type_id: this.paymentTypeListView.getType(),
     		operation_date: this.addOperationFormView.getOpDate(),
     		operation_name: this.addOperationFormView.getOpName(),
+    		type_name: this.paymentTypeListView.getTypeName(),
     		operation_desc: this.addOperationFormView.getOpDesc(),
     		is_credit: "0",
     		value: this.addOperationFormView.getOpValue()
@@ -127,6 +128,7 @@
 				  console.log(operation);
 				  $(that.el).empty();			  
 				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
+      			  window.operationsTab[this.accountListView.getAccount()].add(operation);
 
 				  setTimeout(function(){
 					that.close();
@@ -143,8 +145,14 @@
         uniqueId = uniqueId.getTime();
         console.log("UniqueId : ",uniqueId);
         operation.set("id",uniqueId);
+        window.operationsTab[this.accountListView.getAccount()].add(operation);
+		$(that.el).empty();			  
+		$(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
+		setTimeout(function(){
+			that.close();
+			Backbone.View.prototype.goTo('#/accountList');
+		  },2000);
       }
-      window.operationsTab[this.accountListView.getAccount()].add(operation);
 
     },
 	
