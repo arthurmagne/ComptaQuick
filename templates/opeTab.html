@@ -42,7 +42,7 @@
           <td></td>
           <td class='debit'><%= operation.get("value") %></td>
         <% } %>
-          <td class="op-desc"><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"#$2\"> #$2</a>') 
+          <td class="op-desc"><%= operation.get("operation_desc").replace(/(^|\W)#([a-z\d][\w-]*)/ig, '<a class=\"hashtag-opetab\" href=\"$2\"> #$2</a>') 
 
           %></td>
         <td class="delete-op" data-value="<%= operation.get('id') %>">Supprimer</td>

@@ -117,12 +117,14 @@ define([
    				var evolutionX 	= []; 
    				var evolutionY 	= []; 
    				var evolutionOp = [];
+   				var today = new Date();
 
    				listOpe = listOpe.reverse();
 
-   				//evolutionY.push(this.accountBalance);
-   				//evolutionX.push(Date.parse(new Date()));
-   				//evolutionOp.push("Solde actuel");
+   				evolutionY.push(parseInt(balance));
+   				//today.setTime(today.getTime()-24*3600*1000);
+   				evolutionX.push(Date.parse(today));
+   				evolutionOp.push("Nouveau solde");
    				
    				for(var i = 0; i < listOpe.length; i++){
    					// we put the previous balance in the tab
@@ -137,7 +139,6 @@ define([
    				}
 
    				evolutionY.push(parseInt(balance));
-   				var today = new Date();
    				today.setTime(today.getTime()-30*24*3600*1000);
    				evolutionX.push(Date.parse(today));
    				evolutionOp.push("Ancien solde");
