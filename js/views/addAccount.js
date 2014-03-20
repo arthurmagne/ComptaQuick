@@ -93,6 +93,8 @@ define([
             $(that.el).empty();
             
             $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
+            var operations = new Operations();
+            window.operationsTab[account.get("id")] = operations;
             window.accounts.add(account);
             
             setTimeout(function(){
