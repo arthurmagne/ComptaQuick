@@ -106,7 +106,7 @@
 		this.addOperationFormView.setErrorOpValue(true);
 		console.log("problème de valeur vide");
 	  }
-	  else if(isNaN(_data.value)) {
+	  else if(isNaN(_data.value) || _data.value < 0) {
         error_msg += "Le montant de l'opération doit être un nombre. <br>";
 		this.addOperationFormView.setErrorOpValue(true);
 		console.log("problème de valeur autre que nombre");
@@ -127,10 +127,13 @@
 				  $(that.el).empty();			  
 				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
       			  window.operationsTab[operation.get("account_id")].add(operation);
+      			  console.log("DEBUG wwindow.accounts ",window.accounts);
+      			  var balance =  window.accounts.get(_data.account_id).get('balance');
+      			  window.accounts.get(_data.account_id).set('balance',parseInt(balance)-parseInt(operation.get("value")));
 
 				  setTimeout(function(){
 					that.close();
-					Backbone.View.prototype.goTo('#/accountList');
+					Backbone.View.prototype.goTo('#/opeTab/'+_data.account_id);
 				  },2000);
 				},
 	        error: function (){
@@ -143,12 +146,14 @@
         uniqueId = uniqueId.getTime();
         console.log("UniqueId : ",uniqueId);
         operation.set("id",uniqueId);
+        var balance = window.accounts.get(_data.account_id).get("balance");
+        window.accounts.get(_data.account_id).set("balance",parseInt(balance)-parseInt(_data.value));
         window.operationsTab[this.accountListView.getAccount()].add(operation);
 		$(that.el).empty();			  
 		$(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
 		setTimeout(function(){
 			that.close();
-			Backbone.View.prototype.goTo('#/accountList');
+			Backbone.View.prototype.goTo('#/opeTab/'+_data.account_id);
 		  },2000);
       }
 
