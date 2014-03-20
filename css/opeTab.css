@@ -31,25 +31,20 @@
 }
 
 .add-debit{
-	height: 35px;
-	vertical-align : middle;
-	text-align : center;
 	width: 25%;
-	float : right;
-	position : relative;
-	right: 12%;
+	float: right;
 
 }
 
 .add-credit{
-	height: 35px;
-	vertical-align : middle;
-	text-align : center;
-	float : left;
 	width: 25%;
-	position : relative;
-	left: 12%;
+	float: left;
 } 
+
+.button-operation-container{
+	width : 50%;
+	margin: 0 auto;
+}
 
 .add-op-btn span{
 	background-color: #428bca !important;
