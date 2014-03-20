@@ -86,7 +86,6 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
   return $query->execute();  
 }
-echo getOperations(2,0,0,0,0,0, 'other')->count()."\n";
 
 
 function deleteOperation($idOperation)

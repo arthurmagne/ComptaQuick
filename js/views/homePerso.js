@@ -93,7 +93,6 @@ define([
     fetchAccount: function () {
           var that = this;
           this.accounts.fetch({
-              local: false,
               success: function (accounts) {
                 console.log("accounts fetch success");
                 
