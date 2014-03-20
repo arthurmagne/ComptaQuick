@@ -84,7 +84,7 @@ define([
     },
 	
 	getAccount: function () {
-	  console.log("account:"+ $('select[name=list_account]').val());
+	  console.log("get account from account list :"+ $('#list_account').val());
 	  this.account = $('select[name=list_account]').val();		
       return this.account;
     },

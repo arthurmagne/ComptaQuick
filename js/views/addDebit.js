@@ -32,10 +32,8 @@
 		this.addOperationFormView = new AddOperationFormView();
 
 		if (options){
-			console.log("ICI");
 			this.accountListView.render({account_id: options.account_id});
 		}else{
-			console.log("LA");
 			this.accountListView.render();
 		}
 		this.paymentTypeListView.render();
@@ -123,12 +121,12 @@
       var operation = new Operation(_data);
       if (window.isOnline()){
 		  operation.save(null, {
-			success: function () {
+			success: function (operation) {
 				  console.log("Operation POST avec succès");
 				  console.log(operation);
 				  $(that.el).empty();			  
 				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de débit ajouté avec succès</h2><hr>");
-      			  window.operationsTab[this.accountListView.getAccount()].add(operation);
+      			  window.operationsTab[operation.get("account_id")].add(operation);
 
 				  setTimeout(function(){
 					that.close();

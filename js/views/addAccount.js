@@ -61,7 +61,7 @@ define([
         this.name.addClass("form-error");
       }
       // check if the number is an integer
-      var intRegex = /^\+?[1-9]\d*$/;
+      var intRegex = /^\+?[0-9]\d*$/;
       if( (_data.account_number != "" ) && !(intRegex.test(_data.account_number))) {
         error_msg += 'Le numéro de compte doit être un entier positif.<br>';
         this.number.addClass("form-error");
@@ -93,6 +93,8 @@ define([
             $(that.el).empty();
             
             $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
+            var operations = new Operations();
+            window.operationsTab[account.get("id")] = operations;
             window.accounts.add(account);
             
             setTimeout(function(){
