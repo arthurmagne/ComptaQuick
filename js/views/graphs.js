@@ -491,6 +491,7 @@
       };
      var jsonArray = [];
       object.each(function(op) {
+          console.log("DEBUG DATE ",op.get("operation_date"));
           jsonArray.push({
             x: Date.parse(op.get("operation_date")),
             name: op.get("operation_name"),
@@ -741,7 +742,7 @@
           BootstrapDialog.alert('Vous devez sélectionner un unique tag dans le graphe');
         }else{
           console.log(selectedPoints[0].name);
-          this.render({hashtagName : hashtagName});
+          this.render({hashtagName : selectedPoints[0].name});
         }
     }
 

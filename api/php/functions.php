@@ -48,12 +48,11 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     }
     
     
-    
     if($begin != 0)
-      $query->addWhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
-								  
+      $query->addWhere('o.operation_date >= ?',  array($begin));
+                  
     if($end != 0)
-      $query->addWhere('o.operation_date <= :endDate', array(':endDate' => $end));
+      $query->addWhere('o.operation_date <= ?', array($end));
    }
 								
   switch($type)

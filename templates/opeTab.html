@@ -9,9 +9,12 @@
 
   <% var operations = object.models; %>
 <% } %>
-<% if (operations.length == 0) { %>
+<% if ((typeof object != 'undefined') && (operations.length == 0)) { %>
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
-<% }else{ %>
+    <p class="text-center"><button class="add-debit btn btn-default">Débiter</button>
+    <button class="add-credit btn btn-default">Créditer</button></p>
+<% }else if ((typeof object == 'undefined') && (operations.length == 0)) {}else{ %>
+
 
 <p class="error-msg"></p>
 
