@@ -1,13 +1,14 @@
-<h1 class="page-header">Détail compte</h1>
+<% if (typeof object != 'undefined') { %>
+  <h1 class="page-header">Détail compte</h1>
 
-<p class="error-msg"></p>
-<h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Cliquez pour modifier</span></h2>
-<h3>Solde : <%= object.balance %> €</h3>
-<div id="graphs"></div>
+  <p class="error-msg"></p>
+  <h2 class="sub-header account-name-ope-tab"><span class="name"><%= object.account_name %></span><span class="info text-muted">Cliquez pour modifier</span></h2>
+  <h3>Solde : <%= object.balance %> €</h3>
+  <div id="graphs"></div>
 
 
-<% var operations = object.models; %>
-<% console.log(object.account_name); %>
+  <% var operations = object.models; %>
+<% } %>
 <% if (operations.length == 0) { %>
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
 <% }else{ %>
@@ -49,10 +50,12 @@
         <td class="edit-op" data-value="<%= operation.get('id') %>">Éditer</td>
       </tr>
     <% }); %>
+    <% if (typeof object != 'undefined') { %>
       <tr class="add-op-btn">
         <td colspan="4" class="add-debit">Débiter</td>
         <td colspan="5" class="add-credit">Créditer</td>
       </tr>
+    <% } %>
     </tbody>
   </table>
 </div>

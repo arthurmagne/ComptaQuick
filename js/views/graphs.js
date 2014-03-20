@@ -8,22 +8,28 @@
   'collections/operations',
   'models/operation',
   'text!../../templates/graphs.html',
+  'text!../../templates/opeTab.html',
   'collections/accounts',
   'models/account',
   'views/paymentTypeList',
   'views/accountList'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, Accounts, Account, PaymentTypeListView, AccountListView){
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, opeTabTemplate, Accounts, Account, PaymentTypeListView, AccountListView){
     var addDebitPage = Backbone.View.extend({
   	  events: {
         'submit .graph-form': 'switchType',
         'click .display-cal': 'displayCal',
         'click .display-op-form': 'displayOpForm',
         'click .hide-cal': 'hideCal',
-        'click .hide-op-form': 'hideOpForm'
+        'click .hide-op-form': 'hideOpForm',
+        'click .hashtag-opetab': 'graphHashtag',
+        'click .account-name-ope-tab .name': 'renameAccount',
+        'click .delete-op': 'deleteOp',
+        'click .edit-op': 'editOp',
+        'click .valid-op-edit': 'validEdit'
       },
 	
   	el: '#center-page',
-  	
+
   	render: function (options) {
       console.log("graphs view");
       console.log(options);
@@ -136,6 +142,8 @@
           console.log("operations recupérées : ",operations);
           that.operations = operations;
           that.initGraphOptions(operations);
+          var template = _.template(opeTabTemplate, {operations: operations.models});
+          that.$el.find('#opeTab').html(template);
           
         },
         error: function() {
@@ -203,6 +211,8 @@
                     console.log("operations recupérées : ",operations);
                     that.operations = operations;
                     that.initBalanceGraphOptions(operations);
+                    var template = _.template(opeTabTemplate, {operations: operations.models});
+                    that.$el.find('#opeTab').html(template);
                     
                   },
               error: function() {
@@ -215,6 +225,122 @@
           }
         });
       }
+    },
+
+     generateTagGraph: function () {
+      console.log("generate tag graph");
+      var that = this;
+      var begin, end;
+      
+      var account_id = this.$el.find('select[name=list_account]').val();
+       if (account_id == 'all')
+        account_id = undefined;
+
+      // get the duration
+      var duration = this.$el.find('input[name=duration]:checked').val();
+      if (duration == 'current')
+        duration = undefined;
+      if (duration == 'future'){
+        begin = new Date().toJSON();
+      }
+      if (duration == 'all'){
+        begin = 'all';
+      }
+      if (duration == 'manuel'){
+        
+        begin =  this.$el.find('input[name=begin]').val();
+        end   =  this.$el.find('input[name=end]').val();
+
+        if (begin == '')
+          begin = undefined;
+        if (end == '')
+         end = undefined;
+      }
+
+     var operations = new Operations({accountId: account_id, dateDebut: begin, dateFin: end});
+      var that = this;
+      operations.fetch({
+        success: function (operations) {
+          console.log("operations recupérées : ",operations);
+          that.operations = operations;
+          that.initTagGraphOptions(operations);
+          var template = _.template(opeTabTemplate, {operations: operations.models});
+          that.$el.find('#opeTab').html(template);
+          
+        },
+        error: function() {
+          console.log("Error during fetch account operation");
+        }
+      });  
+      
+    },
+
+    initTagGraphOptions: function (operations) {
+      var graphOptions = {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Détail des opérations'
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: 'Montant (euros)'
+            }
+        },
+        plotOptions: {
+            series: {
+                allowPointSelect: true
+            }
+        },
+        series: [{
+          name: 'Opérations'
+         }]
+      };
+
+      // create an array from operations with only the name of the tag and the number (no need to calculate the percentage)
+      var tagArray = {};
+      operations.each(function(op) {
+        console.log("Une op avec comme desc :",op.get("operation_desc"));
+        var tags =  op.get("operation_desc").match(/(^#|[^&]#)([a-z0-9]+)/gi);
+        console.log(tags);
+        if (tags == null) {
+          if (tagArray['autres'] != null){
+           tagArray['autres'] += 1;
+         }else{
+            tagArray['autres'] = 1;
+         }
+        }else{
+          tags.forEach(function (t) {
+            t = t.trim();
+             if (tagArray[t] != null){
+              tagArray[t] += 1;
+            }else{
+              tagArray[t] = 1;
+            }
+          });
+        }
+      });
+      console.log("notre tableau est donc :",tagArray);
+
+
+     var jsonArray = [];
+      for (var key in tagArray) {
+          jsonArray.push({
+            name: key,
+            y: tagArray[key]
+        });
+        }
+      // don't forget to reverse it
+      graphOptions.series[0].data = jsonArray;
+      if (this.operations.length != 0){
+          this.$el.find('#graphs').highcharts(graphOptions);
+        }else{
+          this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
+        }
     },
 
     initBalanceGraphOptions: function (operations) {
@@ -286,7 +412,7 @@
         this.$el.find('#graphs').highcharts(graphOptions);
       },
 
-      initTagGraphOptions: function (options) {
+      initOpTagGraphOptions: function (options) {
       // options for graph
       var graphOptions = {
           chart: {
@@ -461,6 +587,12 @@
 
     },
 
+    tagsLinks: function(event) {
+        var chart = this.$el.find('#graphs').highcharts();
+        var selectedPoints = chart.getSelectedPoints();
+        console.log('You selected '+ selectedPoints.length +' points');
+    },
+
     generateColor: function() {
       var green = Math.floor(Math.random()*255);
       var red = Math.floor(Math.random()*255);
@@ -470,7 +602,129 @@
     close: function () {
       $(this.el).unbind();
       $(this.el).empty();
-    }
+    },
+
+    renameAccount: function (event) {
+          event.preventDefault();
+          var accountNameTag = $('.account-name-ope-tab');
+          var accountName = accountNameTag.find('.name').html();
+
+          accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
+        },
+
+        graphHashtag: function(event){
+          event.preventDefault();
+          var hashtagName = $(event.currentTarget).attr("href");
+          //console.log(hashtagName);
+
+
+        var graphview = new GraphView();
+        graphview.render({hashtagName : hashtagName, accountId : this.accountId});
+
+        },
+
+        deleteOp: function (event) {
+          //event.stopImmediatePropagation();
+
+          var that = this;
+          BootstrapDialog.confirm('Voulez vous vraiment supprimer cette opération?', function(result){
+                if(result) {
+                    var opId = $(event.currentTarget).data('value');
+              console.log("Delete op with id : ", opId);
+              // remove model (from server and collection by bubbling)
+             // window.deletedOperations.push(opId);
+              //window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
+
+                that.operations.get(opId).destroy({ 
+                  success: function () {
+                    that.$el.find('.op-row[data-value='+opId+']').remove();
+                  },
+                  error: function () {
+                    console.log("DEBUG : Error during destroy deleteOp");
+                  }
+                });
+              
+
+              // remove row from tab
+              
+                
+                }else {
+                    console.log("Suppression annulée");
+                }
+            });  
+
+        },
+
+        editOp: function (event) {
+          //event.stopImmediatePropagation();
+          // Ajouter un input à la place du nom avec un bouton valider
+          console.log("editOp");
+            var opId = $(event.currentTarget).data('value');
+          var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+          //var opDescTag = this.$el.find('.op-row[data-value='+opId+'] .op-desc');
+          var editOpBtn = this.$el.find('.edit-op[data-value='+opId+']');
+          var opName = opNameTag.html();
+          //var opDesc = opDescTag.html();
+
+          opNameTag.html("<input class='form-control' type='text' value='"+opName+"'/>");
+          //opDescTag.html("<input class='form-control' type='text' value='"+opDesc+"'/>");
+          editOpBtn.html("Valider");
+          editOpBtn.removeClass("edit-op");
+          editOpBtn.addClass("valid-op-edit");
+
+        },
+
+        validEdit: function (event) {
+          //event.stopImmediatePropagation();
+          console.log("validEdit");
+          var that = this;
+          var opId = $(event.currentTarget).data('value');
+          var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+          var opNameInput = this.$el.find('.op-row[data-value='+opId+'] .op-name input');
+          var editOpBtn = this.$el.find('.valid-op-edit[data-value='+opId+']');
+          // On récupère la valeur de l'input
+          var opName = opNameInput.val();
+
+
+            $(".error-msg").html();
+
+          var error_msg = '';
+          if (opName == ''){
+            error_msg += "Le nom de l'opération ne peut être vide.<br>";
+              opNameInput.addClass("form-error");
+              
+          }
+
+            $(".error-msg").html(error_msg);
+
+
+          if (error_msg != ''){
+            return ;
+          }
+          // on update l'account sur le serveur
+
+          var operation = this.operations.get(opId);
+          operation.set('operation_name', opName);
+          operation.save(null, {
+              success: function (operation){
+
+                console.log("Operation push au serveur avec succès");
+                console.log(operation);               
+                
+
+              },
+              error: function (){
+                console.log("An error occured");
+              }
+            });
+          
+
+          opNameTag.html(opName);
+          console.log(opName);
+          editOpBtn.html("Éditer");
+          editOpBtn.removeClass("valid-edit");
+          editOpBtn.addClass("edit-op");
+        }
 
   	});
 
