@@ -573,6 +573,7 @@
       };
       
       var k = 0;
+      var size = accounts.length;
        _.each(accounts.models, function(account, cpt) {
                 var id = account.get("id");
                 var balance = account.get("balance");
@@ -622,11 +623,15 @@
                     graphOptions.series[k].data = jsonArray;
                     console.log(graphOptions);
                     k++;
+                    console.log(size);
+                    if(size==k){
+                       console.log(graphOptions);
+                       win.$el.find('#graphs').highcharts(graphOptions);
+                    }
                    }                 
                 })
       });
-     console.log(graphOptions);
-     win.$el.find('#graphs').highcharts(graphOptions);
+    
     },
 
     generateColor: function() {
