@@ -30,16 +30,33 @@
 	height:400px;
 }
 
-.ope-tab .add-credit, .ope-tab .add-debit{
-	width: 50%;
+.add-debit{
+	height: 35px;
+	vertical-align : middle;
+	text-align : center;
+	width: 25%;
+	float : right;
+	position : relative;
+	right: 12%;
+
+}
+
+.add-credit{
+	height: 35px;
+	vertical-align : middle;
+	text-align : center;
+	float : left;
+	width: 25%;
+	position : relative;
+	left: 12%;
 } 
 
-.add-op-btn td{
+.add-op-btn span{
 	background-color: #428bca !important;
 	color: white;
 	cursor: pointer;
 }
 
-.add-op-btn td:hover{
+.add-op-btn span:hover{
 	background-color: rgb(111, 172, 223) !important;
 }

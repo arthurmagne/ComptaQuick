@@ -26,10 +26,17 @@ function getAccounts($idUser)
 
 
 
+<<<<<<< HEAD
 function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
 {
   $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
   //echo 'tag = '.$tag;
+=======
+
+function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag='')
+{
+  $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
+>>>>>>> 35e21c36cea680c5436f718438dce9b77a33d5ff
 
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
@@ -51,7 +58,11 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
     if($begin != 0)
       $query->addWhere('o.operation_date >= ?',  array($begin));
+<<<<<<< HEAD
 								  
+=======
+
+>>>>>>> 35e21c36cea680c5436f718438dce9b77a33d5ff
     if($end != 0)
       $query->addWhere('o.operation_date <= ?', array($end));
    }
@@ -71,10 +82,19 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     $query->addWhere('o.type_id = ?', array($paymentId));
   
  
+<<<<<<< HEAD
   if($tag != 0)
   {
      $str = '%#'.$tag.'%';
      //echo $str;
+=======
+
+  if($tag != 'undefined')
+  {
+     $str = '%#'.$tag.'%';
+     //echo $str;
+
+>>>>>>> 35e21c36cea680c5436f718438dce9b77a33d5ff
      $query->addWhere('o.operation_desc LIKE ?', array($str));
   }
   
@@ -85,8 +105,11 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
   return $query->execute();  
 }
+<<<<<<< HEAD
 //echo getOperations(2,0,0,0,0,0, 'other')->count()."\n";
 
+=======
+>>>>>>> 35e21c36cea680c5436f718438dce9b77a33d5ff
 
 
 function deleteOperation($idOperation)

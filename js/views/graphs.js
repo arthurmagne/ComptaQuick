@@ -1,4 +1,4 @@
-	
+
 	define([
   'bootstrap',
   'holder',
@@ -58,7 +58,7 @@
       if(options){
         if (options.hashtagName){
           console.log("hashtag graph");
-           this.initTagGraphOptions(options);
+          this.generateOpTagGraph(options);
         }
       }
     },
@@ -353,6 +353,22 @@
         }
     },
 
+    generateOpTagGraph: function (options) {      
+      var operations   = new Operations({accountId : options.accountId, tag : options.hashtagName, dateDebut : 'all' });
+      var that = this;
+      operations.fetch({
+        success: function (operations) {
+          console.log("operations recupérées : ",operations);
+          that.operations = operations;
+          that.initOpTagGraphOptions({operations : that.operations, tag : options.hashtagName});
+          
+        },
+        error: function() {
+          console.log("Error during fetch account operation");
+        }
+      });     
+    },
+
     initBalanceGraphOptions: function (operations) {
       // options for graph
       var graphOptions = {
@@ -409,12 +425,21 @@
 
         var jsonArray = [];
         for(var i = 0; i < evolutionX.length; i++){
-            jsonArray.push({
-              x: evolutionX[i],
-              name: evolutionOp[i],
-              color: '#483D8B',
-              y: parseInt(evolutionY[i])
-          });
+          if(evolutionY[i] < 0){
+                jsonArray.push({
+                  x: evolutionX[i],
+                  name: evolutionOp[i],
+                  color: 'red',
+                  y: parseInt(evolutionY[i])
+              });
+            }else {
+                jsonArray.push({
+                  x: evolutionX[i],
+                  name: evolutionOp[i],
+                  color: '#483D8B',
+                  y: parseInt(evolutionY[i])
+              });
+          }
         };
 
         graphOptions.series[0].data = jsonArray;
@@ -422,14 +447,14 @@
         this.$el.find('#graphs').highcharts(graphOptions);
       },
 
-      initOpTagGraphOptions: function (options) {
+      initOpTagGraphOptions: function (opAndTag) {
       // options for graph
       var graphOptions = {
           chart: {
               type: 'column'
           },
           title: {
-              text: 'Graphe hashtag ' + options.hashtagName
+              text: 'Graphe hashtag ' + opAndTag.tag
           },
           xAxis: {
             type: 'datetime'
@@ -444,26 +469,26 @@
           }]
       };
 
-      var balance   = 0;
-      var listOpe   = new Operations({accountId : options.accountId, tag : options.hashtagName, dateDebut : 'all' });
       var jsonArray = [];
+      var operations = opAndTag.operations;
 
-      listOpe.each(function(op) {
+      operations.each(function(op) {
           jsonArray.push({
             x: Date.parse(op.get("operation_date")),
             name: op.get("operation_name"),
-            color: '#483D8B',
+            color: (op.get("is_credit") == 1) ? 'green' : 'red',
             y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
         });
       }); 
       // don't forget to reverse it
       graphOptions.series[0].data = jsonArray;
-      if (listOpe.length != 0){
+      if (operations.length != 0){
           this.$el.find('#graphs').highcharts(graphOptions);
         }else{
           this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
         }
 
+        
 
       },
 
@@ -493,7 +518,7 @@
           jsonArray.push({
             x: Date.parse(op.get("operation_date")),
             name: op.get("operation_name"),
-            color: '#483D8B',
+            color: (op.get("is_credit") == 1) ? 'green' : 'red',
             y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
         });
       }); 
