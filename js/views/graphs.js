@@ -538,10 +538,14 @@
        var series_name = [];
        var win = this;
       _.each(accounts.models, function(account, cpt) {
-                    var name = account.get("account_name");
-                    series_name.push ({name:+" solde du compte"+ name});
-      });  
+                    var accname = account.get("account_name");
+                    console.log(name);
+                    series_name.push({name: accname});
+                    console.log(series_name);
+      }); 
+      console.log("series_name:");  
       console.log(series_name); 
+
 
       var graphOptions = {
         chart: {
@@ -573,9 +577,9 @@
                 var id = account.get("id");
                 var balance = account.get("balance");
                 var operations = new Operations({accountId: id, dateDebut: begin, dateFin: end});
-                var that = this;
                 operations.fetch({
                   success: function (operations) {   
+                    console.log(operations.toArray());
                     var listOpe   = operations.toArray();
                     var evolutionX  = []; 
                     var evolutionY  = []; 
@@ -608,6 +612,7 @@
                           y: parseInt(evolutionY[i])
                       });
                     };
+
                     console.log(k);
                     console.log("jsonArray :");
                     console.log(jsonArray);
@@ -620,6 +625,7 @@
                    }                 
                 })
       });
+     console.log(graphOptions);
      win.$el.find('#graphs').highcharts(graphOptions);
     },
 
