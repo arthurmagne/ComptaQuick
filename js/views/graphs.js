@@ -316,20 +316,21 @@
       operations.each(function(op) {
         console.log("Une op avec comme desc :",op.get("operation_desc"));
         var tags =  op.get("operation_desc").match(/(^#|[^&]#)([a-z0-9]+)/gi);
+        var value = op.get("value");
         console.log(tags);
         if (tags == null) {
           if (tagArray['autres'] != null){
-           tagArray['autres'] += 1;
+           tagArray['autres'] += parseInt(value);
          }else{
-            tagArray['autres'] = 1;
+            tagArray['autres'] = parseInt(value);
          }
         }else{
           tags.forEach(function (t) {
             t = t.trim();
              if (tagArray[t] != null){
-              tagArray[t] += 1;
+              tagArray[t] += parseInt(value);
             }else{
-              tagArray[t] = 1;
+              tagArray[t] = parseInt(value);
             }
           });
         }
@@ -764,7 +765,7 @@
           BootstrapDialog.alert('Vous devez sélectionner un unique tag dans le graphe');
         }else{
           console.log(selectedPoints[0].name);
-          this.render({hashtagName : selectedPoints[0].name});
+          this.render({hashtagName : (selectedPoints[0].name).slice(1)});
         }
     }
 
