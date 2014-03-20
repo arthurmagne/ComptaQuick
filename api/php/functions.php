@@ -10,8 +10,8 @@ define('DEBIT', 2);
 function getAccounts($idUser)
 {
  $query =  Doctrine_Query::create()->select('id')
-				  ->from('Account')
-				  ->where('user_id = :userId', array(":userId" => $idUser));
+          ->from('Account')
+          ->where('user_id = :userId', array(":userId" => $idUser));
  $results = $query->execute();
 
  $accounts = array();
@@ -26,16 +26,16 @@ function getAccounts($idUser)
 
 
 
-function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
+
+function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag='')
 {
   $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
-  //echo 'tag = '.$tag;
 
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
-				  ->from('Operation o')
-				  ->leftJoin('o.PaymentType p')
+          ->from('Operation o')
+          ->leftJoin('o.PaymentType p')
 
-				  ->where('o.account_id IN ?', array($accounts)); 
+          ->where('o.account_id IN ?', array($accounts)); 
 
  
   if($begin != 'all')
@@ -48,14 +48,13 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     }
     
     
-    
     if($begin != 0)
       $query->addWhere('o.operation_date >= ?',  array($begin));
-								  
+
     if($end != 0)
       $query->addWhere('o.operation_date <= ?', array($end));
    }
-								
+
   switch($type)
   {
     case CREDIT:
@@ -71,10 +70,12 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     $query->addWhere('o.type_id = ?', array($paymentId));
   
  
-  if($tag != 0)
+
+  if($tag != 'undefined')
   {
      $str = '%#'.$tag.'%';
      //echo $str;
+
      $query->addWhere('o.operation_desc LIKE ?', array($str));
   }
   
@@ -85,8 +86,6 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
   return $query->execute();  
 }
-//echo getOperations(2,0,0,0,0,0, 'other')->count()."\n";
-
 
 
 function deleteOperation($idOperation)
@@ -149,13 +148,13 @@ function credit($idAccount, $value, $payment_id="", $operation_name="", $operati
 function balanceFromAccount($idAccount)
 {
   $q =  Doctrine_Query::create()->select('SUM(value) as total')->from('Operation o')
-	      ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount))
-	      ->groupBy('is_credit')->orderBy('is_credit')->execute();
+        ->where('o.account_id = :idAccount', array(":idAccount" => $idAccount))
+        ->groupBy('is_credit')->orderBy('is_credit')->execute();
 
   $debit = $q[0]->total;
   $credit = $q[1]->total;
-	      
-	      
+
+
 
   return $credit - $debit;
 }
