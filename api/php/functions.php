@@ -26,10 +26,10 @@ function getAccounts($idUser)
 
 
 
-function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag='')
+function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
 {
   $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
-  
+  //echo 'tag = '.$tag;
 
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
@@ -48,9 +48,10 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     }
     
     
+    
     if($begin != 0)
       $query->addWhere('o.operation_date >= ?',  array($begin));
-                  
+								  
     if($end != 0)
       $query->addWhere('o.operation_date <= ?', array($end));
    }
@@ -70,9 +71,10 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     $query->addWhere('o.type_id = ?', array($paymentId));
   
  
-  if($tag != '' && $tag != 0)
+  if($tag != 0)
   {
-     $str = '%'.$tag.'%';
+     $str = '%#'.$tag.'%';
+     //echo $str;
      $query->addWhere('o.operation_desc LIKE ?', array($str));
   }
   
@@ -83,8 +85,7 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
   return $query->execute();  
 }
-
-
+//echo getOperations(2,0,0,0,0,0, 'other')->count()."\n";
 
 
 
