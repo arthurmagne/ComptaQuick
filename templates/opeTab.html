@@ -15,7 +15,10 @@
     <button class="add-credit btn btn-default">Créditer</button></p>
 <% }else if ((typeof object == 'undefined') && (operations.length == 0)) {}else{ %>
 
-
+ <p class="text-center button-operation-container">
+  <button class="add-credit btn btn-primary btn-lg">Créditer</button>
+  <button class="add-debit btn btn-primary btn-lg">Débiter</button>
+</p>
 <p class="error-msg"></p>
 
 <div class="table-responsive">
@@ -54,12 +57,12 @@
       </tr>
     <% }); %>
     <% if (typeof object != 'undefined') { %>
-      <tr class="add-op-btn">
-        <td colspan="4" class="add-debit">Débiter</td>
-        <td colspan="5" class="add-credit">Créditer</td>
-      </tr>
     <% } %>
     </tbody>
-  </table>
+  </table> 
+  <p class="text-center button-operation-container">
+    <button class="add-credit btn btn-primary btn-lg">Créditer</button>
+    <button class="add-debit btn btn-primary btn-lg">Débiter</button>
+  </p>
 </div>
 <% } %>
