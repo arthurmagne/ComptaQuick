@@ -223,8 +223,6 @@
                     console.log("operations recupérées : ",operations);
                     that.operations = operations;
                     that.initBalanceGraphOptions(operations);
-                    var template = _.template(opeTabTemplate, {operations: operations.models});
-                    that.$el.find('#opeTab').html(template);
                     
                   },
               error: function() {
@@ -239,7 +237,7 @@
       }
     },
 
-     generateTagGraph: function () {
+    generateTagGraph: function () {
       console.log("generate tag graph");
       var that = this;
       var begin, end;
@@ -511,93 +509,92 @@
 
 
     initGraphAllAccOptions: function (accounts, begin , end) {
-         var series_name = [];
-         var win = this;
-        _.each(accounts.models, function(account, cpt) {
-                      var name = account.get("account_name");
-                      series_name.push ({name:+" solde du compte"+ name});
-        });  
-        console.log(series_name);            
-        var graphOptions = {
-          chart: {
-              type: 'spline'
-          },
-          title: {
-              text: 'Évolution du solde de tous les comptes'
-          },
-          xAxis: {
-              type: 'datetime'
-          },
-          yAxis: {
-              title: {
-                  text: 'Montant (euros)'
+       var series_name = [];
+       var win = this;
+      _.each(accounts.models, function(account, cpt) {
+                    var name = account.get("account_name");
+                    series_name.push ({name:+" solde du compte"+ name});
+      });  
+      console.log(series_name); 
+
+      var graphOptions = {
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Évolution du solde de tous les comptes'
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: 'Montant (euros)'
+            }
+        },
+       plotOptions: {
+              line: {
+                  dataLabels: {
+                      enabled: true
+                  }
               }
           },
-         plotOptions: {
-                line: {
-                    dataLabels: {
-                        enabled: true
-                    }
-                }
-            },
-          series: series_name
-        };
-        
-          var k = 0;
-           _.each(accounts.models, function(account, cpt) {
-                    var id = account.get("id");
-                    var balance = account.get("balance");
-                    var operations = new Operations({accountId: id, dateDebut: begin, dateFin: end});
-                    var that = this;
-                    operations.fetch({
-                      success: function (operations) {
-                        that.operations = operations;   
-                        var listOpe   = operations.toArray();
-                        var evolutionX  = []; 
-                        var evolutionY  = []; 
-                        var evolutionOp = [];
-
-                        listOpe = listOpe.reverse();
+        series: series_name
+      };
       
-                        for(var i = 0; i < listOpe.length; i++){
-                          // we put the previous balance in the tab
-                          evolutionY.push(parseInt(balance));
-                          if(listOpe[i].get("is_credit") == 1){
-                            balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
-                          }else{
-                            balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
-                          }
-                          evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
-                          evolutionOp.push(listOpe[i].get("operation_name"));
-                        }
+      var k = 0;
+       _.each(accounts.models, function(account, cpt) {
+                var id = account.get("id");
+                var balance = account.get("balance");
+                var operations = new Operations({accountId: id, dateDebut: begin, dateFin: end});
+                var that = this;
+                operations.fetch({
+                  success: function (operations) {   
+                    var listOpe   = operations.toArray();
+                    var evolutionX  = []; 
+                    var evolutionY  = []; 
+                    var evolutionOp = [];
 
-                        evolutionX.reverse();
-                        evolutionY.reverse();
-                        evolutionOp.reverse();
-                        var colorrandom = win.generateColor();
-                        var jsonArray = [];
-                        for(var i = 0; i < evolutionX.length; i++){
-                            jsonArray.push({
-                              x: evolutionX[i],
-                              name: evolutionOp[i],
-                              color: colorrandom,
-                              y: parseInt(evolutionY[i])
-                          });
-                        };
-                        console.log(k);
-                        console.log("jsonArray :");
-                        console.log(jsonArray);
-                        console.log("graphOptions :");
-                        console.log(graphOptions);
-                        console.log(graphOptions.series[k]);
-                        graphOptions.series[k].data = jsonArray;
-                        console.log(graphOptions.series[k].data);
-                        k++;
-                       }                 
-                    })
-          });
-      win.$el.find('#graphs').highcharts(graphOptions);
+                    listOpe = listOpe.reverse();
 
+                    for(var i = 0; i < listOpe.length; i++){
+                      // we put the previous balance in the tab
+                      evolutionY.push(parseInt(balance));
+                      if(listOpe[i].get("is_credit") == 1){
+                        balance = parseInt(balance) - parseInt(listOpe[i].get("value"));
+                      }else{
+                        balance = parseInt(balance) + parseInt(listOpe[i].get("value"));
+                      }
+                      evolutionX.push(Date.parse(listOpe[i].get("operation_date")));
+                      evolutionOp.push(listOpe[i].get("operation_name"));
+                    }
+
+                    evolutionX.reverse();
+                    evolutionY.reverse();
+                    evolutionOp.reverse();
+                    var colorrandom = win.generateColor();
+                    var jsonArray = [];
+                    for(var i = 0; i < evolutionX.length; i++){
+                        jsonArray.push({
+                          x: evolutionX[i],
+                          name: evolutionOp[i],
+                          color: colorrandom,
+                          y: parseInt(evolutionY[i])
+                      });
+                    };
+                    console.log(k);
+                    console.log("jsonArray :");
+                    console.log(jsonArray);
+                    console.log("graphOptions :");
+                    console.log(graphOptions);
+                    console.log(graphOptions.series[k]);
+                    graphOptions.series[k].data = jsonArray;
+                    console.log(graphOptions);
+                    k++;
+                   }                 
+                })
+      });
+     win.$el.find('#graphs').highcharts(graphOptions);
     },
 
     generateColor: function() {
