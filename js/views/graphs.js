@@ -539,12 +539,9 @@
        var win = this;
       _.each(accounts.models, function(account, cpt) {
                     var accname = account.get("account_name");
-                    console.log(name);
+                    console.log("account name : ",name);
                     series_name.push({name: accname});
-                    console.log(series_name);
       }); 
-      console.log("series_name:");  
-      console.log(series_name); 
 
 
       var graphOptions = {
@@ -573,11 +570,13 @@
       };
       
       var k = 0;
+      acc
        _.each(accounts.models, function(account, cpt) {
                 var id = account.get("id");
                 var balance = account.get("balance");
                 var operations = new Operations({accountId: id, dateDebut: begin, dateFin: end});
                 operations.fetch({
+                  async: false,
                   success: function (operations) {   
                     console.log(operations.toArray());
                     var listOpe   = operations.toArray();
@@ -620,13 +619,18 @@
                     console.log(graphOptions);
                     console.log(graphOptions.series[k]);
                     graphOptions.series[k].data = jsonArray;
+                    console.log("DEBUG jsonarray ",JSON.stringify(jsonArray));
                     console.log(graphOptions);
                     k++;
                    }                 
                 })
       });
-     console.log(graphOptions);
+           console.log(graphOptions);
+     console.log(JSON.stringify(graphOptions));
      win.$el.find('#graphs').highcharts(graphOptions);
+
+
+     
     },
 
     generateColor: function() {
