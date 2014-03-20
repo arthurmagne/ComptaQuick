@@ -25,7 +25,10 @@
         'click .account-name-ope-tab .name': 'renameAccount',
         'click .delete-op': 'deleteOp',
         'click .edit-op': 'editOp',
-        'click .valid-op-edit': 'validEdit'
+        'click .valid-op-edit': 'validEdit',
+        'click .tag-form': 'showDetailBtn',
+        'click .hide-detail-tag': 'hideDetailBtn',
+        'click .detail-tag': 'tagsLinks'
       },
 	
   	el: '#center-page',
@@ -45,6 +48,7 @@
           that.typeOp = that.$el.find('select[name=select-op-type]');
           that.calendars = that.$el.find('.calendars');
           that.opForm = that.$el.find('.graph-op-form');
+          that.detailBtn = that.$el.find('.detail-tag');
           that.accountListView = new AccountListView();
           that.accountListView.render({allOptions: true});
           that.payementTypeListView = new PaymentTypeListView();
@@ -73,6 +77,14 @@
           this.generateBalanceGraph();
           break;
       }
+    },
+
+    showDetailBtn: function (event) {
+      this.detailBtn.removeClass("hide");
+    },
+
+    hideDetailBtn: function (event) {
+      this.detailBtn.addClass("hide");
     },
 
     displayCal: function (event) {
@@ -587,12 +599,6 @@
 
     },
 
-    tagsLinks: function(event) {
-        var chart = this.$el.find('#graphs').highcharts();
-        var selectedPoints = chart.getSelectedPoints();
-        console.log('You selected '+ selectedPoints.length +' points');
-    },
-
     generateColor: function() {
       var green = Math.floor(Math.random()*255);
       var red = Math.floor(Math.random()*255);
@@ -612,119 +618,132 @@
           accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
         },
 
-        graphHashtag: function(event){
-          event.preventDefault();
-          var hashtagName = $(event.currentTarget).attr("href");
-          //console.log(hashtagName);
+    graphHashtag: function(event){
+      event.preventDefault();
+      var hashtagName = $(event.currentTarget).attr("href");
+      //console.log(hashtagName);
 
 
-        var graphview = new GraphView();
-        graphview.render({hashtagName : hashtagName, accountId : this.accountId});
+      var graphview = new GraphView();
+      graphview.render({hashtagName : hashtagName, accountId : this.accountId});
 
-        },
+    },
 
-        deleteOp: function (event) {
-          //event.stopImmediatePropagation();
+    deleteOp: function (event) {
+      //event.stopImmediatePropagation();
 
-          var that = this;
-          BootstrapDialog.confirm('Voulez vous vraiment supprimer cette opération?', function(result){
-                if(result) {
-                    var opId = $(event.currentTarget).data('value');
-              console.log("Delete op with id : ", opId);
-              // remove model (from server and collection by bubbling)
-             // window.deletedOperations.push(opId);
-              //window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
+      var that = this;
+      BootstrapDialog.confirm('Voulez vous vraiment supprimer cette opération?', function(result){
+            if(result) {
+                var opId = $(event.currentTarget).data('value');
+          console.log("Delete op with id : ", opId);
+          // remove model (from server and collection by bubbling)
+         // window.deletedOperations.push(opId);
+          //window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
 
-                that.operations.get(opId).destroy({ 
-                  success: function () {
-                    that.$el.find('.op-row[data-value='+opId+']').remove();
-                  },
-                  error: function () {
-                    console.log("DEBUG : Error during destroy deleteOp");
-                  }
-                });
-              
-
-              // remove row from tab
-              
-                
-                }else {
-                    console.log("Suppression annulée");
-                }
-            });  
-
-        },
-
-        editOp: function (event) {
-          //event.stopImmediatePropagation();
-          // Ajouter un input à la place du nom avec un bouton valider
-          console.log("editOp");
-            var opId = $(event.currentTarget).data('value');
-          var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
-          //var opDescTag = this.$el.find('.op-row[data-value='+opId+'] .op-desc');
-          var editOpBtn = this.$el.find('.edit-op[data-value='+opId+']');
-          var opName = opNameTag.html();
-          //var opDesc = opDescTag.html();
-
-          opNameTag.html("<input class='form-control' type='text' value='"+opName+"'/>");
-          //opDescTag.html("<input class='form-control' type='text' value='"+opDesc+"'/>");
-          editOpBtn.html("Valider");
-          editOpBtn.removeClass("edit-op");
-          editOpBtn.addClass("valid-op-edit");
-
-        },
-
-        validEdit: function (event) {
-          //event.stopImmediatePropagation();
-          console.log("validEdit");
-          var that = this;
-          var opId = $(event.currentTarget).data('value');
-          var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
-          var opNameInput = this.$el.find('.op-row[data-value='+opId+'] .op-name input');
-          var editOpBtn = this.$el.find('.valid-op-edit[data-value='+opId+']');
-          // On récupère la valeur de l'input
-          var opName = opNameInput.val();
-
-
-            $(".error-msg").html();
-
-          var error_msg = '';
-          if (opName == ''){
-            error_msg += "Le nom de l'opération ne peut être vide.<br>";
-              opNameInput.addClass("form-error");
-              
-          }
-
-            $(".error-msg").html(error_msg);
-
-
-          if (error_msg != ''){
-            return ;
-          }
-          // on update l'account sur le serveur
-
-          var operation = this.operations.get(opId);
-          operation.set('operation_name', opName);
-          operation.save(null, {
-              success: function (operation){
-
-                console.log("Operation push au serveur avec succès");
-                console.log(operation);               
-                
-
+            that.operations.get(opId).destroy({ 
+              success: function () {
+                that.$el.find('.op-row[data-value='+opId+']').remove();
               },
-              error: function (){
-                console.log("An error occured");
+              error: function () {
+                console.log("DEBUG : Error during destroy deleteOp");
               }
             });
           
 
-          opNameTag.html(opName);
-          console.log(opName);
-          editOpBtn.html("Éditer");
-          editOpBtn.removeClass("valid-edit");
-          editOpBtn.addClass("edit-op");
+          // remove row from tab
+          
+            
+            }else {
+                console.log("Suppression annulée");
+            }
+        });  
+
+    },
+
+    editOp: function (event) {
+      //event.stopImmediatePropagation();
+      // Ajouter un input à la place du nom avec un bouton valider
+      console.log("editOp");
+        var opId = $(event.currentTarget).data('value');
+      var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+      //var opDescTag = this.$el.find('.op-row[data-value='+opId+'] .op-desc');
+      var editOpBtn = this.$el.find('.edit-op[data-value='+opId+']');
+      var opName = opNameTag.html();
+      //var opDesc = opDescTag.html();
+
+      opNameTag.html("<input class='form-control' type='text' value='"+opName+"'/>");
+      //opDescTag.html("<input class='form-control' type='text' value='"+opDesc+"'/>");
+      editOpBtn.html("Valider");
+      editOpBtn.removeClass("edit-op");
+      editOpBtn.addClass("valid-op-edit");
+
+    },
+
+    validEdit: function (event) {
+      //event.stopImmediatePropagation();
+      console.log("validEdit");
+      var that = this;
+      var opId = $(event.currentTarget).data('value');
+      var opNameTag = this.$el.find('.op-row[data-value='+opId+'] .op-name');
+      var opNameInput = this.$el.find('.op-row[data-value='+opId+'] .op-name input');
+      var editOpBtn = this.$el.find('.valid-op-edit[data-value='+opId+']');
+      // On récupère la valeur de l'input
+      var opName = opNameInput.val();
+
+
+        $(".error-msg").html();
+
+      var error_msg = '';
+      if (opName == ''){
+        error_msg += "Le nom de l'opération ne peut être vide.<br>";
+          opNameInput.addClass("form-error");
+          
+      }
+
+        $(".error-msg").html(error_msg);
+
+
+      if (error_msg != ''){
+        return ;
+      }
+      // on update l'account sur le serveur
+
+      var operation = this.operations.get(opId);
+      operation.set('operation_name', opName);
+      operation.save(null, {
+          success: function (operation){
+
+            console.log("Operation push au serveur avec succès");
+            console.log(operation);               
+            
+
+          },
+          error: function (){
+            console.log("An error occured");
+          }
+        });
+      
+
+      opNameTag.html(opName);
+      console.log(opName);
+      editOpBtn.html("Éditer");
+      editOpBtn.removeClass("valid-edit");
+      editOpBtn.addClass("edit-op");
+    },
+
+    tagsLinks: function(event) {
+        event.preventDefault();
+        var chart = this.$el.find('#graphs').highcharts();
+        var selectedPoints = chart.getSelectedPoints();
+        console.log('You selected '+ selectedPoints.length +' points');
+        if (selectedPoints.length != 1){
+          BootstrapDialog.alert('Vous devez sélectionner un unique tag dans le graphe');
+        }else{
+          console.log(selectedPoints[0].name);
+          this.render({hashtagName : hashtagName});
         }
+    }
 
   	});
 
