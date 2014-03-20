@@ -6,6 +6,7 @@ include('config.php');
 define('CREDIT', 1);
 define('DEBIT', 2);
 
+
 function getAccounts($idUser)
 {
  $query =  Doctrine_Query::create()->select('id')
@@ -25,20 +26,16 @@ function getAccounts($idUser)
 
 
 
-function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag=0)
+function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $paymentId=0, $tag='undefined')
 {
-
   $accounts = (is_array($idAccounts)) ? $idAccounts : array($idAccounts);
-
-
+  //echo 'tag = '.$tag;
 
   $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
 				  ->from('Operation o')
 				  ->leftJoin('o.PaymentType p')
 
-				  ->where('o.account_id IN ?', array($accounts));
-				//  ->where('o.account_id = :idAccount', array(":idAccount" => $accounts[0]));
- 
+				  ->where('o.account_id IN ?', array($accounts)); 
 
  
   if($begin != 'all')
@@ -53,10 +50,10 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
     
     if($begin != 0)
-      $query->addWhere('o.operation_date >= :beginDate',  array(':beginDate' => $begin));
+      $query->addWhere('o.operation_date >= ?',  array($begin));
 								  
     if($end != 0)
-      $query->addWhere('o.operation_date <= :endDate', array(':endDate' => $end));
+      $query->addWhere('o.operation_date <= ?', array($end));
    }
 								
   switch($type)
@@ -73,9 +70,13 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
   if($paymentId != 0)
     $query->addWhere('o.type_id = ?', array($paymentId));
   
-
-  if($tag != 0)
-    $query->addWhere('o.operation_desc LIKE %:tag%', array(':tag' => $tag));
+ 
+  if($tag != 'undefined')
+  {
+     $str = '%#'.$tag.'%';
+     //echo $str;
+     $query->addWhere('o.operation_desc LIKE ?', array($str));
+  }
   
   $query->orderBy('operation_date', 'DESC');
   
@@ -84,27 +85,9 @@ function getOperations($idAccounts, $begin=0 , $end=0, $type=0, $limit=0, $payme
     
   return $query->execute();  
 }
+echo getOperations(2,0,0,0,0,0, 'other')->count()."\n";
 
-getOperations(1, 'all', 0,0,0,5);
 
-/*
-function getOperationsByUser($idUser, $limit = 0)
-{
-
-  $query = Doctrine_Query::create()->select('o.*, p.type_name as type_name')
-				  ->from('Operation o')
-				  ->leftJoin('User u')
-				  ->where('u.user_id = :idUser', array(":idUser" => $idUser))
-				  ->addWhere('to_days(now()) - to_days(operation_date)')
-				  ->orderBy('operation_date', 'DESC');
-  
-  if($limit > 0)
-    $query->limit($limit);
-    
-  return $query->execute();  
-}
-
-*/
 
 function deleteOperation($idOperation)
 {
@@ -190,7 +173,7 @@ function balanceFromUser($idUser)
 
 //example
 /*
-  $operations = getOperations(1, 0, 0, DEBIT);
+  $operations = getOperations(2);
  
  for($i = 0; $i < $operations->count(); ++$i)
 {
@@ -200,8 +183,7 @@ function balanceFromUser($idUser)
   echo "\t".$operations[$i]->value."\n";
   echo "\t".$operations[$i]->type_name."\n";
   
-}*/
-
-
+}
+*/
 
 ?>
