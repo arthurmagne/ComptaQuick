@@ -404,10 +404,15 @@
         var listOpe   = operations.toArray();
         var evolutionX  = []; 
         var evolutionY  = []; 
-        var evolutionOp = [];
+        var evolutionOp = []; 
+        var today = new Date();
 
         listOpe = listOpe.reverse();
-        
+
+        evolutionY.push(parseInt(balance));
+        evolutionX.push(Date.parse(today));
+        evolutionOp.push("Nouveau solde");
+
         for(var i = 0; i < listOpe.length; i++){
           // we put the previous balance in the tab
           evolutionY.push(parseInt(balance));
@@ -420,6 +425,11 @@
           evolutionOp.push(listOpe[i].get("operation_name"));
         }
 
+
+        evolutionY.push(parseInt(balance));
+        today.setTime(today.getTime()-30*24*3600*1000);
+        evolutionX.push(Date.parse(today));
+        evolutionOp.push("Ancien solde");
         evolutionX.reverse();
         evolutionY.reverse();
         evolutionOp.reverse();
@@ -584,8 +594,13 @@
                     var evolutionX  = []; 
                     var evolutionY  = []; 
                     var evolutionOp = [];
+                    var today = new Date();
 
                     listOpe = listOpe.reverse();
+
+                    evolutionY.push(parseInt(balance));
+                    evolutionX.push(Date.parse(today));
+                    evolutionOp.push("Nouveau solde");
 
                     for(var i = 0; i < listOpe.length; i++){
                       // we put the previous balance in the tab
@@ -599,9 +614,17 @@
                       evolutionOp.push(listOpe[i].get("operation_name"));
                     }
 
+
+                    evolutionY.push(parseInt(balance));
+                    today.setTime(today.getTime()-30*24*3600*1000);
+                    evolutionX.push(Date.parse(today));
+                    evolutionOp.push("Ancien solde");
                     evolutionX.reverse();
                     evolutionY.reverse();
                     evolutionOp.reverse();
+
+
+
                     var colorrandom = win.generateColor();
                     var jsonArray = [];
                     for(var i = 0; i < evolutionX.length; i++){
@@ -631,16 +654,6 @@
                    }                 
                 })
       });
-<<<<<<< HEAD
-           console.log(graphOptions);
-     console.log(JSON.stringify(graphOptions));
-     win.$el.find('#graphs').highcharts(graphOptions);
-
-
-     
-=======
-    
->>>>>>> 5935e7ce03c78cf5446177ef9a7522ac541e2e21
     },
 
     generateColor: function() {
