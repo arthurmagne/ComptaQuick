@@ -191,8 +191,10 @@ $app->put('/account/:id', 'authenticate', function ($id) {
     $body = json_decode($body, true);
 
     $name 	    = $body['account_name'];
-    $account_number = $body['account_number'];
-    $balance 	= $body['balance'];
+    if (isset($body['account_number']))
+    	$account_number = $body['account_number'];
+    if (isset($body['balance']))
+    	$balance 	= $body['balance'];
 
     $account = Doctrine_Core::getTable('Account')->findOneById($id);
     

@@ -23,9 +23,9 @@
         'click .hide-op-form': 'hideOpForm',
         'click .hashtag-opetab': 'graphHashtag',
         'click .account-name-ope-tab .name': 'renameAccount',
-        'click .delete-op': 'deleteOp',
-        'click .edit-op': 'editOp',
-        'click .valid-op-edit': 'validEdit',
+        'click  #opeTab .delete-op': 'deleteOp',
+        'click  #opeTab .edit-op': 'editOp',
+        'click  #opeTab .valid-op-edit': 'validEdit',
         'click .tag-form': 'showDetailBtn',
         'click .hide-detail-tag': 'hideDetailBtn',
         'click .detail-tag': 'tagsLinks'

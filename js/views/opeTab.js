@@ -20,9 +20,9 @@ define([
 				'click .hashtag-opetab': 'graphHashtag',
 				'click .account-name-ope-tab .name': 'renameAccount',
 				'keypress :input': 'logKey',
-				'click .delete-op': 'deleteOp',
-				'click .edit-op': 'editOp',
-				'click .valid-op-edit': 'validEdit',
+				'click  #ope-tab-detail-account .delete-op': 'deleteOp',
+				'click  #ope-tab-detail-account .edit-op': 'editOp',
+				'click  #ope-tab-detail-account .valid-op-edit': 'validEdit',
 				'click .add-debit': 'addOpDebit',
 				'click .add-credit': 'addOpCredit'
 			},
@@ -197,10 +197,15 @@ define([
     			BootstrapDialog.confirm('Voulez vous vraiment supprimer cette opération?', function(result){
 		            if(result) {
 		                var opId = $(event.currentTarget).data('value');
+		                var value = $(event.currentTarget).data('op');
 		    			console.log("Delete op with id : ", opId);
 		    			// remove model (from server and collection by bubbling)
 			    		window.deletedOperations.push(opId);
 			    		window.operationsTab[that.accountId].remove(window.operationsTab[that.accountId].get(opId));
+
+			    		// balance maj
+			    		var balance = window.accounts.get(that.accountId).get('balance');
+      			  		window.accounts.get(that.accountId).set('balance',parseInt(balance)-parseInt(value));
 		    			if (window.isOnline()){
 
 		    				that.operations.get(opId).destroy({ 
