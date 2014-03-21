@@ -1,6 +1,5 @@
   <div style ="">
   <h1 class="page-header">Importer un Relevé de compte</h1>
-    <p class='error-msg'></p>
     <p>
       <select type="number" placeholder="Sélectionnez le compte" name="list_account" class="form-control" required>
           <% if (accounts.length == 0) { %>
@@ -40,5 +39,6 @@
   </pre>
   </div>
   <p class="text-center">
-    <button name="validimport"type="submit" class="btn btn-primary btn-lg" id="validImport">Valider l'ajout des opérations</button>
+    <button name="validimport"type="submit" class="btn btn-primary btn-lg" id="validImport" disabled>Valider l'ajout des opérations</button>
   </p>
+  <p class='error-msg'></p>
