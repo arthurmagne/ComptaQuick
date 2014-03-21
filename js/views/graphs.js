@@ -631,17 +631,7 @@
                    }                 
                 })
       });
-<<<<<<< HEAD
-           console.log(graphOptions);
-     console.log(JSON.stringify(graphOptions));
-     win.$el.find('#graphs').highcharts(graphOptions);
-
-
-     
-=======
-    
->>>>>>> 5935e7ce03c78cf5446177ef9a7522ac541e2e21
-    },
+  },
 
     generateColor: function() {
       var green = Math.floor(Math.random()*255);
