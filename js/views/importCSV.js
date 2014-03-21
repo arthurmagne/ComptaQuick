@@ -25,7 +25,6 @@ define([
       	console.log("account list :" + this.accounts);
       	console.log("operations :" + this.operations);
       	var that = this;
-      	this.error_msg = $(".error-msg");
       	this.accounts.fetch({
 	        success: function (accounts) {
 	          console.log("accounts fetch success");
@@ -58,76 +57,88 @@ define([
     },
 
     saveOperation: function(date, name, desc, op) {
-		var error_msg = '';
-
-		this.error_msg.html();
 
 		var idacc = this.$el.find('select[name=list_account]').val();
-		console.log(idacc);
-		console.log(op);
-		var operation =  parseInt(op);
-		if(operation < 0){
-			var credit = 0;
-			operation= Math.abs(operation);
+		console.log(isNaN(parseInt(op)));
+
+		if(isNaN(parseInt(op))==false){
+			var operation =  parseInt(op);
+			if(operation < 0){
+				var credit = 0;
+				operation= Math.abs(operation);
+			}else{
+				var credit = 1;
+			}
+			var dateparsed = this.parseDate(date);
+			console.log(credit);
 		}else{
-			var credit = 1;
+			this.error_msg += " La valeur de l'opération <"+ name + "> n'est pas un nombre <br>";
 		}
 
-		var dateparsed = this.parseDate(date);
-		console.log(credit);
+		this.$el.find('button[name=validimport]').disabled = false;
 
-		var data = {
-			account_id: idacc,
-    		operation_date: dateparsed,
-    		operation_name: name,
-    		operation_desc: desc,
-    		is_credit: credit,
-    		value: operation,
-    		type_id: 3
-		};
-
-
-      	this.error_msg.html(error_msg);
-
-      	if (error_msg != ''){
-        	return ;
-      	}
-	
-    	var operation = new Operation(data);
-    	console.log(operation);	
-    	this.operations.add(operation);
+      	if (this.error_msg != ''){
+      		console.log(this.$el.find('input[name=importFile]'));
+      		this.$el.find('button[name=validimport]').disabled = true;console.log(this.$el.find('input[name=importFile]'));
+      		console.log("this.error_html");
+      		console.log(this.error_html);
+      		this.error_html.html("<div class='bs-callout bs-callout-danger'><h4>ERREUR</h4>" + this.error_msg + "</div>");
+      	}else{
+			var data = {
+					account_id: idacc,
+		    		operation_date: dateparsed,
+		    		operation_name: name,
+		    		operation_desc: desc,
+		    		is_credit: credit,
+		    		value: operation,
+		    		type_id: 3
+			};
+	    	var operation = new Operation(data);
+	    	console.log(operation);	
+	    	this.operations.add(operation);
+    	}
     },
 
  	parseDate: function(date) {
  		var dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
 	    if (date == "" ) {
-			this.error_msg += "Insérer une date <br>";
-		}
-	  	if (!(dateRegex.test(date))) {
-        	this.error_msg += "Format de date invalide <br>";
+	    	this.error_msg+="Insérer une date <br>";
+		}else if (!(dateRegex.test(date))) {
+			this.error_msg+="Format de date invalide <br>";
+      	} else {
+      		dd = date.substring(0,2);
+			mm = date.substring(3,5);
+			yyyy = date.substring(6,10);
+
+			d = yyyy+"-"+mm+"-"+dd
+			return d;  
       	}	
-
-  		dd = date.substring(0,2);
-		mm = date.substring(3,5);
-		yyyy = date.substring(6,10);
-
-		d = yyyy+"-"+mm+"-"+dd
-		return d;  
+      	return null;  		
  	},
 
     parseCSV: function(text, lineTerminator, cellTerminator) {
     	var table = this.$el.find('#import-table');	 
 		var lines = text.split(lineTerminator);
+		this.error_html = $(".error-msg");
+	    console.log(this.error_html);
+	    this.error_msg='';
 		for(var j = 0; j<lines.length; j++){
 			if(lines[j] != ""){
 				var information = lines[j].split(cellTerminator);
-					if (information.length < 4){
+					if (information.length == 3){
 						table.append("<tr><td>"+information[0]+"</td><td>"+information[1]+"</td><td>"+information[2]+"</td></tr>");
 						this.saveOperation(information[0], information[1], "", information[2]);
-					}else{
+					}else if(information.length == 4){
 						table.append("<tr><td>"+information[0]+"</td><td>"+information[1]+"</td><td>"+information[2]+"</td><td>"+information[3]+"</td></tr>");
 						this.saveOperation(information[0], information[1], information[2], information[3]);
-				}
+					} else {
+						$(that.el).empty();
+			  			$(that.el).html("<h2 class='text-center text-muted add-feedback'>Données du fichier non conformes</h2><hr>");
+			  			setTimeout(function(){
+							that.close();
+							Backbone.View.prototype.goTo('#/importCSV');
+			  			},1900);
+					}
 			}
 		}
 	},
@@ -167,28 +178,6 @@ define([
 		console.log(extension);
 	    return allowedExtensions.indexOf(extension);
 	},
-
-	setErrorOpDate: function(set) { 
-	    if(!set){
-			this.date.removeClass("form-error");
-		}else{
-			this.date.addClass("form-error");
-		};
-	},
-	setErrorOpName: function(set) {
-	    if(!set){
-			this.name.removeClass("form-error");
-		}else{
-			this.name.addClass("form-error");
-		};
-	},
-	setErrorOpValue: function(set) {
-	    if(!set){
-			this.value.removeClass("form-error");
-		}else{
-			this.value.addClass("form-error");
-		};
-    },
 
     close: function () {
       $(this.el).unbind();

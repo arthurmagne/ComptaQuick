@@ -570,7 +570,8 @@
       };
       
       var k = 0;
-      acc
+
+      var size = accounts.length;
        _.each(accounts.models, function(account, cpt) {
                 var id = account.get("id");
                 var balance = account.get("balance");
@@ -622,15 +623,24 @@
                     console.log("DEBUG jsonarray ",JSON.stringify(jsonArray));
                     console.log(graphOptions);
                     k++;
+                    console.log(size);
+                    if(size==k){
+                       console.log(graphOptions);
+                       win.$el.find('#graphs').highcharts(graphOptions);
+                    }
                    }                 
                 })
       });
+<<<<<<< HEAD
            console.log(graphOptions);
      console.log(JSON.stringify(graphOptions));
      win.$el.find('#graphs').highcharts(graphOptions);
 
 
      
+=======
+    
+>>>>>>> 5935e7ce03c78cf5446177ef9a7522ac541e2e21
     },
 
     generateColor: function() {
