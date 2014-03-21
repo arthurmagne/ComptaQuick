@@ -146,6 +146,11 @@ define([
       
     };*/
 
+    window.onbeforeunload = function(e) {
+      if (!window.isSync) 
+        return 'Vous avez des modifications non enregistrées. Si vous quittez cette page elles seront perdues.';
+    };
+
 
 
     window.isOnline = function() {
