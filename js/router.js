@@ -185,10 +185,19 @@ define([
         
         // save collections
         window.accounts.saveAll();
+        console.log("DEBUG opTab BEFORE forEach ops : ", window.operationsTab);
         
-        window.operationsTab.forEach(function(operations) {
+        /*window.operationsTab.forEach(function(operations) {
+          console.log("DEBUG opTab forEach ops : ", operations);
           operations.saveAll();
-        });
+        });*/
+
+        for (var key in window.operationsTab) {
+          var operations = window.operationsTab[key];
+          console.log("DEBUG opTab forEach ops : ", operations);
+          operations.saveAll();
+        }
+
 
         console.log("DEBUG : deletedAccounts", window.deletedAccounts);
         // delete deleted objects

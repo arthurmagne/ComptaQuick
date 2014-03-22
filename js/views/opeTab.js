@@ -47,10 +47,11 @@ define([
 				console.log('getOperation: account =',this.account);
 
 				this.accountBalance = this.account.get("balance");
+				this.operations = window.operationsTab[this.accountId];
 
 				// get the right operations
 				if (navigator.onLine){
-					this.operations = new Operations({accountId: this.accountId});
+					//this.operations = new Operations({accountId: this.accountId});
 					this.operations.fetch({
 						success: function (operations) {
 							console.log("Operations recupérées : ",operations);
@@ -65,7 +66,6 @@ define([
 		   			});
 				}else{
 
-					this.operations = window.operationsTab[this.accountId];
 					
 					console.log("OPERATIONS ",this.operations);
 
@@ -127,6 +127,10 @@ define([
    				evolutionOp.push("Nouveau solde");
    				
    				for(var i = 0; i < listOpe.length; i++){
+			    	if ((typeof listOpe[i].get("operation_name") == 'undefined')){
+			    		continue ;
+			    	}
+
    					// we put the previous balance in the tab
    					evolutionY.push(parseInt(balance));
    					if(listOpe[i].get("is_credit") == 1){
@@ -363,10 +367,11 @@ define([
 			},
 
 			drawGraphs: function (graphOptions) {
-				if (this.operations.length != 0){
-					this.$el.find('#graphs').highcharts(graphOptions);
-				}else{
+
+				if ((this.operations.length == 0) || ((typeof this.operations.at(0).get("operation_name") == 'undefined') && this.operations.length == 1)) {
 					this.$el.find('#graphs').remove();
+				}else{
+					this.$el.find('#graphs').highcharts(graphOptions);
 				}
 				
 			}

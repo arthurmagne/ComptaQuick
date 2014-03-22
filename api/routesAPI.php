@@ -106,14 +106,21 @@ $app->put('/account/operation/:id', 'authenticate', function ($id) {
     if (!$operation) {
     	// create new operation
 		$operation = operation($is_credit, $account_id, $value, $type_id, $operation_name, $operation_desc, $operation_date);
+		$operation->id = $id;
 		$response = $app->response();
-		try{
-			$response['Content-Type'] = 'application/json';
-			$operation_object = json_encode($operation->toArray());
-			$response->body($operation_object);
-		} catch (Exception $e) {
-			$app->response()->status(400);
-			$app->response()->header('X-Status-Reason', $e->getMessage());
+		
+		if($operation->trySave()){
+			try{
+				$response['Content-Type'] = 'application/json';
+				$operation_object = json_encode($operation->toArray());
+				$response->body($operation_object);
+			} catch (Exception $e) {
+				$app->response()->status(400);
+				$app->response()->header('X-Status-Reason', $e->getMessage());
+			}
+		}
+		else{
+			$app->halt(400);
 		}
     }else{
 
@@ -209,6 +216,7 @@ $app->put('/account/:id', 'authenticate', function ($id) {
 			$account->balance = 0;
 		}
 		$account->user_id = $uid;
+		$account->id = $id;
     }
 
     $account->account_name = $name;
@@ -328,9 +336,9 @@ $app->post('/login', function () {
 			$firstname = $user->firstname;
 			$lastname = $user->lastname;
 			$email = $user->email;
-			$app->setEncryptedCookie('uid', $id, '60 minutes');
-			$app->setEncryptedCookie('key', $password, '60 minutes');
-			$app->setEncryptedCookie('uma', $email, '60 minutes');
+			$app->setEncryptedCookie('uid', $id, '120 minutes');
+			$app->setEncryptedCookie('key', $password, '120 minutes');
+			$app->setEncryptedCookie('uma', $email, '120 minutes');
 			$uid = $app->getEncryptedCookie('uid');
     		$key = $app->getEncryptedCookie('key');
     		$uma = $app->getEncryptedCookie('uma');
@@ -384,9 +392,9 @@ $app->post('/subscribe', function () {
 	if($user->trySave()){
 	    try {
 	    	$id = $user->id;
-			$app->setEncryptedCookie('uid', $id, '60 minutes');
-			$app->setEncryptedCookie('uma', $email, '60 minutes');
-			$app->setEncryptedCookie('key', $password, '60 minutes');
+			$app->setEncryptedCookie('uid', $id, '120 minutes');
+			$app->setEncryptedCookie('uma', $email, '120 minutes');
+			$app->setEncryptedCookie('key', $password, '120 minutes');
 			$uid = $app->getEncryptedCookie('uid');
 			$key = $app->getEncryptedCookie('key');
     		$uma = $app->getEncryptedCookie('uma');

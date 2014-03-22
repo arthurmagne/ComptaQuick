@@ -118,7 +118,7 @@ define([
                 window.accounts = accounts;
                 var accountsTabView = new AccountsTabView();
                 accountsTabView.render();
-                var operationsTab = [];
+                window.operationsTab = [];
 
                 accounts.each(function (account) {
                   console.log( "accccccccccouuuuuut ",account);
@@ -126,7 +126,7 @@ define([
                   operations.fetch({
                     success: function (operations) {
                       console.log("Operation fetch with success", operations);
-                      operationsTab[account.get('id')] = operations;
+                      window.operationsTab[account.get('id')] = operations;
 
                     },
                     error: function () {
@@ -134,7 +134,6 @@ define([
                     }
                   })
                 });
-                window.operationsTab = operationsTab;
 
               },
               error: function() {

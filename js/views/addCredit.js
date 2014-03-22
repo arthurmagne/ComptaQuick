@@ -109,6 +109,9 @@ define([
 		console.log("problème de valeur autre que nombre");
       }
 
+      
+
+
       this.error_msg.html(error_msg);
 
       if (error_msg != ''){
@@ -141,9 +144,14 @@ define([
         uniqueId = uniqueId.getTime();
         console.log("UniqueId : ",uniqueId);
         operation.set("id",uniqueId);
+        console.log("DEBUG OPERATION OFFLINE : ",operation);
+        console.log("DEBUG OPERATION OFFLINE account id : ",this.accountListView.getAccount());
         var balance = window.accounts.get(_data.account_id).get("balance");
         window.accounts.get(_data.account_id).set("balance",parseInt(balance)+parseInt(_data.value));
+      	
       	window.operationsTab[this.accountListView.getAccount()].add(operation);
+        console.log("DEBUG OPERATION TAB : ",window.operationsTab);
+
         $(that.el).empty();
 				  $(that.el).html("<h2 class='text-center text-muted add-feedback'>Operation de Crédit ajouté avec succès</h2><hr>");
 				 	setTimeout(function(){

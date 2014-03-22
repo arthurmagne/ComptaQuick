@@ -127,7 +127,7 @@ body {
   .sidebar {
     -webkit-transition: margin-left .5s;
     transition: margin-left .5s;
-    margin-left: -158px !important;
+    margin-left: -136px !important;
     position: fixed;
     z-index: 1000;
     background: white;

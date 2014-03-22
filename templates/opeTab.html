@@ -10,12 +10,12 @@
 
   <% var operations = object.models; %>
 <% } %>
-<% if ((typeof object != 'undefined') && (operations.length == 0)) { %>
+
+<% if (((typeof object != 'undefined') && (operations.length == 0)) || ((typeof operations[0].get("operation_name") == 'undefined') && operations.length ==  1)) { %>
     <h2 class="text-center text-muted">Aucune opération n'a été trouvée</h2>
     <p class="text-center"><button class="add-debit btn btn-default">Débiter</button>
     <button class="add-credit btn btn-default">Créditer</button></p>
 <% }else if ((typeof object == 'undefined') && (operations.length == 0)) {}else{ %>
-
 <% if (operations.length > 15) { %>
    <p class="text-center button-operation-container">
     <button class="add-credit btn btn-primary btn-lg">Créditer</button>
@@ -39,6 +39,7 @@
     </thead>
     <tbody>
     <% _.each(operations, function(operation, cpt) { %>
+      <% if (typeof operation.get("operation_name") == 'undefined') { return; } %>
       <tr class="op-row" data-value="<%= operation.get('id') %>">
         <!-- account_id  type_id operation_date  operation_name  operation_desc  is_credit value -->
         <td><%= cpt+1 %></td>

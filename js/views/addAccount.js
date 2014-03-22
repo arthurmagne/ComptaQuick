@@ -76,6 +76,9 @@ define([
         error_msg += 'Le solde du compte doit être un nombre.<br>';
         this.balance.addClass("form-error");
       }
+      if (_data.balance == ''){
+        _data.balance = 0;
+      }
 
       this.error_msg.html(error_msg);
 
@@ -93,7 +96,7 @@ define([
             $(that.el).empty();
             
             $(that.el).html("<h2 class='text-center text-muted add-feedback'>Compte ajouté avec succès</h2><hr>");
-            var operations = new Operations();
+            var operations = new Operations({accountId: account.get("id")});
             window.operationsTab[account.get("id")] = operations;
             window.accounts.add(account);
             
@@ -115,7 +118,7 @@ define([
         console.log("UniqueId : ",uniqueId);
         account.set("id",uniqueId);
         // create an empty collection for this model
-        var operations = new Operations();
+        var operations = new Operations({accountId: uniqueId});
         window.operationsTab[uniqueId] = operations;
         window.accounts.add(account);
         $(that.el).empty();
