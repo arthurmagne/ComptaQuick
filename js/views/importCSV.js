@@ -111,7 +111,6 @@ define([
     	var table = this.$el.find('#import-table');	 
 		var lines = text.split(lineTerminator);
 		this.error_html = $(".error-msg");
-	    console.log(this.error_html);
 	    this.error_msg='';
 		for(var j = 0; j<lines.length; j++){
 			if(lines[j] != ""){
@@ -128,7 +127,7 @@ define([
 						setTimeout(function(){
 							that.close();
 							Backbone.View.prototype.goTo('#/importCSV');
-		 				},2500);
+		 				},5000);
 		 				return;
 					}
 			}
@@ -147,11 +146,16 @@ define([
 		event.preventDefault(); 		
 		that = this;
 		var filename = $('input[name=importFile]').val();
-		if (this.extensionCheck(filename)>= 0){  
-	      this.error_msg+="Extension autorisée";    
-	    } else {  
-	      cthis.error_msg+="Extension non autorisée";  
-	      return;
+		this.error_html = $(".error-msg");
+		this.error_msg='';
+		if (this.extensionCheck(filename) < 0){    
+	      this.error_msg+="Extension non autorisée";  
+	      this.error_html.html("<div class='bs-callout bs-callout-danger'><h4>ERREUR</h4>" + this.error_msg + "</div>");
+						setTimeout(function(){
+							that.close();
+							Backbone.View.prototype.goTo('#/importCSV');
+		 				},2500);
+		   return;
 	    }  
 		var files = event.target.files; // FileList object
 		for (var i = 0, f; f = files[i]; i++) { // Loop through the FileList 
