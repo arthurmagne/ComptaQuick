@@ -185,6 +185,10 @@ define([
 
    			graphHashtag: function(event){
    				event.preventDefault();
+   				if (!navigator.onLine){
+		            BootstrapDialog.alert("Cette partie du site n'est pas disponible sans connexion");
+		            return ;
+		          }
    				var hashtagName = $(event.currentTarget).attr("href");
    				console.log("hashtagName : ", hashtagName);
 

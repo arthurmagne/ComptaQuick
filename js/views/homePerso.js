@@ -79,6 +79,10 @@ define([
     logKeySearch: function (event) {
       if (event.which == 13){
         event.preventDefault();
+        if (!navigator.onLine){
+            BootstrapDialog.alert("Cette partie du site n'est pas disponible sans connexion");
+            return ;
+          }
 
         // enter pressed
         console.log("Search by tag");
