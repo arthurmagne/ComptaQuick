@@ -66,10 +66,18 @@ define([
 
       var _data = this.attributes();
       var error_msg = '';
+      var regexMail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      
       if (!_data.email){
         error_msg += 'Veuillez indiquer un email.<br>';
         this.email.addClass("form-error");
+      }else if (!regexMail.test(_data.email)) {
+        error_msg += 'Veuillez indiquer un email valide.<br>';
+        this.email.addClass("form-error");
       }
+      
+      
+
       if (!_data.password){
         error_msg += 'Veuillez indiquer un mot de passe.<br>';
         this.password.addClass("form-error");
