@@ -19,7 +19,7 @@ define([
 			events: {
 				'click .hashtag-opetab': 'graphHashtag',
 				'click .account-name-ope-tab .name': 'renameAccount',
-				'keypress :input': 'logKey',
+				'keypress .new-name-input': 'logKey',
 				'click  #ope-tab-detail-account .delete-op': 'deleteOp',
 				'click  #ope-tab-detail-account .edit-op': 'editOp',
 				'click  #ope-tab-detail-account .valid-op-edit': 'validEdit',
@@ -176,7 +176,7 @@ define([
 		    	var accountNameTag = $('.account-name-ope-tab');
 		    	var accountName = accountNameTag.find('.name').html();
 
-		    	accountNameTag.html("<input class='form-control' type='text' value='"+accountName+"'/>");
+		    	accountNameTag.html("<input class='form-control new-name-input' type='text' value='"+accountName+"'/>");
    			},
 
    			graphHashtag: function(event){
@@ -301,7 +301,7 @@ define([
 		    	opNameTag.html(opName);
 		    	console.log(opName);
 		    	editOpBtn.html("Éditer");
-		    	editOpBtn.removeClass("valid-edit");
+		    	editOpBtn.removeClass("valid-op-edit");
 		    	editOpBtn.addClass("edit-op");
     		},
 

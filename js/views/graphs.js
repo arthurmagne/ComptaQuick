@@ -785,7 +785,7 @@
       opNameTag.html(opName);
       console.log(opName);
       editOpBtn.html("Éditer");
-      editOpBtn.removeClass("valid-edit");
+      editOpBtn.removeClass("valid-op-edit");
       editOpBtn.addClass("edit-op");
     },
 
