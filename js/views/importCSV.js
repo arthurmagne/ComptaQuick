@@ -29,7 +29,7 @@ define([
 	        success: function (accounts) {
 	          console.log("accounts fetch success");
 	          var template = _.template(importCSVTemplate, {accounts: accounts.models});
-	          that.$el.html(template);   
+	          that.$el.html(template);  
 	        }
       	});  
     },
@@ -46,8 +46,8 @@ define([
 			  	$(that.el).html("<h2 class='text-center text-muted add-feedback'>Import des opérations réussis</h2><hr>");
 			  	setTimeout(function(){
 					that.close();
-					Backbone.View.prototype.goTo('#/accountList');
-			  	},2000);
+					Backbone.View.prototype.goTo('#/importCSV');
+		 		},2000);
 			  },
 			  error: function() {
 			    console.log("oupss");
@@ -57,10 +57,8 @@ define([
     },
 
     saveOperation: function(date, name, desc, op) {
-
 		var idacc = this.$el.find('select[name=list_account]').val();
 		console.log(isNaN(parseInt(op)));
-
 		if(isNaN(parseInt(op))==false){
 			var operation =  parseInt(op);
 			if(operation < 0){
@@ -74,14 +72,7 @@ define([
 		}else{
 			this.error_msg += " La valeur de l'opération <"+ name + "> n'est pas un nombre <br>";
 		}
-
-		this.$el.find('button[name=validimport]').disabled = false;
-
       	if (this.error_msg != ''){
-      		console.log(this.$el.find('input[name=importFile]'));
-      		this.$el.find('button[name=validimport]').disabled = true;console.log(this.$el.find('input[name=importFile]'));
-      		console.log("this.error_html");
-      		console.log(this.error_html);
       		this.error_html.html("<div class='bs-callout bs-callout-danger'><h4>ERREUR</h4>" + this.error_msg + "</div>");
       	}else{
 			var data = {
@@ -132,25 +123,34 @@ define([
 						table.append("<tr><td>"+information[0]+"</td><td>"+information[1]+"</td><td>"+information[2]+"</td><td>"+information[3]+"</td></tr>");
 						this.saveOperation(information[0], information[1], information[2], information[3]);
 					} else {
-						$(that.el).empty();
-			  			$(that.el).html("<h2 class='text-center text-muted add-feedback'>Données du fichier non conformes</h2><hr>");
-			  			setTimeout(function(){
+						this.error_msg+= " Les données du fichier sont non conformes (trop ou pas assez d'informations) " ;
+						this.error_html.html("<div class='bs-callout bs-callout-danger'><h4>ERREUR</h4>" + this.error_msg + "</div>");
+						setTimeout(function(){
 							that.close();
 							Backbone.View.prototype.goTo('#/importCSV');
-			  			},1900);
+		 				},2500);
+		 				return;
 					}
 			}
+		}
+		if(this.error_msg!=''){
+			setTimeout(function(){
+				that.close();
+				Backbone.View.prototype.goTo('#/importCSV');
+		 	},5000);
+		}else{
+			this.enableBtn();
 		}
 	},
 
 	handleFileSelect: function(event) {
-		event.preventDefault(); 
+		event.preventDefault(); 		
 		that = this;
 		var filename = $('input[name=importFile]').val();
 		if (this.extensionCheck(filename)>= 0){  
-	      console.log("Extension autorisée");    
+	      this.error_msg+="Extension autorisée";    
 	    } else {  
-	      console.log("Extension non autorisée");  
+	      cthis.error_msg+="Extension non autorisée";  
 	      return;
 	    }  
 		var files = event.target.files; // FileList object
@@ -163,8 +163,7 @@ define([
 						that.parseCSV(e.target.result, '\n', '\t');
 					}else if(cellterminator==";"){
 						that.parseCSV(e.target.result, '\n', '\;'); 
-					}	
-					
+					}		
 				};
 			})(f);
 		reader.readAsText(f); // Read the file as text
@@ -178,6 +177,16 @@ define([
 		console.log(extension);
 	    return allowedExtensions.indexOf(extension);
 	},
+
+	disableBtn: function()  {
+		var loginButton = $("#validImport");
+  		loginButton.attr("disabled", "true");
+  	},
+
+	enableBtn: function(){
+		var loginButton = $("#validImport");
+    	loginButton.removeAttr("disabled");
+  	},
 
     close: function () {
       $(this.el).unbind();
