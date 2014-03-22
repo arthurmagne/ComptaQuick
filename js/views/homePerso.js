@@ -10,8 +10,9 @@ define([
   'views/accountsTab',
   'collections/accounts',
   'collections/operations',
-  'collections/paymentTypes'
-  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView, Accounts, Operations, PaymentTypes){
+  'collections/paymentTypes',
+  'views/graphs'
+  ], function(bootstrap, holder, $, _, Backbone, homePersoTemplate, AccountsTabView, Accounts, Operations, PaymentTypes, GraphView){
   var HomePage = Backbone.View.extend({
     events: {
       'click #logout': 'logout',
@@ -20,7 +21,8 @@ define([
       'click #username': 'preventLink',
       'click #sync': 'preventLink',
       'click #syncBtn': 'syncWithServer',
-      'click #graph-btn.off, #import-btn.off': 'preventLink'
+      'click #graph-btn.off, #import-btn.off': 'preventLink',
+      'keypress #search-by-tag': 'logKeySearch'
     },
 
     el: '#page',
@@ -72,6 +74,23 @@ define([
 
     preventLink: function (event) {
       event.preventDefault();
+    },
+
+    logKeySearch: function (event) {
+      if (event.which == 13){
+        event.preventDefault();
+
+        // enter pressed
+        console.log("Search by tag");
+        var tag = $('#search-by-tag').val();
+        tag = tag.trim();
+        tag = tag.split(" ")[0];
+        console.log("DEBUG tag : ",tag);
+        // redirect to detail tag page
+        var graphview = new GraphView();
+        graphview.render({hashtagName : tag});
+      }
+
     },
 
     syncWithServer: function (event) {
