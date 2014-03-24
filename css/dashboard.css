@@ -7,6 +7,9 @@ body {
   padding-top: 50px;
 }
 
+td{
+  overflow: hidden;
+}
 /*
  * Global add-ons
  */
