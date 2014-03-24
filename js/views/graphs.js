@@ -415,9 +415,9 @@
 
         listOpe = listOpe.reverse();
 
-        evolutionY.push(parseInt(balance));
-        evolutionX.push(Date.parse(today));
-        evolutionOp.push("Nouveau solde");
+        //evolutionY.push(parseInt(balance));
+        //evolutionX.push(Date.parse(today));
+        //evolutionOp.push("Nouveau solde");
 
         for(var i = 0; i < listOpe.length; i++){
           // we put the previous balance in the tab
@@ -668,9 +668,9 @@
 
                     listOpe = listOpe.reverse();
 
-                    evolutionY.push(parseInt(balance));
-                    evolutionX.push(Date.parse(today));
-                    evolutionOp.push("Nouveau solde");
+                    //evolutionY.push(parseInt(balance));
+                    //evolutionX.push(Date.parse(today));
+                    //evolutionOp.push("Nouveau solde");
 
                     for(var i = 0; i < listOpe.length; i++){
                       // we put the previous balance in the tab
