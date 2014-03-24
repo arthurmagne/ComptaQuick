@@ -23,8 +23,8 @@ define([
 				'click  #ope-tab-detail-account .delete-op': 'deleteOp',
 				'click  #ope-tab-detail-account .edit-op': 'editOp',
 				'click  #ope-tab-detail-account .valid-op-edit': 'validEdit',
-				'click .add-debit': 'addOpDebit',
-				'click .add-credit': 'addOpCredit'
+				'click  #ope-tab-detail-account .add-debit': 'addOpDebit',
+				'click  #ope-tab-detail-account .add-credit': 'addOpCredit'
 			},
 
 			el: '#center-page',

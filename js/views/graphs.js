@@ -12,8 +12,10 @@
   'collections/accounts',
   'models/account',
   'views/paymentTypeList',
-  'views/accountList'
-  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, opeTabTemplate, Accounts, Account, PaymentTypeListView, AccountListView){
+  'views/accountList',
+  'views/addDebit',
+  'views/addCredit'
+  ], function(bootstrap, holder, $, _, Backbone, Operations, Operation, graphsTemplate, opeTabTemplate, Accounts, Account, PaymentTypeListView, AccountListView, AddDebitView, AddCreditView){
     var addDebitPage = Backbone.View.extend({
   	  events: {
         'submit .graph-form': 'switchType',
@@ -26,7 +28,9 @@
         'click  #opeTab .delete-op': 'deleteOp',
         'click  #opeTab .edit-op': 'editOp',
         'click  #opeTab .valid-op-edit': 'validEdit',
-        'click .tag-form': 'showDetailBtn',
+        'click  #opeTab .add-debit': 'addOpDebit',
+        'click  #opeTab .add-credit': 'addOpCredit',
+        'click  #opeTab .tag-form': 'showDetailBtn',
         'click .hide-detail-tag': 'hideDetailBtn',
         'click .detail-tag': 'tagsLinks'
       },
@@ -40,6 +44,7 @@
       console.log("account list :");
       console.log(this.accounts);
       var that = this;
+      this.allAccount = false;
       this.accounts.fetch({
         success: function (accounts) {
           console.log("accounts fetch success");
@@ -108,10 +113,12 @@
 
       var that = this;
       var begin, end, type;
-
+      this.allAccount = false;
       var account_id = this.$el.find('select[name=list_account]').val();
-      if (account_id == 'all')
+      if (account_id == 'all'){
+        this.allAccount = true;
         account_id = undefined;
+      }
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
@@ -171,6 +178,8 @@
       var that = this;
       var win = this;
       var begin, end, type;
+      this.allAccount = false;
+
       
       var account_id = this.$el.find('select[name=list_account]').val();
 
@@ -196,6 +205,8 @@
       }
 
       if (account_id == 'all'){
+        this.allAccount = true;
+
         var allAccOp;
         var i = 1;
         this.accounts = new Accounts(); 
@@ -241,10 +252,14 @@
       console.log("generate tag graph");
       var that = this;
       var begin, end;
+      this.allAccount = false;
       
       var account_id = this.$el.find('select[name=list_account]').val();
-       if (account_id == 'all')
+       if (account_id == 'all'){
+        this.allAccount = true;
+
         account_id = undefined;
+      }
 
       // get the duration
       var duration = this.$el.find('input[name=duration]:checked').val();
@@ -800,7 +815,27 @@
           console.log(selectedPoints[0].name);
           this.render({hashtagName : (selectedPoints[0].name).slice(1)});
         }
-    }
+    },
+
+    addOpDebit: function (event){
+          event.preventDefault();
+          if (this.allAccount){
+            return ;
+          }
+          addDebitView = new AddDebitView();
+          //addDebitView.render(this.accountId);
+          addDebitView.render({account_id: this.accountId});        
+      },    
+      
+      addOpCredit: function (event){
+        event.preventDefault();
+        if (this.allAccount){
+            return ;
+          }
+          addCreditView = new AddCreditView();
+          //addCreditView.render(this.accountId); 
+          addCreditView.render({account_id: this.accountId});   
+      },
 
   	});
 

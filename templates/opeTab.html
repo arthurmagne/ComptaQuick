@@ -16,7 +16,7 @@
     <p class="text-center"><button class="add-debit btn btn-default">Débiter</button>
     <button class="add-credit btn btn-default">Créditer</button></p>
 <% }else if ((typeof object == 'undefined') && (operations.length == 0)) {}else{ %>
-<% if (operations.length > 15) { %>
+<% if ((operations.length > 15) && (typeof object != 'undefined')) { %>
    <p class="text-center button-operation-container">
     <button class="add-credit btn btn-primary btn-lg">Créditer</button>
     <button class="add-debit btn btn-primary btn-lg">Débiter</button>
@@ -67,10 +67,12 @@
     <% } %>
     </tbody>
   </table> 
-  <p class="text-center button-operation-container">
-    <button class="add-credit btn btn-primary btn-lg">Créditer</button>
-    <button class="add-debit btn btn-primary btn-lg">Débiter</button>
-  </p>
+  <% if (typeof object != 'undefined') { %>
+    <p class="text-center button-operation-container">
+      <button class="add-credit btn btn-primary btn-lg">Créditer</button>
+      <button class="add-debit btn btn-primary btn-lg">Débiter</button>
+    </p>
+  <% } %>
 </div>
 <% if (typeof object != 'undefined') { %>
   </div>
