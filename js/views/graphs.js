@@ -301,6 +301,9 @@
                 text: 'Montant (euros)'
             }
         },
+        credits: {
+            enabled: false
+        },
         plotOptions: {
             series: {
                 allowPointSelect: true
@@ -387,13 +390,16 @@
                   text: 'Montant (euros)'
               }
           },
-         plotOptions: {
+          credits: {
+            enabled: false
+          },
+          plotOptions: {
                 line: {
                     dataLabels: {
                         enabled: true
                     }
                 }
-            },
+          },
           series: [{
             name: 'solde'
            }]
@@ -454,8 +460,8 @@
         };
 
         graphOptions.series[0].data = jsonArray;
-        console.log(graphOptions);
-        this.$el.find('#graphs').highcharts(graphOptions);
+        graphOptions.series[0].marker = { enabled : true, radius : 3 };
+        this.$el.find('#graphs').highcharts('StockChart', graphOptions);
       },
 
       initOpTagGraphOptions: function (opAndTag) {
@@ -474,6 +480,9 @@
             title: {
                 text: 'Montant (euros)'
             }
+          },
+          credits: {
+            enabled: false
           },
           series: [{
             name: 'Opérations'
@@ -494,12 +503,10 @@
       // don't forget to reverse it
       graphOptions.series[0].data = jsonArray;
       if (operations.length != 0){
-          this.$el.find('#graphs').highcharts(graphOptions);
+          this.$el.find('#graphs').highcharts('StockChart', graphOptions);
         }else{
           this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
-        }
-
-        
+        }        
 
       },
 
@@ -519,27 +526,64 @@
                 text: 'Montant (euros)'
             }
         },
+        credits: {
+            enabled: false
+        },
         series: [{
-          name: 'Opérations'
+          name: 'Débit',
+          color: 'red'
+         },{
+          name: 'Crédit',
+          color: 'green'
          }]
       };
-     var jsonArray = [];
+     var jsonArray1 = [];
+     var jsonArray2 = [];
+     
+     
       object.each(function(op) {
+          var val = 0;
+          var object2 = object.where({operation_date: op.get("operation_date")});
+          console.log(object2);
+          object2.forEach(function(op2) {
+            if(op.get("is_credit") == op2.attributes.is_credit){
+              val = val + parseInt(op2.attributes.value);
+            }
+          
+          });
+
           console.log("DEBUG DATE ",op.get("operation_date"));
-          jsonArray.push({
-            x: Date.parse(op.get("operation_date")),
-            name: op.get("operation_name"),
-            color: (op.get("is_credit") == 1) ? 'green' : 'red',
-            y: ((op.get("is_credit") == 1) ? parseInt(op.get("value")) : (- parseInt(op.get("value"))))
-        });
+          if (op.get("is_credit") == 1){
+            jsonArray1.push({
+              name: op.get("operation_name"),
+              color: 'green',
+              x: (Date.parse(op.get("operation_date"))),
+              y: val
+            });
+
+          }else{
+
+            jsonArray2.push({
+              name: op.get("operation_name"),
+              color: 'red',
+              x: (Date.parse(op.get("operation_date"))),
+              y: val
+            });
+
+          }
       }); 
       // don't forget to reverse it
-      graphOptions.series[0].data = jsonArray;
+      graphOptions.series[0].data = jsonArray2;
+      graphOptions.series[1].data = jsonArray1;
+
+      console.log(jsonArray2);
+      console.log(jsonArray1);
+      
       if (this.operations.length != 0){
-          this.$el.find('#graphs').highcharts(graphOptions);
-        }else{
+          this.$el.find('#graphs').highcharts('StockChart', graphOptions);
+      }else{
           this.$el.find('#graphs').html("<h2 class='text-center text-muted'>Aucune opération n'a été trouvée</h2>");
-        }
+      }
   
     },
 
@@ -549,12 +593,11 @@
        var win = this;
       _.each(accounts.models, function(account, cpt) {
                     var accname = account.get("account_name");
-                    console.log("account name : ",name);
                     series_name.push({name: accname});
       }); 
 
 
-      var graphOptions = {
+      var graphOptions = { 
         chart: {
             type: 'spline'
         },
@@ -564,18 +607,45 @@
         xAxis: {
             type: 'datetime'
         },
+
         yAxis: {
             title: {
                 text: 'Montant (euros)'
-            }
+            },
+            navigation: {
+                arrowSize: 8,
+                style: {
+                    fontSize: '9px',
+                    margin: 0,
+                    padding: 0
+                }
+            }            
         },
-       plotOptions: {
+        rangeSelector: {
+            inputEnabled: true,
+            selected: 1
+        },
+        scrollbar: {
+            enabled: true,
+            height: 10,
+            barBorderWidth: 0,
+            buttonBorderWidth: 1,
+            trackBorderWidth: 1,
+            barBorderRadius: 3,
+            buttonBorderRadius: 3,
+            trackBorderRadius: 3
+        },
+
+        plotOptions: {
               line: {
                   dataLabels: {
                       enabled: true
                   }
               }
-          },
+        },
+        credits: {
+            enabled: false
+        },
         series: series_name
       };
       
@@ -636,20 +706,14 @@
                       });
                     };
 
-                    console.log(k);
-                    console.log("jsonArray :");
-                    console.log(jsonArray);
-                    console.log("graphOptions :");
-                    console.log(graphOptions);
-                    console.log(graphOptions.series[k]);
+           
                     graphOptions.series[k].data = jsonArray;
-                    console.log("DEBUG jsonarray ",JSON.stringify(jsonArray));
-                    console.log(graphOptions);
+                    graphOptions.series[k].marker = { enabled : true, radius : 3 };
+               
                     k++;
                     console.log(size);
                     if(size==k){
-                       console.log(graphOptions);
-                       win.$el.find('#graphs').highcharts(graphOptions);
+                       win.$el.find('#graphs').highcharts('StockChart', graphOptions);
                     }
                    }                 
                 })

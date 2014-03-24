@@ -36,6 +36,8 @@ define([
 
     saveImport: function(event) {
     	event.preventDefault();
+    	var that = this;
+    	var idacc = that.$el.find('select[name=list_account]').val();
     	this.operations.each(function(operation){
       		console.log(operation);
       		operation.save(null, {
@@ -46,7 +48,7 @@ define([
 			  	$(that.el).html("<h2 class='text-center text-muted add-feedback'>Import des opérations réussis</h2><hr>");
 			  	setTimeout(function(){
 					that.close();
-					Backbone.View.prototype.goTo('#/importCSV');
+						Backbone.View.prototype.goTo('#/opeTab/'+ idacc);
 		 		},2000);
 			  },
 			  error: function() {
