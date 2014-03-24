@@ -13,7 +13,9 @@ require.config({
     backbone_rails: 'libs/backbone_rails/backbone_rails_sync',
     backbone_auth: 'libs/backbone_auth/backbone.basicauth',
     backbone_offline: 'libs/backbone_offline/backbone.offline',
-    highcharts: 'libs/highcharts/highcharts'
+    highcharts: 'libs/highcharts/highcharts',
+    highcharts: 'libs/highstock/highstock'
+    
   },
 
     shim: {
@@ -45,8 +47,11 @@ require.config({
 
         highcharts: {
             deps: ['jquery']
+        },
+        
+        highstock: {
+            deps: ['jquery']
         }
-
     }
 
 });
