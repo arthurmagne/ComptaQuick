@@ -36,3 +36,23 @@
   margin-top: -40px;
   margin-left: 224px;
 }
+
+@media (max-width: 768px) {
+  .sign-up-container input {
+    width: 100% !important;
+  }
+
+  .sign-up-container{
+    width: 100% !important; 
+    border: none !important;
+    border-radius: 0px !important; 
+    margin-top: 0px !important; 
+    margin-left: 0px !important; 
+    top: 0;
+    height: 100%;
+  }
+
+  #connexion-form{
+    width: auto !important;
+  }
+}

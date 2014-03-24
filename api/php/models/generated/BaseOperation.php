@@ -13,6 +13,7 @@
  * @property boolean $is_credit
  * @property integer $value
  * @property Account $Account
+ * @property PaymentType $PaymentType
  * 
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
@@ -54,6 +55,11 @@ abstract class BaseOperation extends Doctrine_Record
         parent::setUp();
         $this->hasOne('Account', array(
              'local' => 'account_id',
-             'foreign' => 'account_id'));
+             'foreign' => 'id',
+             'onDelete' => 'Cascade'));
+
+        $this->hasOne('PaymentType', array(
+             'local' => 'type_id',
+             'foreign' => 'id'));
     }
 }

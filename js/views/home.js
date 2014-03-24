@@ -21,6 +21,7 @@ define([
     render: function () {
       var template = _.template(homeTemplate);
       this.$el.html(template);
+      $("#background").addClass("home-background");
     },
 
     showConnexionForm: function () {
@@ -31,20 +32,23 @@ define([
     connectionAuto: function () {
       event.preventDefault(); // Don't let this button go to the login page
       console.log("Try to connect auto");
-      var url = 'api/index.php/loginAuto';
+      var url = 'loginAuto';
       var that = this;
       $.ajax({
             url:url,
             type:'GET',
+            crossDomain: true,
             statusCode: {
               200: function (response) {
                 console.log("connection automatique réussie");
                 that.close();
                  //on crée notre model user qu'on va passer à la vue suivante
                 var user = new User({model: response});
+                window.userSession = user;
+                
                 //on lance la vue suivante avec le modèle en paramètre
                 var homePersoView = new HomePersoView();
-                homePersoView.render({user: user.attributes.model});
+                homePersoView.render();
                 //on change l'url sans appeler la fonction correspondante du router
                 window.history.pushState(null, null,  "#/perso");
 

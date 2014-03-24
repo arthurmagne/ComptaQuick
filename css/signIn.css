@@ -57,3 +57,24 @@
   color: brown;
   margin-top: -10px;
 }
+
+
+@media (max-width: 768px) {
+  .sign-in-container input {
+    width: 100% !important;
+  }
+
+  .sign-in-container{
+    width: 100% !important; 
+    border: none !important;
+    border-radius: 0px !important; 
+    margin-top: 0px !important; 
+    margin-left: 0px !important; 
+    top: 0;
+    height: 100%;
+  }
+
+  #connexion-form{
+    width: auto !important;
+  }
+}
